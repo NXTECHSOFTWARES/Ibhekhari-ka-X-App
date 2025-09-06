@@ -1,0 +1,28 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Cake Factory"
+    },
+    {
+      "id": 2,
+      "name": "Cookie"
+    },
+    {
+      "id": 3,
+      "name": "Bread"
+    },
+    {
+      "id": 4,
+      "name": "Donut"
+    },
+    {
+      "id": 5,
+      "name": "Muffin"
+    },
+    {
+      "id": 6,
+      "name": "Croissant"
+    }
+  ]
+}
