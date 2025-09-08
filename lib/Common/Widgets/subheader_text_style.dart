@@ -7,6 +7,11 @@ class SubHeaderTextStyle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReusableTextWidget(text: text, color: const Color(0xff634923), size: 12, FW: FontWeight.w400,);
+    return ReusableTextWidget(
+      text: text,
+      color: const Color(0xff634923),
+      size: 12,
+      FW: FontWeight.w300,
+    );
   }
 }

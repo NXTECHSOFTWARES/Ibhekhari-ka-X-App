@@ -1,0 +1,9 @@
+ {
+    "condition" : [
+      "melted",
+      "warm",
+      "soften",
+      "room_temperature",
+      "hot"
+    ]
+ }

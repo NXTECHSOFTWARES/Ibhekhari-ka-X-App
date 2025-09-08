@@ -1,0 +1,43 @@
+[
+  {
+    "title" : "Eggs",
+    "product" : "Moresson",
+    "price": "109.99",
+    "measurement_type" :"Count",
+    "unit": "Large",
+    "quantity": "60",
+    "supplier": "Favors Cash & Carry",
+    "latest_purchase_date" : "10-09-2025"
+  },
+  {
+    "title" : "Flour",
+    "product" : "Snowflake",
+    "price": "120.99",
+    "measurement_type" :true,
+    "unit": "kg",
+    "quantity": "10",
+    "supplier": "Favors Cash & Carry",
+    "latest_purchase_date" : "10-09-2025"
+  },
+  {
+    "title" : "Milk",
+    "product" : "Creamline",
+    "price": "100.99",
+    "measurement_type" :"Count",
+    "unit": "Pack",
+    "quantity": "6",
+    "supplier": "Favors Cash & Carry",
+    "latest_purchase_date" : "10-09-2025"
+  },
+  {
+    "title" : "Butter",
+    "product" : "Woodenspoon",
+    "price": "50.00",
+    "measurement_type" :"weight",
+    "unit": "g",
+    "quantity": "500",
+    "supplier": "Favors Cash & Carry",
+    "latest_purchase_date" : "10-09-2025"
+  }
+
+]

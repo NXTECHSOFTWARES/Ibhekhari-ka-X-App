@@ -265,11 +265,7 @@ class _PastriesPageState extends State<PastriesPage> {
                                       pastryId:
                                           viewModel.pastries[index].id!)));
                         },
-                        child: PastryCard(
-                          imageByte: pastry.imageBytes,
-                          name: pastry.title,
-                          category: pastry.category,
-                        ),
+                        child: PastryCard(pastry: pastry),
                       ),
                     );
                   }),
@@ -293,7 +289,7 @@ class _PastriesPageState extends State<PastriesPage> {
     );
   }
 
-  //
+
   void _confirmDeletePastry(Pastry pastry) {
     showDialog(
       context: context,

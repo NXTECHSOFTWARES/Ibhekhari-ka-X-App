@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
+import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/Utils/Widgets/card_display_widget.dart';
 
 class PastryCard extends StatelessWidget {
-  final Uint8List imageByte;
-  final String name;
-  final String category;
+  final Pastry pastry;
 
-  const PastryCard({super.key, required this.imageByte, required this.name, required this.category});
+  const PastryCard({super.key, required this.pastry});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +29,10 @@ class PastryCard extends StatelessWidget {
             width: 60.w,
             height: 60.h,
             decoration: BoxDecoration(
-              image: DecorationImage(image: MemoryImage(
-                imageByte,
-              ),
+              image: DecorationImage(
+                image: MemoryImage(
+                  pastry.imageBytes,
+                ),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(5.r),
@@ -60,19 +60,22 @@ class PastryCard extends StatelessWidget {
                      * Pastry Name
                      */
                     ReusableTextWidget(
-                      text: name,
+                      text: pastry.title,
                       color: const Color(0xff573E1A),
-                      size: 12, FW: FontWeight.w500,),
+                      size: 12,
+                      FW: FontWeight.w500,
+                    ),
                     /**
                      * Pastry Category
                      */
                     Padding(
                       padding: EdgeInsets.only(right: 5.0.w),
                       child: ReusableTextWidget(
-                        text: category,
+                        text: pastry.category,
                         color: Colors.grey.shade700,
                         size: 10,
-                        FW: FontWeight.w300,),
+                        FW: FontWeight.w300,
+                      ),
                     ),
                   ],
                 ),
@@ -84,20 +87,18 @@ class PastryCard extends StatelessWidget {
                  * out-stock, in-stock, sales and Income display
                  */
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       //spacing: 10.w,
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         /**
                          * Number of Items Sold
                          */
-                        const CardDisplayWidget(header: "out-stock", textValue: "1458"),
+                        const CardDisplayWidget(
+                            header: "out-stock", textValue: "1458"),
                         SizedBox(
                           width: 15.w,
                         ),
@@ -105,7 +106,9 @@ class PastryCard extends StatelessWidget {
                         /**
                          * Number of Items remaining
                          */
-                        const CardDisplayWidget(header: "in-stock", textValue: "18"),
+                        CardDisplayWidget(
+                            header: "in-stock",
+                            textValue: "${pastry.quantity} "),
                       ],
                     ),
                     Padding(
@@ -116,11 +119,13 @@ class PastryCard extends StatelessWidget {
                           /**
                            * Total Items Sold
                            */
-                          CardDisplayWidget(header: "sales", textValue: "R2 458"),
+                          CardDisplayWidget(
+                              header: "sales", textValue: "R2 458"),
                           /**
                            * Total income made by Item sold/ Profit Made
                            */
-                          CardDisplayWidget(header: "income", textValue: "R1 458"),
+                          CardDisplayWidget(
+                              header: "income", textValue: "R1 458"),
                         ],
                       ),
                     )

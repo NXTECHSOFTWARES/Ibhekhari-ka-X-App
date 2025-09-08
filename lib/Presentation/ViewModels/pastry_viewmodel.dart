@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../../Data/Model/category.dart';
 import '../../Data/Model/pastry.dart';
+import '../../Data/Model/recipe.dart';
 import '../../Domain/Repositories/pastry_repo.dart';
 
 enum ViewState { idle, loading, error, success }
@@ -54,6 +56,13 @@ class PastryViewModel extends ChangeNotifier {
 
   final List<Pastry> _listOfPastries = [];
   List<Pastry> get listOfPastries => _listOfPastries;
+
+  Future<Recipe?> getPastryRecipe() async {
+    final response = await rootBundle.loadString("assets/recipes");
+    final data = json.decode(response);
+    Recipe recipe = data;
+    return recipe;
+  }
 
   Future<bool> addPastry({
     required String title,
@@ -340,26 +349,31 @@ class PastryViewModel extends ChangeNotifier {
   }
 
   // // Update pastry quantity
-  // Future<bool> updatePastryQuantity(int id, int newQuantity) async {
-  //   try {
-  //     if (newQuantity < 0) {
-  //       _setError('Quantity cannot be negative');
-  //       return false;
-  //     }
-  //
-  //     // final success = await _repository.updatePastryQuantity(id, newQuantity);
-  //     // if (success) {
-  //     //   await loadPastries(); // Refresh data
-  //     //   return true;
-  //     // } else {
-  //     //   _setError('Failed to update quantity');
-  //     //   return false;
-  //     // }
-  //   } catch (e) {
-  //     _setError('Failed to update quantity: $e');
-  //     return false;
-  //   }
-  // }
+  Future<bool> updatePastryQuantity(int? id, int newQuantity) async {
+    try {
+      if (newQuantity < 0) {
+        _setError('Quantity cannot be negative');
+        return false;
+      }
+
+      Pastry? pastry = await getPastryById(id!);
+      if(pastry!.quantity > 0 ){
+        newQuantity += pastry.quantity;
+      }
+
+      final success = await _repository.updatePastryQuantity(id, newQuantity);
+      if (success) {
+        await loadPastries();
+        return true;
+      } else {
+        _setError('Failed to update quantity');
+        return false;
+      }
+    } catch (e) {
+      _setError('Failed to update quantity: $e');
+      return false;
+    }
+  }
 
   // Delete pastry
   Future<bool> deletePastry(int id) async {

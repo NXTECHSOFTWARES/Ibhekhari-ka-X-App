@@ -8,10 +8,20 @@ class ReusableTextWidget extends StatelessWidget {
   final FontWeight? FW;
   final int size;
 
-  const ReusableTextWidget({super.key, required this.text, required this.color, this.FW, required this.size});
+  const ReusableTextWidget(
+      {super.key,
+      required this.text,
+      required this.color,
+      this.FW,
+      required this.size});
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: GoogleFonts.roboto(color: color, fontSize: size.sp, fontWeight: FW));
+    return Text(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text,
+        style: GoogleFonts.roboto(
+            color: color, fontSize: size.sp, fontWeight: FW));
   }
 }

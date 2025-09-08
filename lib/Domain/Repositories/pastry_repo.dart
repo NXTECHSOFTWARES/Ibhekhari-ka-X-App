@@ -190,18 +190,18 @@ class PastryRepository {
   //   }
   // }
   //
-  // Future<bool> updatePastryQuantity(int id, int newQuantity) async {
-  //   try {
-  //     if (newQuantity < 0) {
-  //       throw Exception('Quantity cannot be negative');
-  //     }
-  //
-  //     final result = await _dbHelper.updatePastryQuantity(id, newQuantity);
-  //     return result > 0;
-  //   } catch (e) {
-  //     throw Exception('Failed to update pastry quantity: $e');
-  //   }
-  // }
+  Future<bool> updatePastryQuantity(int id, int newQuantity) async {
+    try {
+      if (newQuantity < 0) {
+        throw Exception('Quantity cannot be negative');
+      }
+
+      final result = await _dbHelper.updatePastryQuantity(id, newQuantity);
+      return result > 0;
+    } catch (e) {
+      throw Exception('Failed to update pastry quantity: $e');
+    }
+  }
 
   Future<bool> deletePastry(int id) async {
     try {
