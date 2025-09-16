@@ -382,9 +382,10 @@ class _NewPastryState extends State<NewPastry> {
                                         : const Color(0xffAEADAD),
                                     borderRadius: BorderRadius.circular(6.r),
                                     decoration: InputDecoration(
+                                      isDense:true,
                                       fillColor: const Color(0xffDADADA),
                                       filled: true,
-                                      hintText: "select",
+                                      hintText: "select category",
                                       hintStyle: GoogleFonts.poppins(
                                         fontSize: 8.sp,
                                         fontWeight: FontWeight.w200,
