@@ -12,7 +12,7 @@ class HeaderTextStyle extends StatelessWidget {
       text: text,
       color: const Color(0xff351F00),
       size: 16,
-      FW: FontWeight.w500,
+      FW: FontWeight.w400,
     );
   }
 }

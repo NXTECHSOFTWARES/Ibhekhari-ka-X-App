@@ -202,9 +202,9 @@ class _HomepageState extends State<Homepage> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DisplayWidget(headerText: "SALES", subText: "R10 000"),
-                      DisplayWidget(headerText: "INCOME", subText: "R1 000"),
-                      DisplayWidget(headerText: "EXPENSES", subText: "R2 500"),
+                      DisplayWidget(headerText: "SALES", subText: "R10 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457),),
+                      DisplayWidget(headerText: "INCOME", subText: "R1 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
+                      DisplayWidget(headerText: "EXPENSES", subText: "R2 500", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
                     ],
                   )
                 ],

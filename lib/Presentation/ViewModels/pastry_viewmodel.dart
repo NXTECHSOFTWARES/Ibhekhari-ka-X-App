@@ -72,7 +72,6 @@ class PastryViewModel extends ChangeNotifier {
     required File imageFile,
   }) async {
 
-
     Uint8List imgByte;
     if (imageFile != null) {
       imgByte = await _imageFileToBytes(imageFile);
@@ -263,12 +262,10 @@ class PastryViewModel extends ChangeNotifier {
     await loadPastries();
   }
 
-  //
-  // // Load all pastries
+ // Load all pastries
   Future<void> loadPastries() async {
     _setState(ViewState.loading);
     try {
-      //_pastries = _listOfPastries;
       _pastries = await _repository.getAllPastries();
       //_applyFilters();
       // await _updateStatistics();
@@ -497,30 +494,30 @@ class PastryViewModel extends ChangeNotifier {
   //   return '\$${(priceInCents / 100).toStringAsFixed(2)}';
   // }
   //
-  // String getStockStatus(Pastry pastry) {
-  //   if (pastry.quantity == null) return 'Unknown';
-  //   if (pastry.quantity! <= 0) return 'Out of Stock';
-  //   if (pastry.quantity! <= 5) return 'Low Stock';
-  //   return 'In Stock';
-  // }
-  //
-  // Color getStockStatusColor(Pastry pastry) {
-  //   if (pastry.quantity == null) return Colors.grey;
-  //   if (pastry.quantity! <= 0) return Colors.red;
-  //   if (pastry.quantity! <= 5) return Colors.orange;
-  //   return Colors.green;
-  // }
-  //
+  String getStockStatus(Pastry pastry) {
+    if (pastry.quantity == null) return 'Unknown';
+    if (pastry.quantity! <= 0) return 'Out of Stock';
+    if (pastry.quantity! <= 2) return 'Low Stock';
+    return 'In Stock';
+  }
 
-  //
-  // void clearError() {
-  //   if (_state == ViewState.error) {
-  //     _state = ViewState.idle;
-  //     _errorMessage = null;
-  //     notifyListeners();
-  //   }
-  // }
-  //
+  Color getStockStatusColor(Pastry pastry) {
+    if (pastry.quantity == null) return Colors.grey;
+    if (pastry.quantity! <= 0) return Colors.red;
+    if (pastry.quantity! <= 5) return Colors.orange;
+    return Colors.green;
+  }
+
+
+
+  void clearError() {
+    if (_state == ViewState.error) {
+      _state = ViewState.idle;
+      _errorMessage = null;
+      notifyListeners();
+    }
+  }
+
 
   @override
   void dispose() {

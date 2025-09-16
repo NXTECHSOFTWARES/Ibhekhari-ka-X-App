@@ -219,24 +219,23 @@ class PastryRepository {
     pastry.quantity == null || pastry.quantity! > 0).toList();
   }
 
-  Future<List<Pastry>> getLowStockPastries({int threshold = 5}) async {
+  Future<List<Pastry>> getLowStockPastries({int threshold = 2}) async {
     if (threshold < 0) {
       throw ArgumentError('Threshold must be non-negative');
     }
 
     final pastries = await getAllPastries();
     return pastries.where((pastry) =>
-    pastry.quantity != null &&
-        pastry.quantity! <= threshold &&
-        pastry.quantity! > 0).toList();
+    pastry.quantity <= threshold &&
+        pastry.quantity > 0).toList();
   }
 
-  // Future<List<Pastry>> getOutOfStockPastries() async {
-  //   final pastries = await getAllPastries();
-  //   return pastries.where((pastry) =>
-  //   pastry.quantity != null && pastry.quantity! <= 0).toList();
-  // }
-  //
+  Future<List<Pastry>> getOutOfStockPastries() async {
+    final pastries = await getAllPastries();
+    return pastries.where((pastry) =>
+    pastry.quantity <= 0).toList();
+  }
+
   // Future<Map<String, int>> getPastriesCountByCategory() async {
   //   final pastries = await getAllPastries();
   //   final Map<String, int> categoryCounts = <String, int>{};
@@ -312,19 +311,19 @@ class PastryRepository {
   //   _defaultImageBytes = null;
   // }
   //
-  // // Get statistics
-  // Future<Map<String, dynamic>> getInventoryStatistics() async {
-  //   final pastries = await getAllPastries();
-  //   final total = pastries.length;
-  //   final available = pastries.where((p) => (p.quantity ?? 0) > 0).length;
-  //   final outOfStock = pastries.where((p) => (p.quantity ?? 0) <= 0).length;
-  //   final totalValue = await getTotalInventoryValue();
-  //
-  //   return {
-  //     'totalPastries': total,
-  //     'availablePastries': available,
-  //     'outOfStockPastries': outOfStock,
-  //     'totalInventoryValue': totalValue,
-  //   };
-  // }
+  // Get statistics
+  Future<Map<String, dynamic>> getInventoryStatistics() async {
+    final pastries = await getAllPastries();
+    final total = pastries.length;
+    final available = pastries.where((p) => (p.quantity ?? 0) > 0).length;
+    final outOfStock = pastries.where((p) => (p.quantity ?? 0) <= 0).length;
+    // final totalValue = await getTotalInventoryValue();
+
+    return {
+      'totalPastries': total,
+      'availablePastries': available,
+      'outOfStockPastries': outOfStock,
+      //'totalInventoryValue': totalValue,
+    };
+  }
 }
