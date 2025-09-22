@@ -10,7 +10,7 @@ import 'package:nxbakers/Presentation/pages/Ingridient/Ingredients.dart';
 import 'package:nxbakers/Presentation/pages/Profits/profit.dart';
 import 'package:provider/provider.dart';
 
-import 'Pastries/list_of_pastries.dart';
+import 'Pastries/pastries.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

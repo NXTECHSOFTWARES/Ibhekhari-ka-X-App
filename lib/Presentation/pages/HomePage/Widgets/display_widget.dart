@@ -15,6 +15,7 @@ class DisplayWidget extends StatelessWidget {
     return Wrap(
       direction: Axis.vertical,
       crossAxisAlignment: WrapCrossAlignment.center,
+      alignment: WrapAlignment.center,
       spacing: 5.h,
       children: [
         ReusableTextWidget(

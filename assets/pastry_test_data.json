@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Snowball",
+    "price": 10.0,
+    "quantity": 220,
+    "category": "cookie",
+    "imageBytes": null,
+    "created_at": "2023-01-01"
+  },
+  {
+    "title": "Chocolate Chip Muffins",
+    "price": 12.0,
+    "quantity": 800,
+    "category": "Muffins",
+    "imageBytes": null,
+    "created_at": "2023-01-01"
+  },
+  {
+    "title": "Chocolate Cupcake",
+    "price": 5.0,
+    "quantity": 320,
+    "category": "cupcakes",
+    "imageBytes": null,
+    "created_at": "2023-01-01"
+  },
+  {
+    "title": "Long Doughnuts",
+    "price": 10.0,
+    "quantity": 150,
+    "category": "bread",
+    "imageBytes": null,
+    "created_at": "2023-01-01"
+  },
+  {
+    "title": "Cinnamon Rolls",
+    "price": 10.0,
+    "quantity": 890,
+    "category": "bread",
+    "imageBytes": null,
+    "created_at": "2023-01-01"
+  }
+]

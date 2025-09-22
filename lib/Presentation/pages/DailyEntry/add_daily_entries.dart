@@ -37,7 +37,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
         List.generate(pastriesCount, (index) => TextEditingController());
     _soldQuantities = List.generate(pastriesCount, (index) => 0);
     _isInvalid = List.generate(pastriesCount, (index) => false);
-    _soldQuantitiesDisplayValue = List.generate(pastriesCount, (index) => "...");
+    _soldQuantitiesDisplayValue =
+        List.generate(pastriesCount, (index) => "...");
   }
 
   @override
@@ -49,14 +50,15 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     super.dispose();
   }
 
-  void _updateTotalSales(Pastry pastry, int index, String remainingStockText, DailyEntryViewModel viewModel) {
+  void _updateTotalSales(Pastry pastry, int index, String remainingStockText,
+      DailyEntryViewModel viewModel) {
     int remainingStock = 0;
     int initialStock = pastry.quantity ?? 0;
     int soldQuantity = 0;
 
     try {
       remainingStock =
-      remainingStockText.isEmpty ? 0 : int.parse(remainingStockText);
+          remainingStockText.isEmpty ? 0 : int.parse(remainingStockText);
     } catch (e) {
       remainingStock = 0;
     }
@@ -135,7 +137,9 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     int topSellerIndex = -1;
 
     // Find the pastry with the highest sold quantity
-    for (int i = 0; i < _soldQuantities.length && i < viewModel.pastries.length; i++) {
+    for (int i = 0;
+        i < _soldQuantities.length && i < viewModel.pastries.length;
+        i++) {
       if (_soldQuantities[i] > maxSold) {
         maxSold = _soldQuantities[i];
         topSellerIndex = i;
@@ -157,11 +161,12 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     };
   }
 
-  void _submitDailyEntry(DailyEntryViewModel viewModel) {
+  void _submitDailyEntry(DailyEntryViewModel viewModel) async {
     bool hasErrors = false;
     for (int i = 0; i < _controllers.length; i++) {
       if (i < viewModel.pastries.length) {
-        String? error = _validateRemainingStock(_controllers[i].text, viewModel.pastries[i]);
+        String? error = _validateRemainingStock(
+            _controllers[i].text, viewModel.pastries[i]);
         if (error != null) {
           hasErrors = true;
           break;
@@ -170,6 +175,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     }
 
     if (hasErrors) {
+      // Check if widget is still mounted
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fix all errors before submitting'),
@@ -179,25 +186,45 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
       return;
     }
 
-    Map<int, int> soldData = {};
     double totalRevenue = 0;
+    bool success = true;
 
     for (int i = 0; i < viewModel.pastries.length && i < _soldQuantities.length; i++) {
+      Pastry pastry = viewModel.pastries[i];
       if (_soldQuantities[i] > 0) {
-        soldData[viewModel.pastries[i].id!] = _soldQuantities[i];
-        totalRevenue += _soldQuantities[i] * (viewModel.pastries[i].price ?? 0);
+        int remainingStock = pastry.quantity - _soldQuantities[i];
+        totalRevenue += _soldQuantities[i] * pastry.price;
+
+        bool entrySuccess = await viewModel.addDailyEntry(
+          soldStock: _soldQuantities[i],
+          remainingStock: remainingStock,
+          pastryId: pastry.id!,
+          pastry: pastry,
+        );
+
+        if (!entrySuccess) success = false;
       }
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-            'Daily entry saved! Total sales: R${totalRevenue.toStringAsFixed(2)}'),
-        backgroundColor: Colors.green,
-      ),
-    );
+    // Check if widget is still mounted before showing snackbar or navigating
+    if (!mounted) return;
 
-    Navigator.of(context).pop();
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Daily entry saved! Total sales: R${totalRevenue.toStringAsFixed(2)}'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to save some entries'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -205,8 +232,10 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     return ChangeNotifierProvider(
       create: (BuildContext context) => DailyEntryViewModel()..initialize(),
       child: Consumer<DailyEntryViewModel>(
-        builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
-          if (viewModel.pastries.isNotEmpty && _controllers.length != viewModel.pastries.length) {
+        builder: (BuildContext context, DailyEntryViewModel viewModel,
+            Widget? child) {
+          if (viewModel.pastries.isNotEmpty &&
+              _controllers.length != viewModel.pastries.length) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _initializeControllers(viewModel.pastries.length);
             });
@@ -310,28 +339,34 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                   width: 100.w,
                                   height: 38.h,
                                   margin: EdgeInsets.only(bottom: 10.h),
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.w),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff000000).withOpacity(0.20),
+                                    color: const Color(0xff000000)
+                                        .withOpacity(0.20),
                                     borderRadius: BorderRadius.circular(5.0.r),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Wrap(
                                         spacing: 10.w,
-                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
                                         children: [
                                           Container(
                                             width: 22.w,
                                             height: 22.h,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                image: MemoryImage(pastry.imageBytes),
+                                                image: MemoryImage(
+                                                    pastry.imageBytes),
                                               ),
                                               border: Border.all(
                                                 width: 1.0.w,
-                                                color: const Color(0xff000000).withOpacity(0.35),
+                                                color: const Color(0xff000000)
+                                                    .withOpacity(0.35),
                                                 style: BorderStyle.solid,
                                               ),
                                               shape: BoxShape.circle,
@@ -349,10 +384,14 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                         spacing: 10.w,
                                         children: [
                                           ReusableTextWidget(
-                                            text: index < _soldQuantitiesDisplayValue.length
-                                                ? _soldQuantitiesDisplayValue[index]
+                                            text: index <
+                                                    _soldQuantitiesDisplayValue
+                                                        .length
+                                                ? _soldQuantitiesDisplayValue[
+                                                    index]
                                                 : "...",
-                                            color: index < _isInvalid.length && _isInvalid[index]
+                                            color: index < _isInvalid.length &&
+                                                    _isInvalid[index]
                                                 ? Colors.red
                                                 : const Color(0xffF2EADE),
                                             size: 10,
@@ -363,42 +402,75 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                             height: 26.h,
                                             child: Center(
                                               child: TextFormField(
-                                                keyboardType: TextInputType.number,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 textAlign: TextAlign.center,
-                                                controller: index < _controllers.length
-                                                    ? _controllers[index]
-                                                    : null,
+                                                controller:
+                                                    index < _controllers.length
+                                                        ? _controllers[index]
+                                                        : null,
                                                 onChanged: (value) {
-                                                  String numericValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+                                                  String numericValue =
+                                                      value.replaceAll(
+                                                          RegExp(r'[^0-9]'),
+                                                          '');
                                                   if (value != numericValue) {
-                                                    _controllers[index].text = numericValue;
-                                                    _controllers[index].selection = TextSelection.collapsed(offset: numericValue.length);
+                                                    _controllers[index].text =
+                                                        numericValue;
+                                                    _controllers[index]
+                                                            .selection =
+                                                        TextSelection.collapsed(
+                                                            offset: numericValue
+                                                                .length);
                                                   }
-                                                  _updateTotalSales(pastry, index, numericValue, viewModel);
+                                                  _updateTotalSales(
+                                                      pastry,
+                                                      index,
+                                                      numericValue,
+                                                      viewModel);
                                                 },
                                                 style: GoogleFonts.poppins(
-                                                  color: const Color(0xff351F00),
+                                                  color:
+                                                      const Color(0xff351F00),
                                                   fontSize: 10.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                                 decoration: InputDecoration(
                                                   border: InputBorder.none,
-                                                  enabledBorder: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(4.0.r),
-                                                    borderSide: index < _isInvalid.length && _isInvalid[index]
-                                                        ? BorderSide(width: 1.5.w, color: Colors.red)
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0.r),
+                                                    borderSide: index <
+                                                                _isInvalid
+                                                                    .length &&
+                                                            _isInvalid[index]
+                                                        ? BorderSide(
+                                                            width: 1.5.w,
+                                                            color: Colors.red)
                                                         : BorderSide.none,
                                                   ),
                                                   filled: true,
                                                   fillColor: Colors.white,
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(4.0.r),
-                                                    borderSide: index < _isInvalid.length && _isInvalid[index]
-                                                        ? BorderSide(width: 1.5.w, color: Colors.red)
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0.r),
+                                                    borderSide: index <
+                                                                _isInvalid
+                                                                    .length &&
+                                                            _isInvalid[index]
+                                                        ? BorderSide(
+                                                            width: 1.5.w,
+                                                            color: Colors.red)
                                                         : BorderSide.none,
                                                   ),
-                                                  hintStyle: GoogleFonts.poppins(
-                                                    color: const Color(0xff000110),
+                                                  hintStyle:
+                                                      GoogleFonts.poppins(
+                                                    color:
+                                                        const Color(0xff000110),
                                                     fontWeight: FontWeight.w300,
                                                     fontSize: 8.sp,
                                                     fontStyle: FontStyle.italic,
@@ -428,7 +500,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                         height: 1,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 15.h, top: 10.h),
+                        padding: EdgeInsets.only(
+                            left: 20.w, right: 20.w, bottom: 15.h, top: 10.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -444,21 +517,30 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                               children: [
                                 // Top seller name
                                 ReusableTextWidget(
-                                  text: _getTopSeller(viewModel)['name'] == "No sales" ? "loading..." : _getTopSeller(viewModel)['name'],
+                                  text: _getTopSeller(viewModel)['name'] ==
+                                          "No sales"
+                                      ? "loading..."
+                                      : _getTopSeller(viewModel)['name'],
                                   color: const Color(0xff634923),
                                   size: 10,
                                   FW: FontWeight.w400,
                                 ),
                                 // Sold quantity
                                 ReusableTextWidget(
-                                  text: _getTopSeller(viewModel)['quantity'] == 0 ? "loading..." : _getTopSeller(viewModel)['quantity'].toString(),
+                                  text:
+                                      _getTopSeller(viewModel)['quantity'] == 0
+                                          ? "loading..."
+                                          : _getTopSeller(viewModel)['quantity']
+                                              .toString(),
                                   color: const Color(0xff634923),
                                   size: 10,
                                   FW: FontWeight.w400,
                                 ),
                                 // Total price
                                 ReusableTextWidget(
-                                  text: _getTopSeller(viewModel)['total'] == 0.0 ? "loading" : "R${_getTopSeller(viewModel)['total'].toStringAsFixed(2)}",
+                                  text: _getTopSeller(viewModel)['total'] == 0.0
+                                      ? "loading"
+                                      : "R${_getTopSeller(viewModel)['total'].toStringAsFixed(2)}",
                                   color: const Color(0xff634923),
                                   size: 10,
                                   FW: FontWeight.w400,
@@ -474,7 +556,10 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6.0.r),
                                   gradient: const RadialGradient(
-                                    colors: [Color(0xff634923), Color(0xff351F00)],
+                                    colors: [
+                                      Color(0xff634923),
+                                      Color(0xff351F00)
+                                    ],
                                     radius: 4,
                                   ),
                                 ),
@@ -487,11 +572,16 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                       height: 22.h,
                                       decoration: BoxDecoration(
                                         gradient: const RadialGradient(
-                                          colors: [Color(0xffAF8850), Color(0xff482B02)],
+                                          colors: [
+                                            Color(0xffAF8850),
+                                            Color(0xff482B02)
+                                          ],
                                           radius: 0.6,
                                         ),
-                                        borderRadius: BorderRadius.circular(4.r),
-                                        border: Border.all(color: const Color(0xff3F2808)),
+                                        borderRadius:
+                                            BorderRadius.circular(4.r),
+                                        border: Border.all(
+                                            color: const Color(0xff3F2808)),
                                       ),
                                       child: Center(
                                         child: Icon(

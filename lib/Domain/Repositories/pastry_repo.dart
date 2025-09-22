@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:nxbakers/Data/Model/daily_entry.dart';
 import '../../Data/Database/Local/sql_database_helper.dart';
 import '../../Data/Model/category.dart';
 import '../../Data/Model/pastry.dart';
@@ -92,6 +91,8 @@ class PastryRepository {
         pastry.title.trim().toLowerCase() == trimmedTitle.toLowerCase() &&
         pastry.id != excludeId);
   }
+
+
 
 // // Get all pastries with proper image handling
   Future<List<Pastry>> getAllPastries() async {

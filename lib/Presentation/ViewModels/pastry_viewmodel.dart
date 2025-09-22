@@ -64,19 +64,40 @@ class PastryViewModel extends ChangeNotifier {
     return recipe;
   }
 
+  Future<void> loadPastyDemoData() async {
+    final response =
+        await rootBundle.loadString("assets/pastry_test_data.json");
+    final data = json.decode(response);
+    List<Pastry> testDataPastries =
+        (data as List<dynamic>).map((pastry) => Pastry.fromJson(pastry)).toList();
+
+    for (Pastry pastry in testDataPastries) {
+      bool success = await addPastry(
+          title: pastry.title,
+          price: pastry.price,
+          quantity: pastry.quantity,
+          category: pastry.category,
+          imageFile: null);
+      if (success) {
+        print("successfully added Pastry");
+      } else {
+        _setError("Failed to Added Pastry");
+      }
+    }
+  }
+
   Future<bool> addPastry({
     required String title,
     required double price,
     required int quantity,
     required String category,
-    required File imageFile,
+    required File? imageFile,
   }) async {
-
-    Uint8List imgByte;
+    Uint8List? imgByte;
     if (imageFile != null) {
       imgByte = await _imageFileToBytes(imageFile);
     } else {
-      imgByte = await _getDefaultImageBytes();
+      imgByte = Uint8List(0);
     }
 
     try {
@@ -85,7 +106,7 @@ class PastryViewModel extends ChangeNotifier {
         price: price,
         quantity: quantity,
         category: category,
-        imageBytes: imgByte,
+        imageBytes: imgByte!,
         createdAt: DateFormat('yyyy-MM-dd').format(DateTime.now()),
       );
 
@@ -163,12 +184,11 @@ class PastryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Pastry?> getPastryById(int id) async{
-    try{
-
+  Future<Pastry?> getPastryById(int id) async {
+    try {
       Pastry? pastry = await _repository.getPastryById(id);
       return pastry;
-    }catch (e){
+    } catch (e) {
       _setError('Failed to retrieve pastry by id: $e');
     }
     return null;
@@ -262,7 +282,7 @@ class PastryViewModel extends ChangeNotifier {
     await loadPastries();
   }
 
- // Load all pastries
+  // Load all pastries
   Future<void> loadPastries() async {
     _setState(ViewState.loading);
     try {
@@ -354,7 +374,7 @@ class PastryViewModel extends ChangeNotifier {
       }
 
       Pastry? pastry = await getPastryById(id!);
-      if(pastry!.quantity > 0 ){
+      if (pastry!.quantity > 0) {
         newQuantity += pastry.quantity;
       }
 
@@ -409,6 +429,7 @@ class PastryViewModel extends ChangeNotifier {
     _applyFilters();
     notifyListeners();
   }
+
   //
   // void clearFilters() {
   //   _searchQuery = '';
@@ -508,8 +529,6 @@ class PastryViewModel extends ChangeNotifier {
     return Colors.green;
   }
 
-
-
   void clearError() {
     if (_state == ViewState.error) {
       _state = ViewState.idle;
@@ -517,7 +536,6 @@ class PastryViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   @override
   void dispose() {

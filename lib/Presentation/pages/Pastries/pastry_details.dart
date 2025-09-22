@@ -61,7 +61,6 @@ class _PastryDetailsState extends State<PastryDetails> {
         create: (BuildContext context) => PastryViewModel()..loadPastries(),
         child: Consumer<PastryViewModel>(
           builder: (BuildContext context, viewModel, Widget? child) {
-
             return FutureBuilder<Pastry?>(
               future: viewModel.getPastryById(widget.pastryId),
               builder: (context, snapshot) {
@@ -110,7 +109,11 @@ class _PastryDetailsState extends State<PastryDetails> {
                                     height: 130.h,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: MemoryImage(pastry.imageBytes!),
+                                        image: pastry.imageBytes.isEmpty
+                                            ? const AssetImage(
+                                                    "assets/Images/default_pastry_img.jpg")
+                                                as ImageProvider
+                                            : MemoryImage(pastry.imageBytes!),
                                         fit: BoxFit.cover,
                                       ),
                                       borderRadius: BorderRadius.circular(10.r),
@@ -196,23 +199,61 @@ class _PastryDetailsState extends State<PastryDetails> {
                                 height: 15.h,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 15.0.w),
-                                child: Wrap(
-                                  spacing: 5.h,
-                                  direction: Axis.vertical,
+                                padding: EdgeInsets.only(
+                                  left: 15.0.w,
+                                  right: 15.0.w,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    ReusableTextWidget(
-                                      text: pastry.title,
-                                      color: const Color(0xff573E1A),
-                                      size: 14,
-                                      FW: FontWeight.w400,
+                                    Wrap(
+                                      spacing: 5.h,
+                                      direction: Axis.vertical,
+                                      children: [
+                                        ReusableTextWidget(
+                                          text: pastry.title,
+                                          color: const Color(0xff573E1A),
+                                          size: 14,
+                                          FW: FontWeight.w400,
+                                        ),
+                                        ReusableTextWidget(
+                                          text: DateFormat('d MMMM yyyy')
+                                              .format(DateTime.parse(
+                                                  pastry.createdAt)),
+                                          color: const Color(0xffAA9C88),
+                                          size: 10,
+                                          FW: FontWeight.w300,
+                                        ),
+                                      ],
                                     ),
-                                    ReusableTextWidget(
-                                      text: DateFormat('d MMMM yyyy').format(
-                                          DateTime.parse(pastry.createdAt)),
-                                      color: const Color(0xffAA9C88),
-                                      size: 10,
-                                      FW: FontWeight.w300,
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0.w, vertical: 2.h),
+                                      decoration: BoxDecoration(
+                                          color: const Color(0xFF000000)
+                                              .withOpacity(0.05),
+                                          borderRadius:
+                                              BorderRadius.circular(10.r)),
+                                      child: Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        alignment: WrapAlignment.center,
+                                        spacing: 10.w,
+                                        children: [
+                                          ReusableTextWidget(
+                                            text: pastry.category.toLowerCase(),
+                                            color: const Color(0xff6D6457),
+                                            size: 8,
+                                            FW: FontWeight.w300,
+                                          ),
+                                          CircleAvatar(
+                                            backgroundColor: Colors.green,
+                                            radius: 3.r,
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -303,9 +344,8 @@ class _PastryDetailsState extends State<PastryDetails> {
                                                   children: [
                                                     Container(
                                                       width: 125.w,
-                                                      padding:
-                                                          EdgeInsets.only(
-                                                              left: 5.w),
+                                                      padding: EdgeInsets.only(
+                                                          left: 5.w),
                                                       child: Row(
                                                         children: [
                                                           const ReusableTextWidget(
@@ -315,14 +355,18 @@ class _PastryDetailsState extends State<PastryDetails> {
                                                             size: 10,
                                                             FW: FontWeight.w300,
                                                           ),
-                                                          SizedBox(width: 5.w,),
+                                                          SizedBox(
+                                                            width: 5.w,
+                                                          ),
                                                           const Expanded(
-                                                            child: ReusableTextWidget(
+                                                            child:
+                                                                ReusableTextWidget(
                                                               text: "Cups",
                                                               color: Color(
                                                                   0xff6D593D),
                                                               size: 10,
-                                                              FW: FontWeight.w300,
+                                                              FW: FontWeight
+                                                                  .w300,
                                                             ),
                                                           ),
                                                         ],
@@ -345,10 +389,10 @@ class _PastryDetailsState extends State<PastryDetails> {
                                                     SizedBox(
                                                       width: 50.w,
                                                       child: Icon(
-                                                          Icons
-                                                              .check_circle_outline,
-                                                          size: 14.w,
-                                                          color: Colors.green,
+                                                        Icons
+                                                            .check_circle_outline,
+                                                        size: 14.w,
+                                                        color: Colors.green,
                                                       ),
                                                     ),
                                                   ],

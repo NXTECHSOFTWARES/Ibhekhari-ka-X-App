@@ -87,7 +87,6 @@ class _NewPastryState extends State<NewPastry> {
     }
   }
 
-
   @override
   void dispose() {
     _titleController.dispose();
@@ -149,7 +148,7 @@ class _NewPastryState extends State<NewPastry> {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8.0.r),
         child: Image.asset(
-          defaultPastryImageUrl, // Your default image asset
+          defaultPastryImageUrl,
           height: 55.h,
           width: 55.w,
           fit: BoxFit.cover,
@@ -161,7 +160,8 @@ class _NewPastryState extends State<NewPastry> {
   @override
   Widget build(BuildContext context) {
     return Consumer<PastryViewModel>(
-      builder: (BuildContext context, PastryViewModel viewModel, Widget? child) {
+      builder:
+          (BuildContext context, PastryViewModel viewModel, Widget? child) {
         return Dialog(
           insetPadding: EdgeInsets.zero,
           child: Form(
@@ -367,7 +367,12 @@ class _NewPastryState extends State<NewPastry> {
                                     items: viewModel.categories.map((category) {
                                       return DropdownMenuItem(
                                         value: category.name,
-                                        child: Text(category.name),
+                                        child: ReusableTextWidget(
+                                          text: category.name,
+                                          color: const Color(0xff351F00),
+                                          size: 10,
+                                          FW: FontWeight.w400,
+                                        ),
                                       );
                                     }).toList(),
                                     onChanged: (value) {
@@ -382,7 +387,7 @@ class _NewPastryState extends State<NewPastry> {
                                         : const Color(0xffAEADAD),
                                     borderRadius: BorderRadius.circular(6.r),
                                     decoration: InputDecoration(
-                                      isDense:true,
+                                      isDense: true,
                                       fillColor: const Color(0xffDADADA),
                                       filled: true,
                                       hintText: "select category",
@@ -520,7 +525,9 @@ class _NewPastryState extends State<NewPastry> {
                                   width: 15.w,
                                 ),
                                 ReusableTextWidget(
-                                  text: widget.pastry == null ? "save entry" : "Update",
+                                  text: widget.pastry == null
+                                      ? "save entry"
+                                      : "Update",
                                   color: const Color(0xffFFFFFF),
                                   size: 10,
                                   FW: FontWeight.w200,
@@ -533,79 +540,86 @@ class _NewPastryState extends State<NewPastry> {
                         /**
                          * Next entry button
                          */
-                        widget.pastry == null ? GestureDetector(
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              viewModel.multipleEntries(
-                                title: _titleController.text,
-                                price: double.parse(_priceController.text),
-                                quantity: int.parse(_quantityController.text),
-                                category: _selectedCategory!,
-                                imageFile: _selectedImage!,
-                              );
+                        widget.pastry == null
+                            ? GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    viewModel.multipleEntries(
+                                      title: _titleController.text,
+                                      price:
+                                          double.parse(_priceController.text),
+                                      quantity:
+                                          int.parse(_quantityController.text),
+                                      category: _selectedCategory!,
+                                      imageFile: _selectedImage!,
+                                    );
 
-                              _formKey.currentState?.reset();
-                              _quantityController.text = "";
-                              _priceController.text = "";
-                              _titleController.text = "";
-                              setState(() {
-                                _selectedCategory = null;
-                                _selectedImage = null;
-                              });
-                            }
+                                    _formKey.currentState?.reset();
+                                    _quantityController.text = "";
+                                    _priceController.text = "";
+                                    _titleController.text = "";
+                                    setState(() {
+                                      _selectedCategory = null;
+                                      _selectedImage = null;
+                                    });
+                                  }
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  shape: StadiumBorder(),
-                                  backgroundColor: Colors.white,
-                                  content: ReusableTextWidget(
-                                      text: "No Entry Found!",
-                                      color: Colors.black,
-                                      size: 10)),
-                            );
-                          },
-                          child: Container(
-                            width: 125.w,
-                            height: 35.h,
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(6.r),
-                                border: Border.all(
-                                    width: 1.0.w,
-                                    color: const Color(0xff777169),
-                                    style: BorderStyle.solid)),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const ReusableTextWidget(
-                                  text: "next entry",
-                                  color: Color(0xff351F00),
-                                  size: 10,
-                                  FW: FontWeight.w200,
-                                ),
-                                SizedBox(
-                                  width: 15.w,
-                                ),
-                                Container(
-                                  width: 22.w,
-                                  height: 22.w,
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        shape: StadiumBorder(),
+                                        backgroundColor: Colors.white,
+                                        content: ReusableTextWidget(
+                                            text: "No Entry Found!",
+                                            color: Colors.black,
+                                            size: 10)),
+                                  );
+                                },
+                                child: Container(
+                                  width: 125.w,
+                                  height: 35.h,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xffC2C2C2),
-                                    borderRadius: BorderRadius.circular(4.r),
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(6.r),
+                                      border: Border.all(
+                                          width: 1.0.w,
+                                          color: const Color(0xff777169),
+                                          style: BorderStyle.solid)),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      const ReusableTextWidget(
+                                        text: "next entry",
+                                        color: Color(0xff351F00),
+                                        size: 10,
+                                        FW: FontWeight.w200,
+                                      ),
+                                      SizedBox(
+                                        width: 15.w,
+                                      ),
+                                      Container(
+                                        width: 22.w,
+                                        height: 22.w,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffC2C2C2),
+                                          borderRadius:
+                                              BorderRadius.circular(4.r),
+                                        ),
+                                        child: Center(
+                                            child: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: const Color(0xff422B0A),
+                                          size: 12.w,
+                                        )),
+                                      ),
+                                    ],
                                   ),
-                                  child: Center(
-                                      child: Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: const Color(0xff422B0A),
-                                    size: 12.w,
-                                  )),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ):Container(),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -630,7 +644,7 @@ class _NewPastryState extends State<NewPastry> {
       width: width.w,
       height: height.h,
       child: TextFormField(
-        onChanged: (value){
+        onChanged: (value) {
           // setState(() {
           //   if(_value.isNotEmpty){
           //   _controller.text = _value;
@@ -638,7 +652,6 @@ class _NewPastryState extends State<NewPastry> {
           //     _controller.text = value;
           //   }
           // });
-
         },
         focusNode: focusNode,
         style: GoogleFonts.poppins(
@@ -709,9 +722,7 @@ class _NewPastryState extends State<NewPastry> {
           const SnackBar(content: Text('Pastry Added Successfully')),
         );
         Navigator.pop(context);
-      }
-
-        else {
+      } else {
         // Update existing pastry
         final updatedPastry = widget.pastry!.copyWith(
           title: _titleController.text,

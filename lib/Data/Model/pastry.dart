@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:intl/intl.dart';
+
 class Pastry {
   final int? id;
   final String title;
@@ -53,18 +55,19 @@ class Pastry {
     };
   }
 
-  // Update fromJson method
   factory Pastry.fromJson(Map<String, dynamic> json) {
     return Pastry(
       id: json['id'],
       title: json['title'],
-      price: json['price'],
+      price: json['price'] is int ? (json['price'] as int).toDouble() : json['price'],
       quantity: json['quantity'],
       category: json['category'],
       imageBytes: json['imageBytes'] is Uint8List
           ? json['imageBytes']
-          : Uint8List.fromList(List<int>.from(json['imageBytes'] ?? [])),
-      createdAt: json['created_at'],
+          : (json['imageBytes'] != null
+          ? Uint8List.fromList(List<int>.from(json['imageBytes'] ?? []))
+          : Uint8List(0)),
+      createdAt: json['created_at'] ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
     );
   }
 }

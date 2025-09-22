@@ -1,0 +1,17 @@
+[
+  {
+    "sold_stock": 10,
+    "remaining_stock": 190,
+    "pastry_id" : 0
+  },
+  {
+    "sold_stock": 25,
+    "remaining_stock": 75,
+    "pastry_id" : 1
+  },
+  {
+    "sold_stock": 50,
+    "remaining_stock": 450,
+    "pastry_id" : 2
+  }
+]

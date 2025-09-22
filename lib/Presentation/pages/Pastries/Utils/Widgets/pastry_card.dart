@@ -30,7 +30,7 @@ class PastryCard extends StatelessWidget {
             height: 60.h,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: MemoryImage(
+                image: pastry.imageBytes.isEmpty ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider : MemoryImage(
                   pastry.imageBytes,
                 ),
                 fit: BoxFit.cover,
@@ -68,13 +68,26 @@ class PastryCard extends StatelessWidget {
                     /**
                      * Pastry Category
                      */
-                    Padding(
-                      padding: EdgeInsets.only(right: 5.0.w),
-                      child: ReusableTextWidget(
-                        text: pastry.category,
-                        color: Colors.grey.shade700,
-                        size: 10,
-                        FW: FontWeight.w300,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 1.5.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6DED3),
+                        borderRadius: BorderRadius.circular(7.r)
+                      ),
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 5.w,
+                        children: [
+                          ReusableTextWidget(
+                            text: pastry.category.toLowerCase(),
+                            color: const Color(0xff6D6457),
+                            size: 8,
+                            FW: FontWeight.w300,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.green,
+                            radius: 3.r,)
+                        ],
                       ),
                     ),
                   ],

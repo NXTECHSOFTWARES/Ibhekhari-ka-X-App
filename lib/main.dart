@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
-import 'package:nxbakers/Presentation/pages/Pastries/list_of_pastries.dart';
+import 'package:nxbakers/Presentation/pages/Pastries/pastries.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
 
 import 'Presentation/pages/dashboard.dart';

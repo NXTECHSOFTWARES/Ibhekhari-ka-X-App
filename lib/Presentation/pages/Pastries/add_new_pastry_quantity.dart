@@ -112,7 +112,9 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
                                         color: Colors.white,
                                         style: BorderStyle.solid),
                                     image: DecorationImage(
-                                      image: MemoryImage(pastry.imageBytes),
+                                      image: pastry.imageBytes.isEmpty ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider : MemoryImage(
+                                        pastry.imageBytes,
+                                      ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
