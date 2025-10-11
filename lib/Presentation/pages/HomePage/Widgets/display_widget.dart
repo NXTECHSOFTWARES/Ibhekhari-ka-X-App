@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 
 class DisplayWidget extends StatelessWidget {
@@ -20,14 +21,14 @@ class DisplayWidget extends StatelessWidget {
       children: [
         ReusableTextWidget(
           text: headerText,
-          size: 8,
-          FW: FontWeight.w300,
+          size: xsFontSize,
+          FW: sFontWeight,
           color: headerColor,
         ),
         ReusableTextWidget(
           text: subText,
-          size: 10,
-          FW: FontWeight.w400,
+          size: sFontSize,
+          FW: lFontWeight,
           color: subTextColor,
         ),
       ],

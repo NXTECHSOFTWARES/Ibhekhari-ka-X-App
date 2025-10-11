@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -117,7 +118,13 @@ class _NewPastryState extends State<NewPastry> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick image: ${e.toString()}')),
+        SnackBar(
+            content: ReusableTextWidget(
+          text: 'Failed to pick image: ${e.toString()}',
+          color: Colors.white,
+          size: sFontSize,
+          FW: sFontWeight,
+        )),
       );
     }
   }
@@ -135,11 +142,11 @@ class _NewPastryState extends State<NewPastry> {
       );
     } else if (_imageUrl != null && !_useDefaultImage) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8.0.r),
         child: Image.network(
           _imageUrl!,
-          height: 120,
-          width: 120,
+          height: 120.h,
+          width: 120.w,
           fit: BoxFit.cover,
         ),
       );
@@ -186,24 +193,17 @@ class _NewPastryState extends State<NewPastry> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const ReusableTextWidget(
+                            ReusableTextWidget(
                               text: "New Pastry",
-                              color: Color(0xff351F00),
-                              size: 12,
+                              color: const Color(0xff351F00),
+                              size: lFontSize,
                             ),
                             viewModel.listOfPastries.isNotEmpty
                                 ? Container(
                                     width: 20.w,
                                     height: 20.h,
                                     decoration: BoxDecoration(
-                                      // border: Border.all(
-                                      //   width: 1.0.w,
-                                      //   style: BorderStyle.solid,
-                                      //   color: const Color(0xff573E1A)
-                                      //       .withOpacity(0.1),
-                                      // ),
                                       color: Colors.orange.shade500,
-                                      // const Color(0xffD8C6AD).withOpacity(1),
                                       shape: BoxShape.circle,
                                     ),
                                     child: Center(
@@ -211,8 +211,8 @@ class _NewPastryState extends State<NewPastry> {
                                       text: viewModel.listOfPastries.length
                                           .toString(),
                                       color: Colors.white,
-                                      size: 8,
-                                      FW: FontWeight.normal,
+                                      size: xsFontSize,
+                                      FW: lFontWeight,
                                     )),
                                   )
                                 : Container(),
@@ -244,11 +244,11 @@ class _NewPastryState extends State<NewPastry> {
                           spacing: 5.h,
                           direction: Axis.vertical,
                           children: [
-                            const ReusableTextWidget(
+                            ReusableTextWidget(
                               text: "Name of Pastry",
-                              color: Color(0xff573E1A),
-                              size: 10,
-                              FW: FontWeight.w200,
+                              color: const Color(0xff573E1A),
+                              size: sFontSize,
+                              FW: xsFontWeight,
                             ),
                             buildTextEditForm(
                                 viewModel.validateTitle,
@@ -276,11 +276,11 @@ class _NewPastryState extends State<NewPastry> {
                               direction: Axis.vertical,
                               spacing: 5.h,
                               children: [
-                                const ReusableTextWidget(
+                                ReusableTextWidget(
                                   text: "Quantity",
-                                  color: Color(0xff573E1A),
-                                  size: 10,
-                                  FW: FontWeight.w200,
+                                  color: const Color(0xff573E1A),
+                                  size: sFontSize,
+                                  FW: xsFontWeight,
                                 ),
                                 buildTextEditForm(
                                     viewModel.validateQuantity,
@@ -334,21 +334,15 @@ class _NewPastryState extends State<NewPastry> {
                               direction: Axis.vertical,
                               spacing: 5.h,
                               children: [
-                                const ReusableTextWidget(
+                                ReusableTextWidget(
                                   text: "Category",
-                                  color: Color(0xff573E1A),
-                                  size: 10,
-                                  FW: FontWeight.w200,
+                                  color: const Color(0xff573E1A),
+                                  size: sFontSize,
+                                  FW: xsFontWeight,
                                 ),
                                 SizedBox(
                                   width: 125.w,
                                   height: 30.h,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     vertical: 2.h, horizontal: 5.w),
-                                  // decoration: BoxDecoration(
-                                  //     color: const Color(0xffDADADA),
-                                  //     borderRadius: BorderRadius.circular(6.r),
-                                  // ),
                                   child: DropdownButtonFormField<String>(
                                     focusNode: _dropDownFocusNode,
                                     elevation: 0,
@@ -357,11 +351,11 @@ class _NewPastryState extends State<NewPastry> {
                                       fontSize: 10.sp,
                                       color: const Color(0xff351F00),
                                     ),
-                                    hint: const ReusableTextWidget(
+                                    hint: ReusableTextWidget(
                                       text: "Please select a cat...'",
-                                      color: Color(0xff515151),
-                                      size: 8,
-                                      FW: FontWeight.w200,
+                                      color: const Color(0xff515151),
+                                      size: xsFontSize,
+                                      FW: xsFontWeight,
                                     ),
                                     value: _selectedCategory,
                                     items: viewModel.categories.map((category) {
@@ -412,11 +406,11 @@ class _NewPastryState extends State<NewPastry> {
                               direction: Axis.vertical,
                               spacing: 5.h,
                               children: [
-                                const ReusableTextWidget(
+                                ReusableTextWidget(
                                   text: "Pastry Image",
-                                  color: Color(0xff573E1A),
-                                  size: 10,
-                                  FW: FontWeight.w200,
+                                  color: const Color(0xff573E1A),
+                                  size: sFontSize,
+                                  FW: xsFontWeight,
                                 ),
                                 GestureDetector(
                                   onTap: _pickImage,
@@ -529,8 +523,8 @@ class _NewPastryState extends State<NewPastry> {
                                       ? "save entry"
                                       : "Update",
                                   color: const Color(0xffFFFFFF),
-                                  size: 10,
-                                  FW: FontWeight.w200,
+                                  size: sFontSize,
+                                  FW: xsFontWeight,
                                 )
                               ],
                             ),
@@ -565,13 +559,15 @@ class _NewPastryState extends State<NewPastry> {
                                   }
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        shape: StadiumBorder(),
+                                    SnackBar(
+                                        shape: const StadiumBorder(),
                                         backgroundColor: Colors.white,
                                         content: ReusableTextWidget(
                                             text: "No Entry Found!",
                                             color: Colors.black,
-                                            size: 10)),
+                                            size: sFontSize,
+                                        ),
+                                    ),
                                   );
                                 },
                                 child: Container(
@@ -591,11 +587,11 @@ class _NewPastryState extends State<NewPastry> {
                                         CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const ReusableTextWidget(
+                                      ReusableTextWidget(
                                         text: "next entry",
-                                        color: Color(0xff351F00),
-                                        size: 10,
-                                        FW: FontWeight.w200,
+                                        color: const Color(0xff351F00),
+                                        size: sFontSize,
+                                        FW: xsFontWeight,
                                       ),
                                       SizedBox(
                                         width: 15.w,

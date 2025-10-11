@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class Pastry {
@@ -11,6 +10,9 @@ class Pastry {
   final Uint8List imageBytes;
   final String createdAt;
 
+  int? totalSales;
+  double? totalIncome;
+
   Pastry({
     this.id,
     required this.title,
@@ -19,9 +21,10 @@ class Pastry {
     required this.category,
     required this.imageBytes,
     required this.createdAt,
+    this.totalSales,
+    this.totalIncome,
   });
 
-  // Add copyWith method
   Pastry copyWith({
     int? id,
     String? title,
@@ -30,6 +33,8 @@ class Pastry {
     String? category,
     Uint8List? imageBytes,
     String? createdAt,
+    int? totalSales,
+    double? totalIncome,
   }) {
     return Pastry(
       id: id ?? this.id,
@@ -39,10 +44,11 @@ class Pastry {
       category: category ?? this.category,
       imageBytes: imageBytes ?? this.imageBytes,
       createdAt: createdAt ?? this.createdAt,
+      totalSales: totalSales ?? this.totalSales,
+      totalIncome: totalIncome ?? this.totalIncome,
     );
   }
 
-  // Update toJson method
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -52,6 +58,7 @@ class Pastry {
       'category': category,
       'imageBytes': imageBytes,
       'created_at': createdAt,
+
     };
   }
 
@@ -69,5 +76,22 @@ class Pastry {
           : Uint8List(0)),
       createdAt: json['created_at'] ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
     );
+  }
+
+  @override
+  String toString() {
+    return '''
+    Pastry(
+      id: $id,
+      title: $title, 
+      price: $price, 
+      quantity: $quantity, 
+      category: $category, 
+      imageBytes: ${imageBytes.length} bytes, 
+      createdAt: $createdAt,
+      totalSales: $totalSales,
+      totalIncome: $totalIncome
+    )
+    ''';
   }
 }

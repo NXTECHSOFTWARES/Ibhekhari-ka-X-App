@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class DailyEntry {
   final int? id;
   final int soldStock;
@@ -17,7 +19,8 @@ class DailyEntry {
       id: json["id"],
       soldStock: json["sold_stock"],
       remainingStock: json["remaining_stock"],
-      createdAt: json["created_at"],
+      createdAt:
+          json['created_at'] ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
       pastryId: json["pastry_id"],
     );
   }
@@ -43,5 +46,18 @@ DailyEntry {
   pastryId: $pastryId
 }
 ''';
+  }
+
+  DailyEntry copyWith(
+      {int? id,
+      int? soldStock,
+      int? remainingStock,
+      String? createdAt,
+      int? pastryId}) {
+    return DailyEntry(
+        soldStock: soldStock ?? this.soldStock,
+        remainingStock: remainingStock ?? this.remainingStock,
+        createdAt: createdAt ?? this.createdAt,
+        pastryId: pastryId ?? this.pastryId);
   }
 }

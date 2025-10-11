@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 
+import '../../../../../Common/AppData.dart';
+
 class CardDisplayWidget extends StatelessWidget {
   final String header;
   final String textValue;
@@ -16,14 +18,14 @@ class CardDisplayWidget extends StatelessWidget {
         ReusableTextWidget(
           text: header,
           color: const Color(0xffA1845C),
-          size: 10,
-          FW: FontWeight.w400,
+          size: sFontSize,
+          FW: lFontWeight,
         ),
         ReusableTextWidget(
           text: textValue,
           color: const Color(0xff553609),
-          size: 10,
-          FW: FontWeight.w500,
+          size: sFontSize,
+          FW: xlFontWeight,
         ),
       ],
     );

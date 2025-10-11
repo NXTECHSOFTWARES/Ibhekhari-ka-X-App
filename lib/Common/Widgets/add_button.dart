@@ -27,7 +27,7 @@ class AddButton extends StatelessWidget {
         width: 27.w,
         height: 27.w,
         decoration: BoxDecoration(
-          color: const Color(0xffAA9C88),
+          color: const Color(0xff42321C),
           borderRadius: BorderRadius.circular(4.r),
           border: Border.all(
             width: 1.0.w,

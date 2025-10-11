@@ -4,12 +4,53 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:nxbakers/Domain/Repositories/daily_entries_repo.dart';
 import '../../Data/Model/category.dart';
 import '../../Data/Model/pastry.dart';
 import '../../Data/Model/recipe.dart';
 import '../../Domain/Repositories/pastry_repo.dart';
 
 enum ViewState { idle, loading, error, success }
+enum FilterType {
+  all,
+  available,
+  outOfStock,
+  lowStock,
+  category,
+}
+
+enum SortType {
+  nameAsc,
+  nameDesc,
+  priceAsc,
+  priceDesc,
+  quantityAsc,
+  quantityDesc,
+  salesAsc,
+  salesDesc,
+  incomeAsc,
+  incomeDesc,
+}
+
+class FilterOptions {
+  FilterType filterType;
+  String? selectedCategory;
+  int? lowStockThreshold; // For low stock filter
+
+  FilterOptions({
+    this.filterType = FilterType.all,
+    this.selectedCategory,
+    this.lowStockThreshold = 5,
+  });
+
+  bool get isActive => filterType != FilterType.all;
+
+  void reset() {
+    filterType = FilterType.all;
+    selectedCategory = null;
+    lowStockThreshold = 5;
+  }
+}
 
 class PastryViewModel extends ChangeNotifier {
   final PastryRepository _repository = PastryRepository();
@@ -35,6 +76,15 @@ class PastryViewModel extends ChangeNotifier {
   int _totalPastries = 0;
   double _totalValue = 0.0;
   Map<String, int> _categoryStats = {};
+
+  FilterOptions _filterOptions = FilterOptions();
+  SortType _currentSort = SortType.nameAsc;
+  List<Pastry> _displayedPastries = []; // Filtered and sorted pastries
+
+  // Add these getters
+  FilterOptions get filterOptions => _filterOptions;
+  SortType get currentSort => _currentSort;
+  List<Pastry> get displayedPastries => _displayedPastries;
 
   // Getters
   ViewState get state => _state;
@@ -112,6 +162,7 @@ class PastryViewModel extends ChangeNotifier {
 
       await _repository.addPastry(pastry);
       await loadPastries();
+      await initialize();
 
       // _listOfPastries.add(Pastry(
       //     title: title,
@@ -283,17 +334,17 @@ class PastryViewModel extends ChangeNotifier {
   }
 
   // Load all pastries
-  Future<void> loadPastries() async {
-    _setState(ViewState.loading);
-    try {
-      _pastries = await _repository.getAllPastries();
-      //_applyFilters();
-      // await _updateStatistics();
-      _setState(ViewState.success);
-    } catch (e) {
-      _setError('Failed to load pastries: $e');
-    }
-  }
+  // Future<void> loadPastries() async {
+  //   _setState(ViewState.loading);
+  //   try {
+  //     _pastries = await _repository.getAllPastries();
+  //     //_applyFilters();
+  //     // await _updateStatistics();
+  //     _setState(ViewState.success);
+  //   } catch (e) {
+  //     _setError('Failed to load pastries: $e');
+  //   }
+  // }
 
   // // Add new pastry
   // Future<bool> addPastry({
@@ -391,6 +442,159 @@ class PastryViewModel extends ChangeNotifier {
       return false;
     }
   }
+
+  // Method to calculate sales data for each pastry
+  Future<void> _calculateSalesData() async {
+    try {
+      final dailyEntries = await DailyEntriesRepo().getAllDailyEntries();
+
+      // Create a new list with updated pastries
+      List<Pastry> updatedPastries = [];
+
+      for (var pastry in _pastries) {
+        // Filter entries for this pastry
+        final pastryEntries = dailyEntries
+            .where((entry) => entry.pastryId == pastry.id)
+            .toList();
+
+        // Calculate total sales (units sold)
+        int totalSold = pastryEntries.fold(
+            0,
+                (sum, entry) => sum + entry.soldStock
+        );
+
+        // Calculate total income (units * current price)
+        // Note: Uses current price - consider storing historical prices in DailyEntry
+        double totalRevenue = totalSold * pastry.price;
+
+        // Create updated pastry with sales data
+        updatedPastries.add(pastry.copyWith(
+          totalSales: totalSold,
+          totalIncome: totalRevenue,
+        ));
+      }
+
+      // Replace the pastries list with updated one
+      _pastries = updatedPastries;
+
+    } catch (e) {
+      print('Failed to calculate sales data: $e');
+    }
+  }
+
+
+  // Update loadPastries to include sales calculation
+  Future<void> loadPastries() async {
+    _setState(ViewState.loading);
+    try {
+      _pastries = await _repository.getAllPastries();
+      await _calculateSalesData();
+      _applyFiltersAndSort();
+      _setState(ViewState.success);
+    } catch (e) {
+      _setError('Failed to load pastries: $e');
+    }
+  }
+
+  // Apply filter
+  void setFilter(FilterType type, {String? category, int? threshold}) {
+    _filterOptions.filterType = type;
+    _filterOptions.selectedCategory = category;
+    _filterOptions.lowStockThreshold = threshold ?? 5;
+    _applyFiltersAndSort();
+    notifyListeners();
+  }
+
+  // Apply sort
+  void setSort(SortType sortType) {
+    _currentSort = sortType;
+    _applyFiltersAndSort();
+    notifyListeners();
+  }
+
+  // Clear all filters
+  void clearFilters() {
+    _filterOptions.reset();
+    _currentSort = SortType.nameAsc;
+    _applyFiltersAndSort();
+    notifyListeners();
+  }
+
+  // Main filtering and sorting logic
+  void _applyFiltersAndSort() {
+    // Start with all pastries
+    List<Pastry> filtered = List.from(_pastries);
+
+    // Apply filters
+    switch (_filterOptions.filterType) {
+      case FilterType.all:
+      // No filter
+        break;
+      case FilterType.available:
+        filtered = filtered.where((p) => p.quantity > 0).toList();
+        break;
+      case FilterType.outOfStock:
+        filtered = filtered.where((p) => p.quantity <= 0).toList();
+        break;
+      case FilterType.lowStock:
+        filtered = filtered.where((p) =>
+        p.quantity > 0 && p.quantity <= (_filterOptions.lowStockThreshold ?? 5)
+        ).toList();
+        break;
+      case FilterType.category:
+        if (_filterOptions.selectedCategory != null) {
+          filtered = filtered.where((p) =>
+          p.category == _filterOptions.selectedCategory
+          ).toList();
+        }
+        break;
+    }
+
+    // Apply search query if exists
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((p) =>
+      p.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().contains(_searchQuery.toLowerCase())
+      ).toList();
+    }
+
+    // Apply sorting
+    switch (_currentSort) {
+      case SortType.nameAsc:
+        filtered.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case SortType.nameDesc:
+        filtered.sort((a, b) => b.title.compareTo(a.title));
+        break;
+      case SortType.priceAsc:
+        filtered.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case SortType.priceDesc:
+        filtered.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case SortType.quantityAsc:
+        filtered.sort((a, b) => a.quantity.compareTo(b.quantity));
+        break;
+      case SortType.quantityDesc:
+        filtered.sort((a, b) => b.quantity.compareTo(a.quantity));
+        break;
+      case SortType.salesAsc:
+        filtered.sort((a, b) => (a.totalSales ?? 0).compareTo(b.totalSales ?? 0));
+        break;
+      case SortType.salesDesc:
+        filtered.sort((a, b) => (b.totalSales ?? 0).compareTo(a.totalSales ?? 0));
+        break;
+      case SortType.incomeAsc:
+        filtered.sort((a, b) => (a.totalIncome ?? 0).compareTo(b.totalIncome ?? 0));
+        break;
+      case SortType.incomeDesc:
+        filtered.sort((a, b) => (b.totalIncome ?? 0).compareTo(a.totalIncome ?? 0));
+        break;
+    }
+
+    _displayedPastries = filtered;
+  }
+
 
   // Delete pastry
   Future<bool> deletePastry(int id) async {

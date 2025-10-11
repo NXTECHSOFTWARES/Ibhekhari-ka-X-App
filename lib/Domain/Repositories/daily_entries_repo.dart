@@ -17,7 +17,7 @@ class DailyEntriesRepo{
   Future<int> addDailyEntry(DailyEntry dailyEntry) async {
 
     try {
-      if( await isDailyEntryUniqueUnique(dailyEntry)){
+      if( await isDailyEntryUnique(dailyEntry)){
 
       };
       return await _dbHelper.insertDailyEntry(dailyEntry.toJson());
@@ -71,16 +71,17 @@ class DailyEntriesRepo{
         Category(id: 4, name: 'Donut'),
         Category(id: 5, name: 'Muffin'),
         Category(id: 6, name: 'Croissant'),
+        Category(id: 7, name: 'Cupcake'),
       ];
       return _cachedCategories!;
     }
   }
 
-  Future<bool> isDailyEntryUniqueUnique(DailyEntry dailyEntry) async {
-
+  Future<bool> isDailyEntryUnique(DailyEntry dailyEntry) async {
     final entries = await getAllDailyEntries();
     return !entries.any((entry) =>
-    dailyEntry.pastryId == entry.pastryId && dailyEntry.id == entry.id);
+    dailyEntry.pastryId == entry.pastryId &&
+        dailyEntry.createdAt == entry.createdAt); // Check date instead of ID
   }
 
   Future<bool> updateDailyEntryQuantity(int id, int soldStock, remainingStock) async {

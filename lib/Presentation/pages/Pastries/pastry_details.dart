@@ -2,6 +2,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/add_button.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Common/common_main.dart';
@@ -40,11 +41,11 @@ class _PastryDetailsState extends State<PastryDetails> {
         titleSpacing: 0.w,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const ReusableTextWidget(
+        title: ReusableTextWidget(
           text: "Pastry Details",
-          color: Color(0xff351F00),
-          size: 10,
-          FW: FontWeight.w400,
+          color: const Color(0xff351F00),
+          size: sFontSize,
+          FW: lFontWeight,
         ),
         backgroundColor: const Color(0xffD7CEC2),
         iconTheme: IconThemeData(color: const Color(0xff5D3700), size: 18.w),
@@ -161,8 +162,7 @@ class _PastryDetailsState extends State<PastryDetails> {
                                                */
                                               CardDisplayWidget(
                                                 header: 'Inventory',
-                                                textValue:
-                                                    pastry.quantity.toString(),
+                                                textValue: pastry.quantity.toString(),
                                               ),
                                             ],
                                           ),
@@ -215,16 +215,16 @@ class _PastryDetailsState extends State<PastryDetails> {
                                         ReusableTextWidget(
                                           text: pastry.title,
                                           color: const Color(0xff573E1A),
-                                          size: 14,
-                                          FW: FontWeight.w400,
+                                          size: xlFontSize,
+                                          FW: lFontWeight,
                                         ),
                                         ReusableTextWidget(
                                           text: DateFormat('d MMMM yyyy')
                                               .format(DateTime.parse(
                                                   pastry.createdAt)),
                                           color: const Color(0xffAA9C88),
-                                          size: 10,
-                                          FW: FontWeight.w300,
+                                          size: sFontSize,
+                                          FW: sFontWeight,
                                         ),
                                       ],
                                     ),
@@ -235,7 +235,9 @@ class _PastryDetailsState extends State<PastryDetails> {
                                           color: const Color(0xFF000000)
                                               .withOpacity(0.05),
                                           borderRadius:
-                                              BorderRadius.circular(10.r)),
+                                              BorderRadius.circular(10.r,
+                                              ),
+                                      ),
                                       child: Wrap(
                                         crossAxisAlignment:
                                             WrapCrossAlignment.center,
@@ -245,8 +247,8 @@ class _PastryDetailsState extends State<PastryDetails> {
                                           ReusableTextWidget(
                                             text: pastry.category.toLowerCase(),
                                             color: const Color(0xff6D6457),
-                                            size: 8,
-                                            FW: FontWeight.w300,
+                                            size: xsFontSize,
+                                            FW: sFontWeight,
                                           ),
                                           CircleAvatar(
                                             backgroundColor: Colors.green,
@@ -272,11 +274,11 @@ class _PastryDetailsState extends State<PastryDetails> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const ReusableTextWidget(
+                                  ReusableTextWidget(
                                     text: "Recipe",
-                                    color: Color(0xff6D593D),
-                                    size: 12,
-                                    FW: FontWeight.w400,
+                                    color: const Color(0xff6D593D),
+                                    size: lFontSize,
+                                    FW: lFontWeight,
                                   ),
                                   SizedBox(
                                     height: 10.h,

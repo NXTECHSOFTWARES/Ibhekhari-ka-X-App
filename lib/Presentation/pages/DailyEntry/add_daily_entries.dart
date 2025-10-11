@@ -7,6 +7,8 @@ import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Common/AppData.dart';
+
 class AddDailyEntries extends StatefulWidget {
   const AddDailyEntries({super.key});
 
@@ -26,6 +28,11 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
   @override
   void initState() {
     super.initState();
+
+    // Prevent auto-focus when dialog opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
   }
 
   void _initializeControllers(int pastriesCount) {
@@ -260,17 +267,17 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const ReusableTextWidget(
+                            ReusableTextWidget(
                               text: "Daily Entry",
-                              color: Color(0xff351F00),
-                              size: 12,
+                              color: const Color(0xff351F00),
+                              size: lFontSize,
                             ),
                             ReusableTextWidget(
                               text: DateFormat('EEEE, d MMMM y')
                                   .format(DateTime.now()),
                               color: const Color(0xff351F00),
-                              size: 8,
-                              FW: FontWeight.w300,
+                              size: xsFontSize,
+                              FW: sFontWeight,
                             ),
                           ],
                         ),
@@ -293,17 +300,17 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                 direction: Axis.horizontal,
                                 spacing: 3.w,
                                 children: [
-                                  const ReusableTextWidget(
+                                  ReusableTextWidget(
                                     text: "Available For sale: ",
-                                    color: Color(0xff6D593D),
-                                    size: 8,
+                                    color: const Color(0xff6D593D),
+                                    size: xsFontSize,
                                     FW: FontWeight.w400,
                                   ),
                                   ReusableTextWidget(
                                     text: viewModel.pastries.length.toString(),
                                     color: const Color(0xff6D593D),
-                                    size: 8,
-                                    FW: FontWeight.w800,
+                                    size: xsFontSize,
+                                    FW: xxlFontWeight,
                                   ),
                                 ],
                               ),
@@ -311,10 +318,10 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                 direction: Axis.horizontal,
                                 spacing: 3.w,
                                 children: [
-                                  const ReusableTextWidget(
+                                  ReusableTextWidget(
                                     text: "Total Sales:",
-                                    color: Color(0xff6D593D),
-                                    size: 8,
+                                    color: const Color(0xff6D593D),
+                                    size: xsFontSize,
                                     FW: FontWeight.w400,
                                   ),
                                   ReusableTextWidget(
@@ -322,8 +329,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                         ? "R..."
                                         : "R${totalSales.toStringAsFixed(2)}",
                                     color: const Color(0xff6D593D),
-                                    size: 8,
-                                    FW: FontWeight.w800,
+                                    size: xsFontSize,
+                                    FW: xxlFontWeight,
                                   ),
                                 ],
                               ),
@@ -355,14 +362,17 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                         crossAxisAlignment:
                                             WrapCrossAlignment.center,
                                         children: [
+                                          /**
+                                           * Pastry Image
+                                           */
                                           Container(
                                             width: 22.w,
                                             height: 22.h,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                image: MemoryImage(
-                                                    pastry.imageBytes),
-                                              ),
+                                                image: pastry.imageBytes.isNotEmpty ? MemoryImage(
+                                                    pastry.imageBytes)
+                                                    : const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider),
                                               border: Border.all(
                                                 width: 1.0.w,
                                                 color: const Color(0xff000000)
@@ -375,8 +385,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                           ReusableTextWidget(
                                             text: pastry.title,
                                             color: Colors.white,
-                                            size: 10,
-                                            FW: FontWeight.w400,
+                                            size: sFontSize,
+                                            FW: lFontWeight,
                                           ),
                                         ],
                                       ),
@@ -397,11 +407,16 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                             size: 10,
                                             FW: FontWeight.w400,
                                           ),
+
+                                          /**
+                                           * Remaining Stock TextField
+                                           */
                                           SizedBox(
                                             width: 60.w,
                                             height: 26.h,
                                             child: Center(
                                               child: TextFormField(
+                                                focusNode: FocusNode(skipTraversal: true),
                                                 keyboardType:
                                                     TextInputType.number,
                                                 textAlign: TextAlign.center,
@@ -505,13 +520,14 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const ReusableTextWidget(
+                             ReusableTextWidget(
                               text: "Top Seller",
-                              color: Color(0xff351F00),
-                              size: 12,
-                              FW: FontWeight.w400,
+                              color: const Color(0xff351F00),
+                              size: lFontSize,
+                              FW: lFontWeight,
                             ),
-                            SizedBox(height: 15.h),
+                            SizedBox(height: 15.h,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -522,8 +538,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                       ? "loading..."
                                       : _getTopSeller(viewModel)['name'],
                                   color: const Color(0xff634923),
-                                  size: 10,
-                                  FW: FontWeight.w400,
+                                  size: sFontSize,
+                                  FW: lFontWeight,
                                 ),
                                 // Sold quantity
                                 ReusableTextWidget(
@@ -533,8 +549,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                           : _getTopSeller(viewModel)['quantity']
                                               .toString(),
                                   color: const Color(0xff634923),
-                                  size: 10,
-                                  FW: FontWeight.w400,
+                                  size: sFontSize,
+                                  FW: lFontWeight,
                                 ),
                                 // Total price
                                 ReusableTextWidget(
@@ -542,8 +558,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                       ? "loading"
                                       : "R${_getTopSeller(viewModel)['total'].toStringAsFixed(2)}",
                                   color: const Color(0xff634923),
-                                  size: 10,
-                                  FW: FontWeight.w400,
+                                  size: sFontSize,
+                                  FW: lFontWeight,
                                 ),
                               ],
                             ),
@@ -555,12 +571,12 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                 height: 34.h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6.0.r),
-                                  gradient: const RadialGradient(
-                                    colors: [
+                                  gradient: RadialGradient(
+                                    colors: const [
                                       Color(0xff634923),
                                       Color(0xff351F00)
                                     ],
-                                    radius: 4,
+                                    radius: 4.r,
                                   ),
                                 ),
                                 child: Row(
@@ -592,12 +608,12 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                       ),
                                     ),
                                     SizedBox(width: 25.w),
-                                    const Center(
+                                    Center(
                                       child: ReusableTextWidget(
                                         text: "today's entry",
                                         color: Colors.white,
-                                        size: 10,
-                                        FW: FontWeight.w300,
+                                        size: sFontSize,
+                                        FW: sFontWeight,
                                       ),
                                     )
                                   ],

@@ -4,11 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nxbakers/Common/common_main.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
+import 'package:nxbakers/Domain/Services/notification_history_service.dart';
+import 'package:nxbakers/Domain/Services/notification_service.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/pages/HomePage/Widgets/display_widget.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Common/AppData.dart';
+import '../Inventory/inventory_page.dart';
 import '../Pastries/add_new_pastry.dart';
 
 class Homepage extends StatefulWidget {
@@ -19,6 +23,24 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final NotificationHistoryService _notificationHistoryService = NotificationHistoryService();
+  final NotificationService _notificationService = NotificationService();
+  int _unreadCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnreadCount();
+  }
+
+  Future<void> _loadUnreadCount() async {
+    final count = await _notificationHistoryService.getUnreadCount();
+    if (mounted) {
+      setState(() {
+        _unreadCount = count;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,10 +51,10 @@ class _HomepageState extends State<Homepage> {
           child: Container(),
         ),
         flexibleSpace:
-            /**
+        /**
          * App bar
-         * */
-            Container(
+         */
+        Container(
           width: size.width,
           height: 95.h,
           padding: EdgeInsets.only(top: 40.h, bottom: 15.h),
@@ -43,6 +65,9 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                /**
+                 * Bakery Shop Name -
+                 */
                 Container(
                   width: 195.w,
                   height: 40.h,
@@ -51,23 +76,31 @@ class _HomepageState extends State<Homepage> {
                       borderRadius: BorderRadius.circular(30.r)),
                   child: Row(
                     children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.fromLTRB(5.0.w, 5.0.w, 20.0.w, 5.0.w),
-                        child: const CircleAvatar(
-                          backgroundImage: AssetImage(
-                              "assets/Images/default_pastry_img.jpg"),
+                      // Only the CircleAvatar is clickable
+                      GestureDetector(
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: Padding(
+                          padding:
+                          EdgeInsets.fromLTRB(0.0.w, 5.0.w, 20.0.w, 5.0.w),
+                          child: const CircleAvatar(
+                            backgroundImage: AssetImage(
+                                "assets/Images/default_pastry_img.jpg"),
+                          ),
                         ),
                       ),
                       Expanded(
-                          child: Text(
-                        "bread & cake bakery",
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.playfair(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 12.sp,
-                            color: const Color(0xff573E1A)),
-                      ))
+                        child: Text(
+                          "bread & cake bakery",
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.playfair(
+                            fontWeight: xxlFontWeight,
+                            fontSize: lFontSize.sp,
+                            color: const Color(0xff573E1A),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -99,18 +132,19 @@ class _HomepageState extends State<Homepage> {
                      * Notification Button
                      */
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context,  '/notifications'
-                        );
+                      onTap: () async {
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()));
+                        _loadUnreadCount();
                       },
                       child: Badge(
-                        isLabelVisible: true,
-                        label: const Text("2"),
+                        isLabelVisible: _unreadCount > 0,
+                        label: ReusableTextWidget(
+                          text: _unreadCount > 99 ? "99+" : "$_unreadCount",
+                          color: Colors.white,
+                          size: xsFontSize,
+                          FW: sFontWeight,
+                        ),
                         backgroundColor: Colors.orange,
-                        textColor: const Color(0xffffffff),
-                        textStyle: GoogleFonts.poppins(fontSize: 8.sp),
-                        //  padding: EdgeInsets.all(0.w),
                         child: Container(
                           width: 30.w,
                           height: 30.h,
@@ -118,16 +152,10 @@ class _HomepageState extends State<Homepage> {
                             shape: BoxShape.circle,
                             color: Color(0xff5C4B32),
                           ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {},
-                            icon: Center(
-                              child: Icon(
+                          child: Icon(
                                 CommunityMaterialIcons.bell,
                                 size: 15.w,
                                 color: Colors.white,
-                              ),
-                            ),
                           ),
                         ),
                       ),
@@ -152,35 +180,39 @@ class _HomepageState extends State<Homepage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  /**
+                   * Opening Balance Design
+                   */
                   Container(
                     height: 40.h,
                     padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                    EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                     decoration: BoxDecoration(
                       color: const Color(0xff42321C),
                       borderRadius: BorderRadius.circular(6.r),
                     ),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        //Opening Balance
+                        /**
+                         * Opening Balance
+                         */
+
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          // direction: Axis.vertical,
-                          // spacing: 10.h,
                           children: [
                             ReusableTextWidget(
                               text: "OPENING BALANCE:",
-                              size: 8,
-                              FW: FontWeight.w300,
+                              size: xsFontSize,
+                              FW: sFontWeight,
                               color: Colors.white,
                             ),
                             ReusableTextWidget(
                               text: "R 1 200",
-                              size: 12,
-                              FW: FontWeight.w500,
-                              color: Color(0xffFFE4BD),
+                              size: lFontSize,
+                              FW: xlFontWeight,
+                              color: const Color(0xffFFE4BD),
                             ),
                           ],
                         ),
@@ -189,9 +221,9 @@ class _HomepageState extends State<Homepage> {
                       * */
                         ReusableTextWidget(
                           text: "10 February 2025",
-                          size: 10,
-                          FW: FontWeight.w500,
-                          color: Color(0xffFFE4BD),
+                          size: sFontSize,
+                          FW: xlFontWeight,
+                          color: const Color(0xffFFE4BD),
                         ),
                       ],
                     ),
@@ -202,9 +234,22 @@ class _HomepageState extends State<Homepage> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DisplayWidget(headerText: "SALES", subText: "R10 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457),),
-                      DisplayWidget(headerText: "INCOME", subText: "R1 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
-                      DisplayWidget(headerText: "EXPENSES", subText: "R2 500", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
+                      DisplayWidget(
+                        headerText: "SALES",
+                        subText: "R10 000",
+                        headerColor: const Color(0xff351F00),
+                        subTextColor: const Color(0xff6D6457),
+                      ),
+                      DisplayWidget(
+                          headerText: "INCOME",
+                          subText: "R1 000",
+                          headerColor: const Color(0xff351F00),
+                          subTextColor: const Color(0xff6D6457)),
+                      DisplayWidget(
+                          headerText: "EXPENSES",
+                          subText: "R2 500",
+                          headerColor: const Color(0xff351F00),
+                          subTextColor: const Color(0xff6D6457)),
                     ],
                   )
                 ],
@@ -270,16 +315,15 @@ class _HomepageState extends State<Homepage> {
                    */
                   GestureDetector(
                     onTap: () {
-                      showDialog<void>(
-                        context: context,
-                        //barrierDismissible: barrierDismissible,
-                        // false = user must tap button, true = tap outside dialog
-                        builder: (BuildContext dialogContext) {
-                          return ChangeNotifierProvider(
-                              create: (BuildContext context) =>
-                                  PastryViewModel(),
-                              child: const NewPastry());
-                        },
+                      // Navigate to Inventory Page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (_) => PastryViewModel(),
+                            child: const InventoryPage(),
+                          ),
+                        ),
                       );
                     },
                     child: ClipRRect(
@@ -312,7 +356,7 @@ class _HomepageState extends State<Homepage> {
                   ),
 
                   /**
-                   * Button FOR ADDING INGREDIENTS
+                   * BUTTON FOR ADDING INGREDIENTS
                    */
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.r),
@@ -355,7 +399,11 @@ class _HomepageState extends State<Homepage> {
                   )
                 ],
               ),
-            )
+            ),
+            ElevatedButton(onPressed: (){
+              _notificationService.testNotificationNavigation();
+
+            }, child: Text("load notification test data"))
           ],
         ),
       ),

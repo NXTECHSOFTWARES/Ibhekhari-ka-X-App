@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,8 @@ import 'package:nxbakers/Presentation/pages/HomePage/Widgets/display_widget.dart
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Common/AppData.dart';
+
 class DailyInventoryEntry extends StatefulWidget {
   const DailyInventoryEntry({super.key});
 
@@ -24,20 +27,51 @@ class DailyInventoryEntry extends StatefulWidget {
 class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
   String? _selectedYear;
   final FocusNode _dropDownFocusNode = FocusNode();
+  late DailyEntryViewModel _viewModel;
+
+  List<bool> _expandedStates = [];
+  List<String> topSellers = [];
 
   bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
+
     setState(() {
       _selectedYear = "2025";
     });
+
+    // Future.microtask(() {
+    //   _viewModel = Provider.of<DailyEntryViewModel>(context, listen: false);
+    //   _viewModel.initialize();
+    //   _initializeExpandedStates(); // Move this call here, after _viewModel is initialized
+    // });
   }
 
+  // void _initializeExpandedStates() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (mounted) {
+  //       setState(() {
+  //         _expandedStates = _calculateExpandedStates();
+  //       });
+  //     }
+  //   });
+  // }
+
+  // List<bool> _calculateExpandedStates() {
+  //   int totalDailyEntries = 0;
+  //
+  //   // Calculate total number of daily entries across all periods
+  //   _viewModel.dailyEntriesFGroupByDate.forEach((periodKey, dailyEntries) {
+  //     totalDailyEntries += dailyEntries.length;
+  //   });
+  //
+  //   return List<bool>.filled(totalDailyEntries, false);
+  // }
+
   double _getPastryPrice(pastryId, List<Pastry> pastries) {
-    List<Pastry> pastry =
-        pastries.where((pastry) => pastry.id! == pastryId).toList();
+    List<Pastry> pastry = pastries.where((pastry) => pastry.id! == pastryId).toList();
     return pastry[0].price;
   }
 
@@ -46,429 +80,453 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
     int topSoldStock = 0;
 
     for (DailyEntry entry in entries) {
-      String pastryName =
-          pastries.where((pastry) => pastry.id! == entry.pastryId).first.title;
+      String pastryName = pastries.where((pastry) => pastry.id! == entry.pastryId).first.title;
       if (entry.soldStock > topSoldStock) {
         topSeller = pastryName;
         topSoldStock = entry.soldStock;
       }
     }
+
+    topSellers.add(topSeller);
+    return topSeller;
+  }
+
+  String _formatShortPeriod(String periodKey) {
+    try {
+      DateFormat format = DateFormat('dd MMMM yyyy');
+      DateTime date = format.parse(periodKey);
+      return DateFormat('MMMM d').format(date);
+    } catch (e) {
+      return periodKey;
+    }
+  }
+
+  String _calculatePeriodTotal(Map<String, List<DailyEntry>> dailyEntries, List<Pastry> pastries) {
+    double total = 0;
+    dailyEntries.forEach((date, entries) {
+      for (var entry in entries) {
+        total += entry.soldStock * _getPastryPrice(entry.pastryId, pastries); // Adjust this based on your DailyEntry model
+      }
+    });
+    return 'R${total.toStringAsFixed(2)}';
+  }
+
+// Calculate global index for expanded states management
+  int _calculateGlobalIndex(int periodIndex, int dailyIndex, Map<String, Map<String, List<DailyEntry>>> groupedData) {
+    int globalIndex = 0;
+    for (int i = 0; i < periodIndex; i++) {
+      String key = groupedData.keys.elementAt(i);
+      globalIndex += groupedData[key]!.keys.length;
+    }
+    return globalIndex + dailyIndex;
+  }
+
+  String findMostFrequent(List<String> list) {
+    return list.groupListsBy((element) => element)
+        .entries
+        .reduce((a, b) => a.value.length > b.value.length ? a : b)
+        .key;
+  }
+
+  String _getTopSellerForPeriod(Map<String, List<DailyEntry>> dailyEntriesInPeriod, List<Pastry> pastries) {
+    Map<String, int> pastrySales = {};
+
+    dailyEntriesInPeriod.forEach((date, entries) {
+      for (DailyEntry entry in entries) {
+        String pastryName = pastries
+            .where((pastry) => pastry.id! == entry.pastryId)
+            .firstOrNull
+            ?.title ?? "Unknown Pastry";
+
+        pastrySales[pastryName] = (pastrySales[pastryName] ?? 0) + entry.soldStock;
+      }
+    });
+
+    if (pastrySales.isEmpty) return "No Sales";
+
+    // Find pastry with highest total sales
+    String topSeller = pastrySales.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+    return topSeller;
+  }
+
+  String _getTopSellerForDate(List<DailyEntry> entries, List<Pastry> pastries) {
+    if (entries.isEmpty) return "No Sales";
+
+    String topSeller = "";
+    int topSoldStock = 0;
+
+    for (DailyEntry entry in entries) {
+      String pastryName = pastries
+          .where((pastry) => pastry.id! == entry.pastryId)
+          .firstOrNull
+          ?.title ?? "Unknown Pastry";
+
+      if (entry.soldStock > topSoldStock) {
+        topSeller = pastryName;
+        topSoldStock = entry.soldStock;
+      }
+    }
+
     return topSeller;
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-      child: Consumer<DailyEntryViewModel>(builder:
-          (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
-        if (viewModel.dailyEntriesFGroupByDate.isEmpty) {
-          return CommonMain(
-            child: Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    height: 85.h,
-                    color: const Color(0xffF2EADE),
-                    padding: EdgeInsets.only(bottom: 15.h),
-                    child: Column(
-                      children: [
-                        Expanded(child: Container()),
-                        CommonPageHeader(
-                          pageTitle: "Daily Entries",
-                          pageSubTitle: "A List of all sales Entries",
-                          addViewModel: ChangeNotifier(),
-                          addNavPage: const AddDailyEntries(),
-                        ),
-                      ],
+    return Consumer<DailyEntryViewModel>(builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
+
+      if (_expandedStates.isEmpty && viewModel.dailyEntriesFGroupByDate.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            setState(() {
+              int totalEntries = 0;
+              viewModel.dailyEntriesFGroupByDate.forEach((periodKey, dailyEntries) {
+                totalEntries += dailyEntries.length;
+              });
+              _expandedStates = List<bool>.filled(totalEntries, false);
+            });
+          }
+        });
+      }
+      return Scaffold(
+        floatingActionButton: viewModel.dailyEntriesFGroupByDate.isEmpty
+            ? Align(
+          alignment: Alignment.center,
+          child: FloatingActionButton(
+            backgroundColor: Colors.black,
+            onPressed: () {
+              viewModel.loadTestData();
+            },
+            child: Icon(Icons.add, color: Colors.white),
+          ),
+        )
+            : null,
+        body: CommonMain(
+          child: Column(
+            children: [
+              Container(
+                height: 85.h,
+                color: const Color(0xffF2EADE),
+                padding: EdgeInsets.only(bottom: 15.h),
+                child: Column(
+                  children: [
+                    Expanded(child: Container()),
+                    CommonPageHeader(
+                      pageTitle: "Daily Entries",
+                      pageSubTitle: "A List of all sales Entries",
+                      addViewModel: ChangeNotifier(),
+                      addNavPage: const AddDailyEntries(),
                     ),
-                  ),
-                  /**
-                   * Tab bar for Top selling Pastries
-                   */
-                  Container(
-                    width: size.width,
-                    height: 30.h,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    color: const Color.fromRGBO(0, 0, 0, 0.15),
-                    child: Row(
-                      children: [
-                        const ReusableTextWidget(
-                          text: "Top Sellers",
-                          color: Color(0xff5D3700),
-                          size: 8,
-                          FW: FontWeight.w300,
-                        ),
-                        SizedBox(
-                          width: 20.w,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: viewModel.pastries.length,
-                              itemBuilder: (context, index) {
-                                final pastry = viewModel.pastries[index];
-                                return TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          PastryDetails(pastryId: index + 1),
-                                    );
-                                  },
-                                  child: ReusableTextWidget(
-                                    text: pastry.title,
-                                    color: Colors.white,
-                                    size: 8,
-                                    FW: FontWeight.w300,
-                                  ),
+                  ],
+                ),
+              ),
+              /**
+               * Tab bar for Top selling Pastries
+               */
+              Container(
+                width: size.width,
+                height: 30.h,
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                color: const Color.fromRGBO(0, 0, 0, 0.15),
+                child: Row(
+                  children: [
+                    ReusableTextWidget(
+                      text: "Top Sellers",
+                      color: const Color(0xff5D3700),
+                      size: sFontSize,
+                      FW: sFontWeight,
+                    ),
+                    SizedBox(width: 20.w),
+                    Expanded(
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: viewModel.pastries.length,
+                          itemBuilder: (context, index) {
+                            final pastry = viewModel.pastries[index];
+                            return TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => PastryDetails(pastryId: pastry.id ?? 0),
                                 );
-                              }),
-                        ),
-                      ],
+                              },
+                              child: ReusableTextWidget(
+                                text: pastry.title,
+                                color: Colors.white,
+                                size: sFontSize,
+                                FW: sFontWeight,
+                              ),
+                            );
+                          }),
                     ),
-                  ),
-                  Expanded(
-                      child: Center(
+                  ],
+                ),
+              ),
+              /**
+               * Main page content
+               */
+              viewModel.dailyEntriesFGroupByDate.isEmpty
+                  ? Expanded(
+                  child: Center(
                     child: ReusableTextWidget(
                       text: "No Data To Display".toUpperCase(),
                       color: Colors.black,
-                      size: 16,
+                      size: xlFontSize,
                       FW: FontWeight.w400,
                     ),
-                  )),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return CommonMain(
-            child: Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    height: 85.h,
-                    color: const Color(0xffF2EADE),
-                    padding: EdgeInsets.only(bottom: 15.h),
-                    child: Column(
-                      children: [
-                        Expanded(child: Container()),
-                        CommonPageHeader(
-                          pageTitle: "Daily Entries",
-                          pageSubTitle: "A List of all sales Entries",
-                          addViewModel: ChangeNotifier(),
-                          addNavPage: const AddDailyEntries(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  /**
-                 * Tab bar for Top selling Pastries
-                 */
-                  Container(
-                    width: size.width,
-                    height: 30.h,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    color: const Color.fromRGBO(0, 0, 0, 0.15),
-                    child: Row(
-                      children: [
-                        const ReusableTextWidget(
-                          text: "Top Sellers",
-                          color: Color(0xff5D3700),
-                          size: 8,
-                          FW: FontWeight.w300,
-                        ),
-                        SizedBox(
-                          width: 20.w,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: viewModel.pastries.length,
-                              itemBuilder: (context, index) {
-                                final pastry = viewModel.pastries[index];
-                                return TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          PastryDetails(pastryId: index + 1),
-                                    );
-                                  },
-                                  child: ReusableTextWidget(
-                                    text: pastry.title,
-                                    color: Colors.white,
-                                    size: 8,
-                                    FW: FontWeight.w300,
-                                  ),
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 20.h,
-                        left: 5.w,
-                        right: 5.w,
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: 0.0.h,
-                              bottom: 15.0.h,
-                              left: 15.0.w,
-                              right: 15.0.w,
+                  ))
+                  : Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ReusableTextWidget(
+                              text: "Daily Sales",
+                              color: const Color(0xff573E1A),
+                              size: xlFontSize,
+                              FW: lFontWeight,
                             ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const ReusableTextWidget(
-                                      text: "Daily Sales",
-                                      color: Color(0xff573E1A),
-                                      size: 14,
-                                      FW: FontWeight.w400,
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.zero,
-                                      width: 55.w,
-                                      height: 30.h,
-                                      // padding: EdgeInsets.symmetric(
-                                      //     vertical: 2.h, horizontal: 5.w),
-                                      // decoration: BoxDecoration(
-                                      //     color: const Color(0xffDADADA),
-                                      //     borderRadius: BorderRadius.circular(6.r),
-                                      // ),
-                                      child: Center(
-                                        child: DropdownButtonFormField<String>(
-                                          focusNode: _dropDownFocusNode,
-                                          elevation: 0,
-                                          dropdownColor:
-                                              const Color(0xffF2EADE),
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 10.sp,
-                                            color: const Color(0xff351F00),
-                                          ),
-                                          // hint: const ReusableTextWidget(
-                                          //   text: "Please select a year...'",
-                                          //   color: Color(0xff515151),
-                                          //   size: 8,
-                                          //   FW: FontWeight.w200,
-                                          // ),
-                                          value: _selectedYear,
-                                          items: const [
-                                            DropdownMenuItem(
-                                              value: "2025",
-                                              child: ReusableTextWidget(
-                                                text: "2025",
-                                                color: Color(0XFF351F00),
-                                                size: 10,
-                                                FW: FontWeight.w300,
-                                              ),
-                                            ),
-                                          ]
-                                          // viewModel.categories.map((category) {
-                                          //   return DropdownMenuItem(
-                                          //     value: category.name,
-                                          //     child: Text(category.name),
-                                          //   );
-                                          // }).toList()
-                                          ,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedYear = value;
-                                            });
-                                          },
-                                          iconSize: 18.w,
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down_rounded,
-                                            color: Color(0xff7D6543),
-                                          ),
-                                          iconEnabledColor:
-                                              const Color(0xff7D6543),
-                                          focusColor:
-                                              _dropDownFocusNode.hasFocus
-                                                  ? Colors.white
-                                                  : Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(6.r),
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            isDense: true,
-                                            contentPadding:
-                                                EdgeInsets.only(left: 10.w),
-                                            enabledBorder: InputBorder.none,
-                                            focusedBorder: InputBorder.none,
-                                            fillColor: Colors.transparent,
-                                            filled: true,
-                                          ),
-                                          validator: (value) => value == null
-                                              ? 'Please select a year'
-                                              : null,
-                                        ),
+                            Container(
+                              padding: EdgeInsets.zero,
+                              width: 55.w,
+                              height: 30.h,
+                              child: Center(
+                                child: DropdownButtonFormField<String>(
+                                  focusNode: _dropDownFocusNode,
+                                  elevation: 0,
+                                  dropdownColor: const Color(0xffF2EADE),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: const Color(0xff351F00),
+                                  ),
+                                  value: _selectedYear,
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: "2025",
+                                      child: ReusableTextWidget(
+                                        text: "2025",
+                                        color: const Color(0XFF351F00),
+                                        size: sFontSize,
+                                        FW: sFontWeight,
                                       ),
                                     ),
                                   ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedYear = value;
+                                    });
+                                  },
+                                  iconSize: 18.w,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: Color(0xff7D6543),
+                                  ),
+                                  iconEnabledColor: const Color(0xff7D6543),
+                                  focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6.r),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.only(left: 10.w),
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    fillColor: Colors.transparent,
+                                    filled: true,
+                                  ),
+                                  validator: (value) => value == null ? 'Please select a year' : null,
                                 ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(),
-                                    Wrap(
-                                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      spacing: 10.w,
-                                      children: [
-                                        const ReusableTextWidget(
-                                          text: "R1 204",
-                                          color: Color(0xff56452D),
-                                          size: 8,
-                                          FW: FontWeight.w300,
-                                        ),
-                                        Container(
-                                          width: 25.w,
-                                          height: 1.h,
-                                          color: const Color(0xffAA9C88),
-                                        ),
-                                        const ReusableTextWidget(
-                                          text: "Snowball",
-                                          color: Color(0xff56452D),
-                                          size: 8,
-                                          FW: FontWeight.w300,
-                                        ),
-                                        Container(
-                                          width: 25.w,
-                                          height: 1.h,
-                                          color: const Color(0xffAA9C88),
-                                        ),
-                                        const ReusableTextWidget(
-                                          text: "August 10",
-                                          color: Color(0xff56452D),
-                                          size: 8,
-                                          FW: FontWeight.w300,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                                itemCount:
-                                    viewModel.dailyEntriesFGroupByDate.length,
-                                itemBuilder: (context, index) {
-                                  String dateKey = viewModel
-                                      .dailyEntriesFGroupByDate.keys
-                                      .elementAt(index);
-                                  List<DailyEntry> entriesForDate = viewModel
-                                      .dailyEntriesFGroupByDate[dateKey]!;
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 17.h),
+                      /**
+                       * Daily Entries
+                       */
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: viewModel.dailyEntriesFGroupByDate.keys.length,
+                          itemBuilder: (context, periodIndex) {
+                            String periodKey = viewModel.dailyEntriesFGroupByDate.keys.elementAt(periodIndex);
+                            Map<String, List<DailyEntry>> dailyEntriesInPeriod = viewModel.dailyEntriesFGroupByDate[periodKey]!;
 
-                                  return Container(
-                                    width: size.width,
-                                    // height: 50.h,
-                                    margin: EdgeInsets.only(bottom: 10.h),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF2EADE),
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFF362A1A)
-                                              .withOpacity(0.24),
-                                          spreadRadius: 0,
-                                          blurRadius: 4.r,
-                                          offset: Offset(0, 2.h),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ExpansionTile(
-                                          showTrailingIcon: false,
-                                          minTileHeight: 50.h,
-                                          collapsedShape: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.r),
-                                              borderSide: BorderSide.none),
-                                          onExpansionChanged: (isExpanded) {
-                                            setState(() {
-                                              _isExpanded = isExpanded;
-                                            });
-                                          },
-                                          shape: InputBorder.none,
-                                          backgroundColor: Colors.transparent,
-                                          title: _buildSummaryItem(
-                                              dateKey,
-                                              entriesForDate,
-                                              viewModel.pastries),
-                                          children: [
-                                            Divider(
-                                              color: Colors.black12,
-                                              thickness: 5.h,
-                                              height: 3.h,
+                            // Calculate top seller for this period
+                            String periodTopSeller = _getTopSellerForPeriod(dailyEntriesInPeriod, viewModel.pastries);
+
+                            return Column(
+                              children: [
+                                /**
+                                 * Month Period Summary Header
+                                 */
+                                Padding(
+                                  padding: EdgeInsets.only(top: 0.h, right: 15.0.w, bottom: 13.h),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(),
+                                      Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        spacing: 10.w,
+                                        children: [
+                                          /**
+                                           * Total Sales for the Period
+                                           */
+                                          ReusableTextWidget(
+                                            text: _calculatePeriodTotal(dailyEntriesInPeriod, viewModel.pastries),
+                                            color: const Color(0xff56452D),
+                                            size: xsFontSize,
+                                            FW: sFontWeight,
+                                          ),
+                                          Container(
+                                            width: 25.w,
+                                            height: 1.h,
+                                            color: const Color(0xffAA9C88),
+                                          ),
+                                          /**
+                                           * Top Seller/ Pastry that was sold the most for the Period
+                                           */
+                                          ReusableTextWidget(
+                                            text: periodTopSeller,
+                                            color: const Color(0xff56452D),
+                                            size: xsFontSize,
+                                            FW: sFontWeight,
+                                          ),
+                                          Container(
+                                            width: 25.w,
+                                            height: 1.h,
+                                            color: const Color(0xffAA9C88),
+                                          ),
+                                          /**
+                                           * Period Date
+                                           */
+                                          ReusableTextWidget(
+                                            text: _formatShortPeriod(periodKey),
+                                            color: const Color(0xff56452D),
+                                            size: xsFontSize,
+                                            FW: sFontWeight,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                /**
+                                 * Daily Month Entries
+                                 */
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: dailyEntriesInPeriod.keys.length,
+                                    itemBuilder: (context, dailyIndex) {
+                                      String dateKey = dailyEntriesInPeriod.keys.elementAt(dailyIndex);
+                                      List<DailyEntry> entriesForDate = dailyEntriesInPeriod[dateKey]!;
+
+                                      int globalIndex = _calculateGlobalIndex(periodIndex, dailyIndex, viewModel.dailyEntriesFGroupByDate);
+                                      bool isExpanded = globalIndex < _expandedStates.length ? _expandedStates[globalIndex] : false;
+
+                                      return Container(
+                                        width: size.width,
+                                        margin: EdgeInsets.only(bottom: 10.h),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF2EADE),
+                                          borderRadius: BorderRadius.circular(8.r),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFF362A1A).withOpacity(0.24),
+                                              spreadRadius: 0,
+                                              blurRadius: 4.r,
+                                              offset: Offset(0, 2.h),
                                             ),
-                                            _buildFilterChips(
-                                                viewModel.categories),
-                                            _buildItemsList(entriesForDate,
-                                                viewModel.pastries),
                                           ],
                                         ),
-                                        _isExpanded
-                                            ? Container()
-                                            : Container(
-                                                width: size.width,
-                                                height: 5.h,
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 8.w),
-                                                decoration: BoxDecoration(
-                                                  color: const Color(0XFF634923)
-                                                      .withOpacity(0.22),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                    10.r,
-                                                  ),
+                                        child: Column(
+                                          children: [
+                                            /**
+                                             * Daily Entry Summary
+                                             */
+                                            ExpansionTile(
+                                              showTrailingIcon: false,
+                                              minTileHeight: 50.h,
+                                              initiallyExpanded: isExpanded,
+                                              collapsedShape: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              onExpansionChanged: (isExpanded) {
+                                                if (globalIndex < _expandedStates.length) {
+                                                  setState(() {
+                                                    // Reset all expanded states
+                                                    for (int i = 0; i < _expandedStates.length; i++) {
+                                                      _expandedStates[i] = false;
+                                                    }
+                                                    _expandedStates[globalIndex] = isExpanded;
+                                                  });
+                                                }
+                                              },
+                                              shape: InputBorder.none,
+                                              backgroundColor: Colors.transparent,
+                                              title: _buildSummaryItem(dateKey, entriesForDate, viewModel.pastries),
+                                              children: [
+                                                Divider(
+                                                  color: Colors.black12,
+                                                  thickness: 5.h,
+                                                  height: 3.h,
                                                 ),
+                                                _buildFilterChips(viewModel.categories),
+                                                _buildItemsList(entriesForDate, viewModel.pastries),
+                                              ],
+                                            ),
+                                            isExpanded
+                                                ? Container()
+                                                : Container(
+                                              width: size.width,
+                                              height: 5.h,
+                                              padding: EdgeInsets.zero,
+                                              margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0XFF634923).withOpacity(0.22),
+                                                borderRadius: BorderRadius.circular(10.r),
+                                              ),
+                                              child: Center(
                                                 child: Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_rounded,
+                                                  Icons.keyboard_arrow_down_rounded,
                                                   size: 10.w,
                                                 ),
                                               ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          )
-                        ],
-                      ),
-                    ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                SizedBox(height: 17.h),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          );
-        }
-      }),
-    );
+              SizedBox(height: 50.h,),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildFilterChips(categories) {
-    List<dynamic> filters =
-        categories.map((category) => category.name).toList();
+    List<dynamic> filters = categories.map((category) => category.name).toList();
 
     return Container(
       width: double.infinity,
@@ -484,14 +542,14 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
               color: const Color(0xff7B7B7B),
               borderRadius: BorderRadius.circular(100.r),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.zero,
               child: Center(
                 child: ReusableTextWidget(
                   text: "all",
                   color: Colors.white,
-                  size: 8,
-                  FW: FontWeight.w300,
+                  size: xsFontSize,
+                  FW: sFontWeight,
                 ),
               ),
             ),
@@ -514,14 +572,12 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
                     label: ReusableTextWidget(
                       text: filter.toLowerCase(),
                       color: Colors.white,
-                      size: 8,
-                      FW: FontWeight.w400,
+                      size: sFontSize,
+                      FW: lFontWeight,
                     ),
                     selected: isSelected,
                     selectedColor: Colors.grey[800],
-                    backgroundColor: isSelected
-                        ? const Color(0xff7B7B7B)
-                        : const Color(0xff3C3C3C),
+                    backgroundColor: isSelected ? const Color(0xff7B7B7B) : const Color(0xff3C3C3C),
                     onSelected: (bool selected) {
                       // Handle filter selection
                     },
@@ -538,15 +594,10 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
     );
   }
 
-  Widget _buildSummaryItem(
-      String date, List<DailyEntry> entries, List<Pastry> pastries) {
+  Widget _buildSummaryItem(String date, List<DailyEntry> entries, List<Pastry> pastries) {
     int totalItems = entries.fold(0, (sum, entry) => sum + entry.soldStock);
     String topSeller = _getTopSeller(entries, pastries);
-    double totalSales = entries.fold(
-        0,
-        (sum, entry) =>
-            sum +
-            (entry.soldStock * _getPastryPrice(entry.pastryId, pastries)));
+    double totalSales = entries.fold(0, (sum, entry) => sum + (entry.soldStock * _getPastryPrice(entry.pastryId, pastries)));
 
     return Column(
       children: [
@@ -554,13 +605,13 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 100.w,
+              width: 80.w,
               child: ReusableTextWidget(
-                text: DateFormat('d MMMM y')
-                    .format(DateFormat('EEEE, d MMMM y').parse(date)),
+                // text: DateFormat('d MMMM y').format(DateFormat('EEEE, d MMMM y').parse(date)),
+                text: date,
                 color: const Color(0xFFA1845C),
-                size: 8,
-                FW: FontWeight.w400,
+                size: xsFontSize,
+                FW: lFontWeight,
               ),
             ),
             Wrap(
@@ -574,7 +625,7 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
                 ),
                 DisplayWidget(
                   headerText: "Top Seller",
-                  subText: topSeller,
+                  subText: _getTopSellerForDate(entries, pastries),
                   headerColor: const Color(0xff6D593D),
                   subTextColor: const Color(0xff553609),
                 ),
@@ -600,26 +651,33 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
     );
   }
 
-  Widget _buildItemsList(
-      List<DailyEntry> entriesForDate, List<Pastry> pastries) {
+  Widget _buildItemsList(List<DailyEntry> entriesForDate, List<Pastry> pastries) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.0.w, vertical: 25.h),
       child: ListView(
         scrollDirection: Axis.vertical,
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        children: entriesForDate
-            .map((entry) => _buildListItem(entry, pastries))
-            .toList(),
+        children: entriesForDate.map((entry) => _buildListItem(entry, pastries)).toList(),
       ),
     );
   }
 
   Widget _buildListItem(DailyEntry entry, List<Pastry> pastries) {
-    final imageBytes =
-        pastries.firstWhere((pastry) => pastry.id! == entry.id).imageBytes;
-    final title = pastries.firstWhere((pastry) => pastry.id! == entry.id).title;
-    double totalSales =
-        entry.soldStock * _getPastryPrice(entry.pastryId, pastries);
+    // Find the pastry - handle case where it might not exist
+    Pastry? foundPastry;
+
+    try {
+      foundPastry = pastries.firstWhere((pastry) => pastry.id == entry.pastryId // Use pastryId, not id
+          );
+    } catch (e) {
+      // Return a placeholder widget if pastry not found
+      return _buildPlaceholderListItem(entry);
+    }
+
+    final imageBytes = foundPastry.imageBytes;
+    final title = foundPastry.title;
+    double totalSales = entry.soldStock * _getPastryPrice(entry.pastryId, pastries);
 
     return GestureDetector(
       onTap: () {
@@ -648,20 +706,21 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Pastry Image
+            /**
+             * Pastry Image
+             */
             Container(
               width: 30.w,
               height: 30.h,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                      color: const Color(0xff000000).withOpacity(0.35),
-                      width: 1.0.w,
-                      style: BorderStyle.solid),
+                  border: Border.all(color: const Color(0xff000000).withOpacity(0.35), width: 1.0.w, style: BorderStyle.solid),
                   image: DecorationImage(
-                    image: MemoryImage(
-                      imageBytes,
-                    ),
+                    image: imageBytes.isEmpty
+                        ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider
+                        : MemoryImage(
+                            imageBytes,
+                          ),
                     fit: BoxFit.cover,
                   )),
             ),
@@ -669,9 +728,9 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
             // Pastry Name
             Expanded(
               child: ReusableTextWidget(
-                text: title,
-                size: 8,
-                FW: FontWeight.w400,
+                text: title ?? "No Pastry Name",
+                size: xsFontSize,
+                FW: lFontWeight,
                 color: Colors.white,
               ),
             ),
@@ -691,20 +750,54 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
     );
   }
 
+  Widget _buildPlaceholderListItem(DailyEntry entry) {
+    return Container(
+      height: 40.h,
+      margin: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.fromLTRB(5.w, 5.h, 20.w, 5.h),
+      decoration: BoxDecoration(
+        color: const Color(0xff000000).withOpacity(0.20),
+        borderRadius: BorderRadius.circular(5.r),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 30.w,
+            height: 30.h,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey,
+            ),
+            child: Icon(Icons.warning, size: 15.w, color: Colors.white),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: ReusableTextWidget(
+              text: "Pastry ID ${entry.pastryId} not found",
+              size: xsFontSize,
+              FW: lFontWeight,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStatColumn(String header, String subText) {
     return Column(
       children: [
         ReusableTextWidget(
           text: header,
-          size: 8,
+          size: xsFontSize,
           color: const Color(0xff503600),
-          FW: FontWeight.w400,
+          FW: lFontWeight,
         ),
         SizedBox(height: 0.h),
         ReusableTextWidget(
           text: subText,
-          size: 8,
-          FW: FontWeight.w400,
+          size: xsFontSize,
+          FW: lFontWeight,
           color: Colors.white,
         ),
       ],

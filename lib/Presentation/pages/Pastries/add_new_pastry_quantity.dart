@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Common/Widgets/toast_message.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
@@ -112,9 +113,13 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
                                         color: Colors.white,
                                         style: BorderStyle.solid),
                                     image: DecorationImage(
-                                      image: pastry.imageBytes.isEmpty ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider : MemoryImage(
-                                        pastry.imageBytes,
-                                      ),
+                                      image: pastry.imageBytes.isEmpty
+                                          ? const AssetImage(
+                                                  "assets/Images/default_pastry_img.jpg")
+                                              as ImageProvider
+                                          : MemoryImage(
+                                              pastry.imageBytes,
+                                            ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -125,8 +130,8 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
                                 ReusableTextWidget(
                                   text: pastry.title,
                                   color: Colors.white,
-                                  size: 10,
-                                  FW: FontWeight.w400,
+                                  size: sFontSize,
+                                  FW: lFontWeight,
                                 )
                               ],
                             ),
@@ -152,7 +157,8 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
                                     ),
                                     textInputAction: TextInputAction.send,
                                     onFieldSubmitted: (value) {
-                                      _confirmPastryQuantityValue(widget.id, viewModel, value);
+                                      _confirmPastryQuantityValue(
+                                          widget.id, viewModel, value);
                                     },
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
@@ -198,7 +204,8 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
     );
   }
 
-  void _confirmPastryQuantityValue(int id, PastryViewModel viewModel,String newQuantity ) {
+  void _confirmPastryQuantityValue(
+      int id, PastryViewModel viewModel, String newQuantity) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -206,9 +213,9 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
         actionsAlignment: MainAxisAlignment.spaceBetween,
         title: ReusableTextWidget(
           text: 'Confirm Quantity',
-          size: 14,
+          size: lFontSize,
           color: Colors.brown.shade800,
-          FW: FontWeight.w400,
+          FW: lFontWeight,
         ),
         content: Wrap(
           direction: Axis.vertical,
@@ -217,14 +224,14 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
           children: [
             ReusableTextWidget(
               text: 'Proceed with Quantity value? ',
-              size: 10,
+              size: sFontSize,
               color: Colors.brown.shade400,
             ),
             ReusableTextWidget(
               text: newQuantity,
-              size: 18,
+              size: xxlFontSize,
               color: Colors.grey.shade500,
-              FW: FontWeight.w500,
+              FW: xlFontWeight,
             ),
           ],
         ),
@@ -234,24 +241,29 @@ class _AddNewPastryQuantityStockState extends State<AddNewPastryQuantityStock> {
             child: ReusableTextWidget(
               text: 'back',
               color: Colors.grey.shade400,
-              size: 12,
-              FW: FontWeight.w400,
+              size: lFontSize,
+              FW: lFontWeight,
             ),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PastryDetails(pastryId: id)));
-              final success = await viewModel.updatePastryQuantity(id, int.parse(newQuantity));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PastryDetails(pastryId: id)));
+              final success = await viewModel.updatePastryQuantity(
+                  id, int.parse(newQuantity));
               if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                const ToastMessage(message: 'Successfully Added New Quantity Stock',) as SnackBar);
+                ScaffoldMessenger.of(context).showSnackBar(const ToastMessage(
+                  message: 'Successfully Added New Quantity Stock',
+                ) as SnackBar);
               }
             },
-            child:ReusableTextWidget(
+            child: ReusableTextWidget(
               text: 'Proceed',
               color: Colors.green.shade800,
-              size: 12,
-              FW: FontWeight.w600,
+              size: lFontSize,
+              FW: xxlFontWeight,
             ),
           ),
         ],

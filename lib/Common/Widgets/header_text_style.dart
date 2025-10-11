@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 
 class HeaderTextStyle extends StatelessWidget {
@@ -11,8 +12,8 @@ class HeaderTextStyle extends StatelessWidget {
     return ReusableTextWidget(
       text: text,
       color: const Color(0xff351F00),
-      size: 16,
-      FW: FontWeight.w400,
+      size: xlFontSize,
+      FW: lFontWeight,
     );
   }
 }
