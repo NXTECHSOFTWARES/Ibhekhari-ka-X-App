@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nxbakers/Common/AppData.dart';
+import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/pages/DailyEntry/daily_inventory_entry.dart';
 import 'package:nxbakers/Presentation/pages/HomePage/homepage.dart';
@@ -58,6 +60,156 @@ class _DashboardState extends State<Dashboard> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       drawerScrimColor: Colors.black54,
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: 80.w,
+        height: 80.h,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(colors: const [
+            Color(0xffC99448),
+            Color(0xff634923),
+          ], radius: 0.45.r),
+        ),
+        child: IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => ChangeNotifierProvider(
+                create: (BuildContext context) => PastryViewModel()..loadPastries(),
+                child: const NewPastry(),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.add_rounded,
+            size: 38.w,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+          color: const Color(0xff351F00),
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 10,
+          padding: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Wrap(
+                  spacing: 0.w,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  direction: Axis.horizontal,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 0;
+                        });
+                      },
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(5.w),
+                            decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5.r),
+                                border: Border.all(
+                                  color: _selectedIndex == 0 ? Colors.white : const Color(0xffAA9C88),
+                                  width: 1.0.w,
+                                ),
+                            ),
+                            child: Icon(
+                              color: _selectedIndex == 0 ? Colors.white : const Color(0xffAA9C88),
+                              _selectedIndex == 0 ? CommunityMaterialIcons.home : CommunityMaterialIcons.home_outline,
+                              size: 24.w,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                        padding: EdgeInsets.zero,
+                        color: _selectedIndex == 1 ? Colors.white : const Color(0xffAA9C88),
+                        onPressed: () {
+                          setState(() {
+                            _selectedIndex = 1;
+                          });
+                        },
+                        icon: Icon(_selectedIndex == 1 ? CommunityMaterialIcons.clipboard_list : CommunityMaterialIcons.clipboard_list_outline)),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(_selectedIndex == 2 ? CommunityMaterialIcons.chart_line_stacked : CommunityMaterialIcons.chart_line)),
+                  ],
+                ),
+                Wrap(
+                  spacing: 25.w,
+                  direction: Axis.horizontal,
+                  children: [
+                    Icon(_selectedIndex == 4 ? CommunityMaterialIcons.cash_usd : CommunityMaterialIcons.cash_usd_outline),
+                    Icon(_selectedIndex == 5 ? Icons.food_bank : Icons.food_bank_outlined),
+                    Icon(_selectedIndex == 6 ? CommunityMaterialIcons.account_outline : CommunityMaterialIcons.account_outline),
+                  ],
+                ),
+              ],
+            ),
+          )
+
+          // BottomNavigationBar(
+          //   backgroundColor: const Color(0xff351F00),
+          //   currentIndex: _selectedIndex,
+          //   unselectedItemColor: const Color(0xffAA9C88),
+          //   type: BottomNavigationBarType.fixed,
+          //   showUnselectedLabels: false,
+          //   selectedFontSize: 10.w,
+          //   unselectedFontSize: 0,
+          //   selectedItemColor: Colors.white,
+          //   selectedLabelStyle: GoogleFonts.poppins(fontSize: 10.sp),
+          //   onTap: (index) {
+          //     setState(() {
+          //       _selectedIndex = index;
+          //     });
+          //   },
+          //   items: [
+          //      BottomNavigationBarItem(
+          //       icon: Icon(_selectedIndex == 0 ? CommunityMaterialIcons.home : CommunityMaterialIcons.home_outline),
+          //       label: "Home",
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: Icon( _selectedIndex == 1 ? CommunityMaterialIcons.clipboard_list: CommunityMaterialIcons.clipboard_list_outline),
+          //       label: "Sales",
+          //     ),
+          //      BottomNavigationBarItem(
+          //       icon: Icon( _selectedIndex == 2 ? CommunityMaterialIcons.chart_line_stacked : CommunityMaterialIcons.chart_line),
+          //       label: "Statistics",
+          //     ),
+          //      BottomNavigationBarItem(
+          //       icon: Icon(CommunityMaterialIcons.currency_eur),
+          //       label: "Profits",
+          //     ),
+          //      BottomNavigationBarItem(
+          //        icon: Icon( _selectedIndex == 4 ? CommunityMaterialIcons.cash_usd : CommunityMaterialIcons.cash_usd_outline),
+          //        label: "Profits",
+          //     ),
+          //      BottomNavigationBarItem(
+          //       icon: Icon(_selectedIndex == 5 ? Icons.food_bank : Icons.food_bank_outlined),
+          //       label: "Ingredients",
+          //     ),
+          //      BottomNavigationBarItem(
+          //       icon: Icon(_selectedIndex == 6 ? CommunityMaterialIcons.account_outline : CommunityMaterialIcons.account_outline),
+          //       label: "Account",
+          //     ),
+          //
+          //   ],
+          // ),
+          ),
       body: Stack(
         children: [
           // Use IndexedStack instead of PageView to preserve widget state
@@ -65,91 +217,92 @@ class _DashboardState extends State<Dashboard> {
             index: _selectedIndex,
             children: listOfPages,
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: [
-                Container(
-                  width: size.width,
-                  height: 130.h,
-
-                ),
-                Container(
-                  width: size.width,
-                  height: 80.h,
-                  color: const Color(0xff351F00),
-                ),
-                BottomNavigationBar(
-                  backgroundColor: const Color(0xff351F00),
-                  currentIndex: _selectedIndex,
-                  unselectedItemColor: const Color(0xffffffff),
-                  type: BottomNavigationBarType.fixed,
-                  showUnselectedLabels: false,
-                  selectedFontSize: 10.w,
-                  unselectedFontSize: 0,
-                  selectedLabelStyle: GoogleFonts.poppins(fontSize: 10.sp),
-                  onTap: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  items: const [
-                    BottomNavigationBarItem(
-                      icon: Icon(CommunityMaterialIcons.home),
-                      label: "Home",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(CommunityMaterialIcons.view_list),
-                      label: "Pastries",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(CommunityMaterialIcons.clipboard_list),
-                      label: "Ingredients",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(CommunityMaterialIcons.chart_line),
-                      label: "Statistics",
-                    ),
-                  ],
-                ),
-                Positioned(
-                  top: -0.h,
-                  child: Container(
-                    width: 80.w,
-                    height: 80.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-
-                      gradient: RadialGradient(
-                        colors: const [
-                          Color(0xffC99448),
-                          Color(0xff634923),
-                        ],
-                        radius: 0.45.r
-                      ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ChangeNotifierProvider(
-                            create: (BuildContext context) => PastryViewModel()..loadPastries(),
-                            child: const NewPastry(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.add_rounded,
-                        size: 38.w,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Stack(
+          //     alignment: AlignmentDirectional.bottomCenter,
+          //     children: [
+          //       SizedBox(
+          //         width: size.width,
+          //         height: 130.h,
+          //
+          //       ),
+          //       // Container(
+          //       //   width: size.width,
+          //       //   height: 80.h,
+          //       //   color: const Color(0xff351F00),
+          //       // ),
+          //       // BottomNavigationBar(
+          //       //
+          //       //   backgroundColor: const Color(0xff351F00),
+          //       //   currentIndex: _selectedIndex,
+          //       //   unselectedItemColor: const Color(0xffffffff),
+          //       //   type: BottomNavigationBarType.fixed,
+          //       //   showUnselectedLabels: false,
+          //       //   selectedFontSize: 10.w,
+          //       //   unselectedFontSize: 0,
+          //       //   selectedLabelStyle: GoogleFonts.poppins(fontSize: 10.sp),
+          //       //   onTap: (index) {
+          //       //     setState(() {
+          //       //       _selectedIndex = index;
+          //       //     });
+          //       //   },
+          //       //   items: const [
+          //       //     BottomNavigationBarItem(
+          //       //       icon: Icon(CommunityMaterialIcons.home),
+          //       //       label: "Home",
+          //       //     ),
+          //       //     BottomNavigationBarItem(
+          //       //       icon: Icon(CommunityMaterialIcons.view_list),
+          //       //       label: "Pastries",
+          //       //     ),
+          //       //     BottomNavigationBarItem(
+          //       //       icon: Icon(CommunityMaterialIcons.clipboard_list),
+          //       //       label: "Ingredients",
+          //       //     ),
+          //       //     BottomNavigationBarItem(
+          //       //       icon: Icon(CommunityMaterialIcons.chart_line),
+          //       //       label: "Statistics",
+          //       //     ),
+          //       //   ],
+          //       // ),
+          //       Positioned(
+          //         top: -0.h,
+          //         child: Container(
+          //           width: 80.w,
+          //           height: 80.h,
+          //           decoration: BoxDecoration(
+          //             shape: BoxShape.circle,
+          //
+          //             gradient: RadialGradient(
+          //               colors: const [
+          //                 Color(0xffC99448),
+          //                 Color(0xff634923),
+          //               ],
+          //               radius: 0.45.r
+          //             ),
+          //           ),
+          //           child: IconButton(
+          //             onPressed: () {
+          //               showDialog(
+          //                 context: context,
+          //                 builder: (context) => ChangeNotifierProvider(
+          //                   create: (BuildContext context) => PastryViewModel()..loadPastries(),
+          //                   child: const NewPastry(),
+          //                 ),
+          //               );
+          //             },
+          //             icon: Icon(
+          //               Icons.add_rounded,
+          //               size: 38.w,
+          //               color: Colors.white,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

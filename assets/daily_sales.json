@@ -1,7 +1,7 @@
-{
-  "month": "February 2025",
-  "sales": {
-    "2025-02-11": [
+[
+  {
+    "date": "2025-02-11",
+    "sales": [
       {
         "sold_stock": 0,
         "remaining_stock": 17,
@@ -18,7 +18,12 @@
         "pastry_id": 2
       }
     ],
-    "2025-02-12": [
+    "top_seller": "Cinnamon Rolls",
+    "total_sales": 80.00
+  },
+  {
+    "date": "2025-02-12",
+    "sales": [
       {
         "sold_stock": 9,
         "remaining_stock": 8,
@@ -35,7 +40,12 @@
         "pastry_id": 2
       }
     ],
-    "2025-02-13": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 65.00
+  },
+  {
+    "date": "2025-02-13",
+    "sales": [
       {
         "sold_stock": 6,
         "remaining_stock": 2,
@@ -57,7 +67,12 @@
         "pastry_id": 3
       }
     ],
-    "2025-02-14": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 70.00
+  },
+  {
+    "date": "2025-02-14",
+    "sales": [
       {
         "sold_stock": 2,
         "remaining_stock": 0,
@@ -79,7 +94,12 @@
         "pastry_id": 3
       }
     ],
-    "2025-02-15": [
+    "top_seller": "Vanilla Cupcakes",
+    "total_sales": 135.00
+  },
+  {
+    "date": "2025-02-15",
+    "sales": [
       {
         "sold_stock": 0,
         "remaining_stock": 0,
@@ -101,7 +121,12 @@
         "pastry_id": 3
       }
     ],
-    "2025-02-16": [
+    "top_seller": "Vanilla Cupcakes",
+    "total_sales": 80.00
+  },
+  {
+    "date": "2025-02-16",
+    "sales": [
       {
         "sold_stock": 0,
         "remaining_stock": 0,
@@ -123,7 +148,12 @@
         "pastry_id": 3
       }
     ],
-    "2025-02-17": [
+    "top_seller": "Snowball",
+    "total_sales": 110.00
+  },
+  {
+    "date": "2025-02-17",
+    "sales": [
       {
         "sold_stock": 0,
         "remaining_stock": 0,
@@ -145,7 +175,12 @@
         "pastry_id": 3
       }
     ],
-    "2025-02-18": [
+    "top_seller": "Snowball",
+    "total_sales": 60.00
+  },
+  {
+    "date": "2025-02-18",
+    "sales": [
       {
         "sold_stock": 2,
         "remaining_stock": 28,
@@ -172,7 +207,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-19": [
+    "top_seller": "Bran Muffins",
+    "total_sales": 175.00
+  },
+  {
+    "date": "2025-02-19",
+    "sales": [
       {
         "sold_stock": 6,
         "remaining_stock": 22,
@@ -199,7 +239,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-20": [
+    "top_seller": "Snowball",
+    "total_sales": 180.00
+  },
+  {
+    "date": "2025-02-20",
+    "sales": [
       {
         "sold_stock": 13,
         "remaining_stock": 9,
@@ -226,7 +271,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-21": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 170.00
+  },
+  {
+    "date": "2025-02-21",
+    "sales": [
       {
         "sold_stock": 9,
         "remaining_stock": 0,
@@ -253,7 +303,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-22": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 90.00
+  },
+  {
+    "date": "2025-02-22",
+    "sales": [
       {
         "sold_stock": 0,
         "remaining_stock": 19,
@@ -280,7 +335,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-23": [
+    "top_seller": "Snowball",
+    "total_sales": 90.00
+  },
+  {
+    "date": "2025-02-23",
+    "sales": [
       {
         "sold_stock": 8,
         "remaining_stock": 11,
@@ -307,7 +367,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-24": [
+    "top_seller": "Bran Muffins",
+    "total_sales": 235.00
+  },
+  {
+    "date": "2025-02-24",
+    "sales": [
       {
         "sold_stock": 8,
         "remaining_stock": 3,
@@ -334,7 +399,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-25": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 85.00
+  },
+  {
+    "date": "2025-02-25",
+    "sales": [
       {
         "sold_stock": 2,
         "remaining_stock": 15,
@@ -361,7 +431,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-26": [
+    "top_seller": "Bran Muffins",
+    "total_sales": 80.00
+  },
+  {
+    "date": "2025-02-26",
+    "sales": [
       {
         "sold_stock": 4,
         "remaining_stock": 11,
@@ -388,7 +463,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-27": [
+    "top_seller": "Bran Muffins",
+    "total_sales": 130.00
+  },
+  {
+    "date": "2025-02-27",
+    "sales": [
       {
         "sold_stock": 9,
         "remaining_stock": 2,
@@ -415,7 +495,12 @@
         "pastry_id": 4
       }
     ],
-    "2025-02-28": [
+    "top_seller": "Chocolate Cupcakes",
+    "total_sales": 160.00
+  },
+  {
+    "date": "2025-02-28",
+    "sales": [
       {
         "sold_stock": 2,
         "remaining_stock": 19,
@@ -441,6 +526,8 @@
         "remaining_stock": 33,
         "pastry_id": 4
       }
-    ]
+    ],
+    "top_seller": "Snowball",
+    "total_sales": 145.00
   }
-}
+]
