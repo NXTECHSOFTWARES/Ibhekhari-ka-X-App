@@ -127,6 +127,7 @@ class PastryViewModel extends ChangeNotifier {
           price: pastry.price,
           quantity: pastry.quantity,
           category: pastry.category,
+          createdAt: pastry.createdAt,
           imageFile: null);
       if (success) {
         print("successfully added Pastry");
@@ -142,6 +143,7 @@ class PastryViewModel extends ChangeNotifier {
     required int quantity,
     required String category,
     required File? imageFile,
+    createdAt
   }) async {
     Uint8List? imgByte;
     if (imageFile != null) {
@@ -157,7 +159,7 @@ class PastryViewModel extends ChangeNotifier {
         quantity: quantity,
         category: category,
         imageBytes: imgByte!,
-        createdAt: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        createdAt: createdAt ??  DateFormat('yyyy-MM-dd').format(DateTime.now()),
       );
 
       await _repository.addPastry(pastry);

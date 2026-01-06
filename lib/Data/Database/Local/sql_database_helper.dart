@@ -19,7 +19,7 @@ class SqlDatabaseHelper {
   Future<Database> _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, 'nxbakers.db');
-
+    // deleteDatabase(path);
     return await openDatabase(
       path,
       version: 1,

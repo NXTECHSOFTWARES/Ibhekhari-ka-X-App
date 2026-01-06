@@ -1,0 +1,446 @@
+{
+  "month": "February 2025",
+  "sales": {
+    "2025-02-11": [
+      {
+        "sold_stock": 0,
+        "remaining_stock": 17,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 21,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 1,
+        "pastry_id": 2
+      }
+    ],
+    "2025-02-12": [
+      {
+        "sold_stock": 9,
+        "remaining_stock": 8,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 19,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      }
+    ],
+    "2025-02-13": [
+      {
+        "sold_stock": 6,
+        "remaining_stock": 2,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 19,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 6,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 7,
+        "pastry_id": 3
+      }
+    ],
+    "2025-02-14": [
+      {
+        "sold_stock": 2,
+        "remaining_stock": 0,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 7,
+        "remaining_stock": 12,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 4,
+        "remaining_stock": 2,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 5,
+        "remaining_stock": 2,
+        "pastry_id": 3
+      }
+    ],
+    "2025-02-15": [
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 6,
+        "remaining_stock": 6,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 3,
+        "remaining_stock": 9,
+        "pastry_id": 3
+      }
+    ],
+    "2025-02-16": [
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 6,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 0,
+        "pastry_id": 3
+      }
+    ],
+    "2025-02-17": [
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 6,
+        "remaining_stock": 3,
+        "pastry_id": 3
+      }
+    ],
+    "2025-02-18": [
+      {
+        "sold_stock": 2,
+        "remaining_stock": 28,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 8,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 8,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 7,
+        "remaining_stock": 2,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 9,
+        "remaining_stock": 8,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-19": [
+      {
+        "sold_stock": 6,
+        "remaining_stock": 22,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 6,
+        "remaining_stock": 3,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 6,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 7,
+        "remaining_stock": 7,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 6,
+        "remaining_stock": 3,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-20": [
+      {
+        "sold_stock": 13,
+        "remaining_stock": 9,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 1,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 3,
+        "remaining_stock": 3,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 5,
+        "remaining_stock": 2,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 3,
+        "remaining_stock": 0,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-21": [
+      {
+        "sold_stock": 9,
+        "remaining_stock": 0,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 1,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 17,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-22": [
+      {
+        "sold_stock": 0,
+        "remaining_stock": 19,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 21,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 9,
+        "remaining_stock": 8,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 21,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-23": [
+      {
+        "sold_stock": 8,
+        "remaining_stock": 11,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 4,
+        "remaining_stock": 17,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 0,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 19,
+        "remaining_stock": 2,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-24": [
+      {
+        "sold_stock": 8,
+        "remaining_stock": 3,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 16,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 28,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-25": [
+      {
+        "sold_stock": 2,
+        "remaining_stock": 15,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 2,
+        "remaining_stock": 14,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 11,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 18,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 10,
+        "remaining_stock": 18,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-26": [
+      {
+        "sold_stock": 4,
+        "remaining_stock": 11,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 4,
+        "remaining_stock": 7,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 17,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 12,
+        "remaining_stock": 6,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-27": [
+      {
+        "sold_stock": 9,
+        "remaining_stock": 2,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 6,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 8,
+        "remaining_stock": 9,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 5,
+        "remaining_stock": 1,
+        "pastry_id": 4
+      }
+    ],
+    "2025-02-28": [
+      {
+        "sold_stock": 2,
+        "remaining_stock": 19,
+        "pastry_id": 0
+      },
+      {
+        "sold_stock": 0,
+        "remaining_stock": 0,
+        "pastry_id": 1
+      },
+      {
+        "sold_stock": 4,
+        "remaining_stock": 2,
+        "pastry_id": 2
+      },
+      {
+        "sold_stock": 9,
+        "remaining_stock": 17,
+        "pastry_id": 3
+      },
+      {
+        "sold_stock": 1,
+        "remaining_stock": 33,
+        "pastry_id": 4
+      }
+    ]
+  }
+}

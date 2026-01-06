@@ -1,0 +1,260 @@
+[
+  {
+    "baking_date": "2025-02-11",
+    "batch_items": [
+      {
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_baked": 17,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "initial batch"
+      },
+      {
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_baked": 21,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "initial batch"
+      },
+      {
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_baked": 8,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "initial batch"
+      }
+    ],
+    "total_items_baked": 46
+  },
+  {
+    "baking_date": "2025-02-13",
+    "batch_items": [
+      {
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_baked": 8,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 9,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "new product introduction"
+      }
+    ],
+    "total_items_baked": 17
+  },
+  {
+    "baking_date": "2025-02-15",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 9,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 9
+  },
+  {
+    "baking_date": "2025-02-17",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 9,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 9
+  },
+  {
+    "baking_date": "2025-02-18",
+    "batch_items": [
+      {
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_baked": 10,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_baked": 8,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_baked": 30,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "large batch - high demand anticipated"
+      },
+      {
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "quantity_baked": 9,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "new product introduction"
+      }
+    ],
+    "total_items_baked": 57
+  },
+  {
+    "baking_date": "2025-02-19",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 12,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 12
+  },
+  {
+    "baking_date": "2025-02-21",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 17,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 17
+  },
+  {
+    "baking_date": "2025-02-22",
+    "batch_items": [
+      {
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_baked": 19,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_baked": 21,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "quantity_baked": 21,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 61
+  },
+  {
+    "baking_date": "2025-02-24",
+    "batch_items": [
+      {
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "quantity_baked": 34,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "large batch - high demand from Feb 23"
+      }
+    ],
+    "total_items_baked": 34,
+    "additional_purchases": [
+      {
+        "item": "Butter",
+        "cost": 110,
+        "currency": "R",
+        "notes": "ingredient purchase for production"
+      }
+    ]
+  },
+  {
+    "baking_date": "2025-02-25",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 18,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_baked": 12,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_baked": 17,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      }
+    ],
+    "total_items_baked": 47
+  },
+  {
+    "baking_date": "2025-02-28",
+    "batch_items": [
+      {
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "quantity_baked": 17,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_baked": 19,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "replenishment batch"
+      },
+      {
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "quantity_baked": 33,
+        "status": "fresh",
+        "expiry_tracking": "monitor for freshness",
+        "notes": "large batch - consistent demand"
+      }
+    ],
+    "total_items_baked": 69
+  }
+]

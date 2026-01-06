@@ -22,6 +22,7 @@ class DailyEntriesRepo{
       };
       return await _dbHelper.insertDailyEntry(dailyEntry.toJson());
     } catch (e) {
+      print("Hey Im here");
       throw Exception('Failed to add daily entry: $e');
     }
 

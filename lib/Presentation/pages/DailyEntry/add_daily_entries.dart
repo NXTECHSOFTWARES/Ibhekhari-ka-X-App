@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:nxbakers/Common/Widgets/custom_add_button.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
@@ -29,7 +30,6 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
   void initState() {
     super.initState();
 
-    // Prevent auto-focus when dialog opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
@@ -40,12 +40,10 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
       controller.dispose();
     }
 
-    _controllers =
-        List.generate(pastriesCount, (index) => TextEditingController());
+    _controllers = List.generate(pastriesCount, (index) => TextEditingController());
     _soldQuantities = List.generate(pastriesCount, (index) => 0);
     _isInvalid = List.generate(pastriesCount, (index) => false);
-    _soldQuantitiesDisplayValue =
-        List.generate(pastriesCount, (index) => "...");
+    _soldQuantitiesDisplayValue = List.generate(pastriesCount, (index) => "...");
   }
 
   @override
@@ -57,15 +55,13 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     super.dispose();
   }
 
-  void _updateTotalSales(Pastry pastry, int index, String remainingStockText,
-      DailyEntryViewModel viewModel) {
+  void _updateTotalSales(Pastry pastry, int index, String remainingStockText, DailyEntryViewModel viewModel) {
     int remainingStock = 0;
     int initialStock = pastry.quantity ?? 0;
     int soldQuantity = 0;
 
     try {
-      remainingStock =
-          remainingStockText.isEmpty ? 0 : int.parse(remainingStockText);
+      remainingStock = remainingStockText.isEmpty ? 0 : int.parse(remainingStockText);
     } catch (e) {
       remainingStock = 0;
     }
@@ -144,9 +140,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     int topSellerIndex = -1;
 
     // Find the pastry with the highest sold quantity
-    for (int i = 0;
-        i < _soldQuantities.length && i < viewModel.pastries.length;
-        i++) {
+    for (int i = 0; i < _soldQuantities.length && i < viewModel.pastries.length; i++) {
       if (_soldQuantities[i] > maxSold) {
         maxSold = _soldQuantities[i];
         topSellerIndex = i;
@@ -172,8 +166,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     bool hasErrors = false;
     for (int i = 0; i < _controllers.length; i++) {
       if (i < viewModel.pastries.length) {
-        String? error = _validateRemainingStock(
-            _controllers[i].text, viewModel.pastries[i]);
+        String? error = _validateRemainingStock(_controllers[i].text, viewModel.pastries[i]);
         if (error != null) {
           hasErrors = true;
           break;
@@ -239,10 +232,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     return ChangeNotifierProvider(
       create: (BuildContext context) => DailyEntryViewModel()..initialize(),
       child: Consumer<DailyEntryViewModel>(
-        builder: (BuildContext context, DailyEntryViewModel viewModel,
-            Widget? child) {
-          if (viewModel.pastries.isNotEmpty &&
-              _controllers.length != viewModel.pastries.length) {
+        builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
+          if (viewModel.pastries.isNotEmpty && _controllers.length != viewModel.pastries.length) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _initializeControllers(viewModel.pastries.length);
             });
@@ -262,8 +253,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: 15.0.h, left: 20.w, right: 20.w, bottom: 0.h),
+                        padding: EdgeInsets.only(top: 15.0.h, left: 20.w, right: 20.w, bottom: 0.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -273,8 +263,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                               size: lFontSize,
                             ),
                             ReusableTextWidget(
-                              text: DateFormat('EEEE, d MMMM y')
-                                  .format(DateTime.now()),
+                              text: DateFormat('EEEE, d MMMM y').format(DateTime.now()),
                               color: const Color(0xff351F00),
                               size: xsFontSize,
                               FW: sFontWeight,
@@ -325,9 +314,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                     FW: FontWeight.w400,
                                   ),
                                   ReusableTextWidget(
-                                    text: totalSales == 0
-                                        ? "R..."
-                                        : "R${totalSales.toStringAsFixed(2)}",
+                                    text: totalSales == 0 ? "R..." : "R${totalSales.toStringAsFixed(2)}",
                                     color: const Color(0xff6D593D),
                                     size: xsFontSize,
                                     FW: xxlFontWeight,
@@ -346,21 +333,17 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                   width: 100.w,
                                   height: 38.h,
                                   margin: EdgeInsets.only(bottom: 10.h),
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.w),
+                                  padding: EdgeInsets.symmetric(horizontal: 8.w),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff000000)
-                                        .withOpacity(0.20),
+                                    color: const Color(0xff000000).withOpacity(0.20),
                                     borderRadius: BorderRadius.circular(5.0.r),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Wrap(
                                         spacing: 10.w,
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
+                                        crossAxisAlignment: WrapCrossAlignment.center,
                                         children: [
                                           /**
                                            * Pastry Image
@@ -370,13 +353,12 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                             height: 22.h,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                image: pastry.imageBytes.isNotEmpty ? MemoryImage(
-                                                    pastry.imageBytes)
-                                                    : const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider),
+                                                  image: pastry.imageBytes.isNotEmpty
+                                                      ? MemoryImage(pastry.imageBytes)
+                                                      : const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider),
                                               border: Border.all(
                                                 width: 1.0.w,
-                                                color: const Color(0xff000000)
-                                                    .withOpacity(0.35),
+                                                color: const Color(0xff000000).withOpacity(0.35),
                                                 style: BorderStyle.solid,
                                               ),
                                               shape: BoxShape.circle,
@@ -394,16 +376,8 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                         spacing: 10.w,
                                         children: [
                                           ReusableTextWidget(
-                                            text: index <
-                                                    _soldQuantitiesDisplayValue
-                                                        .length
-                                                ? _soldQuantitiesDisplayValue[
-                                                    index]
-                                                : "...",
-                                            color: index < _isInvalid.length &&
-                                                    _isInvalid[index]
-                                                ? Colors.red
-                                                : const Color(0xffF2EADE),
+                                            text: index < _soldQuantitiesDisplayValue.length ? _soldQuantitiesDisplayValue[index] : "...",
+                                            color: index < _isInvalid.length && _isInvalid[index] ? Colors.red : const Color(0xffF2EADE),
                                             size: 10,
                                             FW: FontWeight.w400,
                                           ),
@@ -417,75 +391,40 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                                             child: Center(
                                               child: TextFormField(
                                                 focusNode: FocusNode(skipTraversal: true),
-                                                keyboardType:
-                                                    TextInputType.number,
+                                                keyboardType: TextInputType.number,
                                                 textAlign: TextAlign.center,
-                                                controller:
-                                                    index < _controllers.length
-                                                        ? _controllers[index]
-                                                        : null,
+                                                controller: index < _controllers.length ? _controllers[index] : null,
                                                 onChanged: (value) {
-                                                  String numericValue =
-                                                      value.replaceAll(
-                                                          RegExp(r'[^0-9]'),
-                                                          '');
+                                                  String numericValue = value.replaceAll(RegExp(r'[^0-9]'), '');
                                                   if (value != numericValue) {
-                                                    _controllers[index].text =
-                                                        numericValue;
-                                                    _controllers[index]
-                                                            .selection =
-                                                        TextSelection.collapsed(
-                                                            offset: numericValue
-                                                                .length);
+                                                    _controllers[index].text = numericValue;
+                                                    _controllers[index].selection = TextSelection.collapsed(offset: numericValue.length);
                                                   }
-                                                  _updateTotalSales(
-                                                      pastry,
-                                                      index,
-                                                      numericValue,
-                                                      viewModel);
+                                                  _updateTotalSales(pastry, index, numericValue, viewModel);
                                                 },
                                                 style: GoogleFonts.poppins(
-                                                  color:
-                                                      const Color(0xff351F00),
+                                                  color: const Color(0xff351F00),
                                                   fontSize: 10.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                                 decoration: InputDecoration(
                                                   border: InputBorder.none,
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0.r),
-                                                    borderSide: index <
-                                                                _isInvalid
-                                                                    .length &&
-                                                            _isInvalid[index]
-                                                        ? BorderSide(
-                                                            width: 1.5.w,
-                                                            color: Colors.red)
+                                                  enabledBorder: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(4.0.r),
+                                                    borderSide: index < _isInvalid.length && _isInvalid[index]
+                                                        ? BorderSide(width: 1.5.w, color: Colors.red)
                                                         : BorderSide.none,
                                                   ),
                                                   filled: true,
                                                   fillColor: Colors.white,
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4.0.r),
-                                                    borderSide: index <
-                                                                _isInvalid
-                                                                    .length &&
-                                                            _isInvalid[index]
-                                                        ? BorderSide(
-                                                            width: 1.5.w,
-                                                            color: Colors.red)
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(4.0.r),
+                                                    borderSide: index < _isInvalid.length && _isInvalid[index]
+                                                        ? BorderSide(width: 1.5.w, color: Colors.red)
                                                         : BorderSide.none,
                                                   ),
-                                                  hintStyle:
-                                                      GoogleFonts.poppins(
-                                                    color:
-                                                        const Color(0xff000110),
+                                                  hintStyle: GoogleFonts.poppins(
+                                                    color: const Color(0xff000110),
                                                     fontWeight: FontWeight.w300,
                                                     fontSize: 8.sp,
                                                     fontStyle: FontStyle.italic,
@@ -515,39 +454,32 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                         height: 1,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: 20.w, right: 20.w, bottom: 15.h, top: 10.h),
+                        padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 15.h, top: 10.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             ReusableTextWidget(
+                            ReusableTextWidget(
                               text: "Top Seller",
                               color: const Color(0xff351F00),
                               size: lFontSize,
                               FW: lFontWeight,
                             ),
-                            SizedBox(height: 15.h,
+                            SizedBox(
+                              height: 15.h,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Top seller name
                                 ReusableTextWidget(
-                                  text: _getTopSeller(viewModel)['name'] ==
-                                          "No sales"
-                                      ? "loading..."
-                                      : _getTopSeller(viewModel)['name'],
+                                  text: _getTopSeller(viewModel)['name'] == "No sales" ? "loading..." : _getTopSeller(viewModel)['name'],
                                   color: const Color(0xff634923),
                                   size: sFontSize,
                                   FW: lFontWeight,
                                 ),
                                 // Sold quantity
                                 ReusableTextWidget(
-                                  text:
-                                      _getTopSeller(viewModel)['quantity'] == 0
-                                          ? "loading..."
-                                          : _getTopSeller(viewModel)['quantity']
-                                              .toString(),
+                                  text: _getTopSeller(viewModel)['quantity'] == 0 ? "loading..." : _getTopSeller(viewModel)['quantity'].toString(),
                                   color: const Color(0xff634923),
                                   size: sFontSize,
                                   FW: lFontWeight,
@@ -565,61 +497,10 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
                             ),
                             SizedBox(height: 30.h),
                             GestureDetector(
-                              onTap: () => _submitDailyEntry(viewModel),
-                              child: Container(
-                                width: double.infinity,
-                                height: 34.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6.0.r),
-                                  gradient: RadialGradient(
-                                    colors: const [
-                                      Color(0xff634923),
-                                      Color(0xff351F00)
-                                    ],
-                                    radius: 4.r,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 22.w,
-                                      height: 22.h,
-                                      decoration: BoxDecoration(
-                                        gradient: const RadialGradient(
-                                          colors: [
-                                            Color(0xffAF8850),
-                                            Color(0xff482B02)
-                                          ],
-                                          radius: 0.6,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(4.r),
-                                        border: Border.all(
-                                            color: const Color(0xff3F2808)),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 18.w,
-                                          color: const Color(0xff422B0A),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 25.w),
-                                    Center(
-                                      child: ReusableTextWidget(
-                                        text: "today's entry",
-                                        color: Colors.white,
-                                        size: sFontSize,
-                                        FW: sFontWeight,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
+                                onTap: () => _submitDailyEntry(viewModel),
+                                child: const CustomAddButton(
+                                  buttonTitle: 'TODAY’S ENTRY',
+                                )),
                           ],
                         ),
                       ),

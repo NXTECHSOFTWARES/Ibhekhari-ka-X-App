@@ -7,6 +7,7 @@ import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/pages/DailyEntry/daily_inventory_entry.dart';
 import 'package:nxbakers/Presentation/pages/HomePage/homepage.dart';
 import 'package:nxbakers/Presentation/pages/Ingridient/Ingredients.dart';
+import 'package:nxbakers/Presentation/pages/Pastries/add_new_pastry.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/low_stock_details_page.dart';
 import 'package:nxbakers/Presentation/pages/Profits/profit.dart';
 import 'package:nxbakers/Presentation/pages/Settings/notification_settings_page.dart';
@@ -14,8 +15,10 @@ import 'package:provider/provider.dart';
 
 import '../../../Domain/Services/background_task_service.dart';
 import '../../ViewModels/daily_entry_viewmodel.dart';
+import '../../ViewModels/stats_viewmodel.dart';
 import '../Pastries/pastries.dart';
 
+import '../Stats/stats_dashboard.dart';
 import 'Utils/WIdgets/custom_drawer.dart';
 
 class Dashboard extends StatefulWidget {
@@ -27,7 +30,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
-  // Remove the scaffold key since we don't need programmatic control
 
   final List<Widget> listOfPages = [
     const Homepage(),
@@ -35,8 +37,14 @@ class _DashboardState extends State<Dashboard> {
       create: (BuildContext context) => DailyEntryViewModel()..initialize(),
       child: const DailyInventoryEntry(),
     ),
-    ChangeNotifierProvider(create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const PastriesPage()),
-    const IngredientsPage(),
+    ChangeNotifierProvider(
+      create: (BuildContext context) => PastryViewModel()..loadPastries(),
+      child: const PastriesPage(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => StatsViewModel(),
+      child: DailySalesStatsPage(),
+    )
   ];
 
   @override
@@ -49,22 +57,13 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      // Customize swipe behavior (optional)
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width, // Full screen swipe
-      drawerScrimColor: Colors.black54, // Background dim when drawer is open
-      // You can also control which gestures open the drawer
-      // gestureDetectors: {
-      //   const TypeMatcher<HorizontalDragGestureRecognizer>(): (recognizer) {
-      //     return recognizer..minFlingVelocity = 100; // Adjust sensitivity
-      //   },
-      // },
-
+      drawerScrimColor: Colors.black54,
       body: Stack(
         children: [
-          PageView(
-            scrollDirection: Axis.horizontal,
-            scrollBehavior: const ScrollBehavior(),
-            children: [listOfPages[_selectedIndex]],
+          // Use IndexedStack instead of PageView to preserve widget state
+          IndexedStack(
+            index: _selectedIndex,
+            children: listOfPages,
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -74,15 +73,15 @@ class _DashboardState extends State<Dashboard> {
                 Container(
                   width: size.width,
                   height: 130.h,
-                  color: Colors.transparent,
+
                 ),
                 Container(
                   width: size.width,
                   height: 80.h,
-                  color: Colors.black,
+                  color: const Color(0xff351F00),
                 ),
                 BottomNavigationBar(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: const Color(0xff351F00),
                   currentIndex: _selectedIndex,
                   unselectedItemColor: const Color(0xffffffff),
                   type: BottomNavigationBarType.fixed,
@@ -96,10 +95,22 @@ class _DashboardState extends State<Dashboard> {
                     });
                   },
                   items: const [
-                    BottomNavigationBarItem(icon: Icon(CommunityMaterialIcons.home), label: "Home"),
-                    BottomNavigationBarItem(icon: Icon(CommunityMaterialIcons.view_list), label: "Pastries"),
-                    BottomNavigationBarItem(icon: Icon(CommunityMaterialIcons.clipboard_list), label: "Ingredients"),
-                    BottomNavigationBarItem(icon: Icon(CommunityMaterialIcons.chart_line), label: "Profit"),
+                    BottomNavigationBarItem(
+                      icon: Icon(CommunityMaterialIcons.home),
+                      label: "Home",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(CommunityMaterialIcons.view_list),
+                      label: "Pastries",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(CommunityMaterialIcons.clipboard_list),
+                      label: "Ingredients",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(CommunityMaterialIcons.chart_line),
+                      label: "Statistics",
+                    ),
                   ],
                 ),
                 Positioned(
@@ -107,20 +118,33 @@ class _DashboardState extends State<Dashboard> {
                   child: Container(
                     width: 80.w,
                     height: 80.h,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
+
+                      gradient: RadialGradient(
+                        colors: const [
+                          Color(0xffC99448),
+                          Color(0xff634923),
+                        ],
+                        radius: 0.45.r
+                      ),
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          // You can keep this as a menu button or change it back to plus
-                          // For swipe-only, you might want to keep it as plus for other functionality
-                          // Or remove the onPressed entirely if you don't need it
-                        },
-                        icon: Icon(
-                          CommunityMaterialIcons.plus, // Changed back to plus
-                          size: 32.w,
-                        )),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (BuildContext context) => PastryViewModel()..loadPastries(),
+                            child: const NewPastry(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.add_rounded,
+                        size: 38.w,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -145,27 +169,29 @@ class _DashboardState extends State<Dashboard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: Icon(Icons.inventory_2, color: Color(0xFF573E1A)),
-            title: Text('Check Low Stock'),
+            leading: const Icon(Icons.inventory_2, color: Color(0xFF573E1A)),
+            title: const Text('Check Low Stock'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LowStockDetailsPage(),
+                  builder: (context) => const LowStockDetailsPage(),
                 ),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.notifications_active, color: Color(0xFF573E1A)),
-            title: Text('Test Notifications'),
+            leading: const Icon(Icons.notifications_active, color: Color(0xFF573E1A)),
+            title: const Text('Test Notifications'),
             onTap: () async {
               Navigator.pop(context);
               await BackgroundTaskService().checkNow();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Stock check complete')),
-              );
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Stock check complete')),
+                );
+              }
             },
           ),
         ],

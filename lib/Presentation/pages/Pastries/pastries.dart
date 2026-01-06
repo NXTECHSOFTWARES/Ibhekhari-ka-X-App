@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
+import 'package:nxbakers/Common/color.dart';
 import 'package:nxbakers/Common/common_main.dart';
 import 'package:nxbakers/Common/common_page_header.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/Utils/Widgets/custom_filter_button.dart';
@@ -83,13 +84,50 @@ class _PastriesPageState extends State<PastriesPage> {
             case ViewState.loading:
               return const Center(child: CircularProgressIndicator());
             case ViewState.error:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(viewModel.errorMessage ?? 'An error occurred'),
-                  ],
-                ),
+              return CommonMain(
+                child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  /**
+                   * Header
+                   */
+                  CommonPageHeader(
+                    pageTitle: 'Pastries',
+                    pageSubTitle: 'A List of all pastries in your inventory',
+                    addViewModel: PastryViewModel(),
+                    addNavPage: const NewPastry(),
+                  ),
+
+                  /**
+                   * Filter and sort button
+                   */
+                  Row(
+                    children: [Expanded(child: Container()), _buildCustomFilterDesign(viewModel)],
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ReusableTextWidget(
+                            text: "No PASTRIES AVAILABLE".toUpperCase(),
+                            color: Colors.black,
+                            size: xlFontSize,
+                            FW: FontWeight.w400,
+                          ),
+                          ReusableTextWidget(
+                            text: "please add new pastries",
+                            color: primaryColor,
+                            size: lFontSize,
+                            FW: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
               );
             case ViewState.success:
             case ViewState.idle:
@@ -225,8 +263,6 @@ class _PastriesPageState extends State<PastriesPage> {
             addNavPage: const NewPastry(),
           ),
 
-
-
           /**
            * Filter and sort button
            */
@@ -258,7 +294,7 @@ class _PastriesPageState extends State<PastriesPage> {
                 horizontal: 5.w,
               ),
               child: ListView.builder(
-                  padding: EdgeInsets.only(top: 0.h),
+                  padding: EdgeInsets.only(bottom: 100.h),
                   itemCount: viewModel.displayedPastries.length,
                   itemBuilder: (context, index) {
                     final pastry = viewModel.displayedPastries[index];
@@ -310,7 +346,8 @@ class _PastriesPageState extends State<PastriesPage> {
                     );
                   }),
             ),
-          )
+          ),
+
         ],
       ),
     );

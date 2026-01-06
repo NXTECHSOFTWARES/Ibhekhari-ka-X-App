@@ -122,10 +122,7 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
   }
 
   String findMostFrequent(List<String> list) {
-    return list.groupListsBy((element) => element)
-        .entries
-        .reduce((a, b) => a.value.length > b.value.length ? a : b)
-        .key;
+    return list.groupListsBy((element) => element).entries.reduce((a, b) => a.value.length > b.value.length ? a : b).key;
   }
 
   String _getTopSellerForPeriod(Map<String, List<DailyEntry>> dailyEntriesInPeriod, List<Pastry> pastries) {
@@ -133,10 +130,7 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
 
     dailyEntriesInPeriod.forEach((date, entries) {
       for (DailyEntry entry in entries) {
-        String pastryName = pastries
-            .where((pastry) => pastry.id! == entry.pastryId)
-            .firstOrNull
-            ?.title ?? "Unknown Pastry";
+        String pastryName = pastries.where((pastry) => pastry.id! == entry.pastryId).firstOrNull?.title ?? "Unknown Pastry";
 
         pastrySales[pastryName] = (pastrySales[pastryName] ?? 0) + entry.soldStock;
       }
@@ -156,10 +150,7 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
     int topSoldStock = 0;
 
     for (DailyEntry entry in entries) {
-      String pastryName = pastries
-          .where((pastry) => pastry.id! == entry.pastryId)
-          .firstOrNull
-          ?.title ?? "Unknown Pastry";
+      String pastryName = pastries.where((pastry) => pastry.id! == entry.pastryId).firstOrNull?.title ?? "Unknown Pastry";
 
       if (entry.soldStock > topSoldStock) {
         topSeller = pastryName;
@@ -174,7 +165,6 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Consumer<DailyEntryViewModel>(builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
-
       if (_expandedStates.isEmpty && viewModel.dailyEntriesFGroupByDate.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
@@ -191,15 +181,15 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
       return Scaffold(
         floatingActionButton: viewModel.dailyEntriesFGroupByDate.isEmpty
             ? Align(
-          alignment: Alignment.center,
-          child: FloatingActionButton(
-            backgroundColor: Colors.black,
-            onPressed: () {
-              viewModel.loadTestData();
-            },
-            child: Icon(Icons.add, color: Colors.white),
-          ),
-        )
+                alignment: Alignment.center,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    viewModel.loadTestData();
+                  },
+                  child: const Icon(Icons.add, color: Colors.white),
+                ),
+              )
             : null,
         body: CommonMain(
           child: Column(
@@ -267,257 +257,260 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
                */
               viewModel.dailyEntriesFGroupByDate.isEmpty
                   ? Expanded(
-                  child: Center(
-                    child: ReusableTextWidget(
-                      text: "No Data To Display".toUpperCase(),
-                      color: Colors.black,
-                      size: xlFontSize,
-                      FW: FontWeight.w400,
-                    ),
-                  ))
+                      child: Center(
+                        child: ReusableTextWidget(
+                          text: "No Data To Display".toUpperCase(),
+                          color: Colors.black,
+                          size: xlFontSize,
+                          FW: FontWeight.w400,
+                        ),
+                      ),
+                    )
                   : Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Column(
                           children: [
-                            ReusableTextWidget(
-                              text: "Daily Sales",
-                              color: const Color(0xff573E1A),
-                              size: xlFontSize,
-                              FW: lFontWeight,
-                            ),
-                            Container(
-                              padding: EdgeInsets.zero,
-                              width: 55.w,
-                              height: 30.h,
-                              child: Center(
-                                child: DropdownButtonFormField<String>(
-                                  focusNode: _dropDownFocusNode,
-                                  elevation: 0,
-                                  dropdownColor: const Color(0xffF2EADE),
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: const Color(0xff351F00),
+                            SizedBox(height: 20.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ReusableTextWidget(
+                                    text: "Daily Sales",
+                                    color: const Color(0xff573E1A),
+                                    size: xlFontSize,
+                                    FW: lFontWeight,
                                   ),
-                                  value: _selectedYear,
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: "2025",
-                                      child: ReusableTextWidget(
-                                        text: "2025",
-                                        color: const Color(0XFF351F00),
-                                        size: sFontSize,
-                                        FW: sFontWeight,
+                                  Container(
+                                    padding: EdgeInsets.zero,
+                                    width: 55.w,
+                                    height: 30.h,
+                                    child: Center(
+                                      child: DropdownButtonFormField<String>(
+                                        focusNode: _dropDownFocusNode,
+                                        elevation: 0,
+                                        dropdownColor: const Color(0xffF2EADE),
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 10.sp,
+                                          color: const Color(0xff351F00),
+                                        ),
+                                        value: _selectedYear,
+                                        items: [
+                                          DropdownMenuItem(
+                                            value: "2025",
+                                            child: ReusableTextWidget(
+                                              text: "2025",
+                                              color: const Color(0XFF351F00),
+                                              size: sFontSize,
+                                              FW: sFontWeight,
+                                            ),
+                                          ),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedYear = value;
+                                          });
+                                        },
+                                        iconSize: 18.w,
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          color: Color(0xff7D6543),
+                                        ),
+                                        iconEnabledColor: const Color(0xff7D6543),
+                                        focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(6.r),
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.only(left: 10.w),
+                                          enabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          fillColor: Colors.transparent,
+                                          filled: true,
+                                        ),
+                                        validator: (value) => value == null ? 'Please select a year' : null,
                                       ),
                                     ),
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedYear = value;
-                                    });
-                                  },
-                                  iconSize: 18.w,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: Color(0xff7D6543),
                                   ),
-                                  iconEnabledColor: const Color(0xff7D6543),
-                                  focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(6.r),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.only(left: 10.w),
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                  ),
-                                  validator: (value) => value == null ? 'Please select a year' : null,
-                                ),
+                                ],
                               ),
                             ),
+                            SizedBox(height: 17.h),
+                            /**
+                       * Daily Entries
+                       */
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: viewModel.dailyEntriesFGroupByDate.keys.length,
+                                itemBuilder: (context, periodIndex) {
+                                  String periodKey = viewModel.dailyEntriesFGroupByDate.keys.elementAt(periodIndex);
+                                  Map<String, List<DailyEntry>> dailyEntriesInPeriod = viewModel.dailyEntriesFGroupByDate[periodKey]!;
+
+                                  // Calculate top seller for this period
+                                  String periodTopSeller = _getTopSellerForPeriod(dailyEntriesInPeriod, viewModel.pastries);
+
+                                  return Column(
+                                    children: [
+                                      /**
+                                 * Month Period Summary Header
+                                 */
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 0.h, right: 15.0.w, bottom: 13.h),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(),
+                                            Wrap(
+                                              crossAxisAlignment: WrapCrossAlignment.center,
+                                              spacing: 10.w,
+                                              children: [
+                                                /**
+                                           * Total Sales for the Period
+                                           */
+                                                ReusableTextWidget(
+                                                  text: _calculatePeriodTotal(dailyEntriesInPeriod, viewModel.pastries),
+                                                  color: const Color(0xff56452D),
+                                                  size: xsFontSize,
+                                                  FW: sFontWeight,
+                                                ),
+                                                Container(
+                                                  width: 25.w,
+                                                  height: 1.h,
+                                                  color: const Color(0xffAA9C88),
+                                                ),
+                                                /**
+                                           * Top Seller/ Pastry that was sold the most for the Period
+                                           */
+                                                ReusableTextWidget(
+                                                  text: periodTopSeller,
+                                                  color: const Color(0xff56452D),
+                                                  size: xsFontSize,
+                                                  FW: sFontWeight,
+                                                ),
+                                                Container(
+                                                  width: 25.w,
+                                                  height: 1.h,
+                                                  color: const Color(0xffAA9C88),
+                                                ),
+                                                /**
+                                           * Period Date
+                                           */
+                                                ReusableTextWidget(
+                                                  text: _formatShortPeriod(periodKey),
+                                                  color: const Color(0xff56452D),
+                                                  size: xsFontSize,
+                                                  FW: sFontWeight,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      /**
+                                 * Daily Month Entries
+                                 */
+                                      ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemCount: dailyEntriesInPeriod.keys.length,
+                                          itemBuilder: (context, dailyIndex) {
+                                            String dateKey = dailyEntriesInPeriod.keys.elementAt(dailyIndex);
+                                            List<DailyEntry> entriesForDate = dailyEntriesInPeriod[dateKey]!;
+
+                                            int globalIndex = _calculateGlobalIndex(periodIndex, dailyIndex, viewModel.dailyEntriesFGroupByDate);
+                                            bool isExpanded = globalIndex < _expandedStates.length ? _expandedStates[globalIndex] : false;
+
+                                            return Container(
+                                              width: size.width,
+                                              margin: EdgeInsets.only(bottom: 10.h),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFF2EADE),
+                                                borderRadius: BorderRadius.circular(8.r),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: const Color(0xFF362A1A).withOpacity(0.24),
+                                                    spreadRadius: 0,
+                                                    blurRadius: 4.r,
+                                                    offset: Offset(0, 2.h),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  /**
+                                             * Daily Entry Summary
+                                             */
+                                                  ExpansionTile(
+                                                    showTrailingIcon: false,
+                                                    minTileHeight: 50.h,
+                                                    initiallyExpanded: isExpanded,
+                                                    collapsedShape: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      borderSide: BorderSide.none,
+                                                    ),
+                                                    onExpansionChanged: (isExpanded) {
+                                                      if (globalIndex < _expandedStates.length) {
+                                                        setState(() {
+                                                          // Reset all expanded states
+                                                          for (int i = 0; i < _expandedStates.length; i++) {
+                                                            _expandedStates[i] = false;
+                                                          }
+                                                          _expandedStates[globalIndex] = isExpanded;
+                                                        });
+                                                      }
+                                                    },
+                                                    shape: InputBorder.none,
+                                                    backgroundColor: Colors.transparent,
+                                                    title: _buildSummaryItem(dateKey, entriesForDate, viewModel.pastries),
+                                                    children: [
+                                                      Divider(
+                                                        color: Colors.black12,
+                                                        thickness: 5.h,
+                                                        height: 3.h,
+                                                      ),
+                                                      _buildFilterChips(viewModel.categories),
+                                                      _buildItemsList(entriesForDate, viewModel.pastries),
+                                                    ],
+                                                  ),
+                                                  isExpanded
+                                                      ? Container()
+                                                      : Container(
+                                                          width: size.width,
+                                                          height: 5.h,
+                                                          padding: EdgeInsets.zero,
+                                                          margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                                          decoration: BoxDecoration(
+                                                            color: const Color(0XFF634923).withOpacity(0.22),
+                                                            borderRadius: BorderRadius.circular(10.r),
+                                                          ),
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.keyboard_arrow_down_rounded,
+                                                              size: 10.w,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                      SizedBox(height: 17.h),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: 17.h),
-                      /**
-                       * Daily Entries
-                       */
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: viewModel.dailyEntriesFGroupByDate.keys.length,
-                          itemBuilder: (context, periodIndex) {
-                            String periodKey = viewModel.dailyEntriesFGroupByDate.keys.elementAt(periodIndex);
-                            Map<String, List<DailyEntry>> dailyEntriesInPeriod = viewModel.dailyEntriesFGroupByDate[periodKey]!;
-
-                            // Calculate top seller for this period
-                            String periodTopSeller = _getTopSellerForPeriod(dailyEntriesInPeriod, viewModel.pastries);
-
-                            return Column(
-                              children: [
-                                /**
-                                 * Month Period Summary Header
-                                 */
-                                Padding(
-                                  padding: EdgeInsets.only(top: 0.h, right: 15.0.w, bottom: 13.h),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(),
-                                      Wrap(
-                                        crossAxisAlignment: WrapCrossAlignment.center,
-                                        spacing: 10.w,
-                                        children: [
-                                          /**
-                                           * Total Sales for the Period
-                                           */
-                                          ReusableTextWidget(
-                                            text: _calculatePeriodTotal(dailyEntriesInPeriod, viewModel.pastries),
-                                            color: const Color(0xff56452D),
-                                            size: xsFontSize,
-                                            FW: sFontWeight,
-                                          ),
-                                          Container(
-                                            width: 25.w,
-                                            height: 1.h,
-                                            color: const Color(0xffAA9C88),
-                                          ),
-                                          /**
-                                           * Top Seller/ Pastry that was sold the most for the Period
-                                           */
-                                          ReusableTextWidget(
-                                            text: periodTopSeller,
-                                            color: const Color(0xff56452D),
-                                            size: xsFontSize,
-                                            FW: sFontWeight,
-                                          ),
-                                          Container(
-                                            width: 25.w,
-                                            height: 1.h,
-                                            color: const Color(0xffAA9C88),
-                                          ),
-                                          /**
-                                           * Period Date
-                                           */
-                                          ReusableTextWidget(
-                                            text: _formatShortPeriod(periodKey),
-                                            color: const Color(0xff56452D),
-                                            size: xsFontSize,
-                                            FW: sFontWeight,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                /**
-                                 * Daily Month Entries
-                                 */
-                                ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: dailyEntriesInPeriod.keys.length,
-                                    itemBuilder: (context, dailyIndex) {
-                                      String dateKey = dailyEntriesInPeriod.keys.elementAt(dailyIndex);
-                                      List<DailyEntry> entriesForDate = dailyEntriesInPeriod[dateKey]!;
-
-                                      int globalIndex = _calculateGlobalIndex(periodIndex, dailyIndex, viewModel.dailyEntriesFGroupByDate);
-                                      bool isExpanded = globalIndex < _expandedStates.length ? _expandedStates[globalIndex] : false;
-
-                                      return Container(
-                                        width: size.width,
-                                        margin: EdgeInsets.only(bottom: 10.h),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFF2EADE),
-                                          borderRadius: BorderRadius.circular(8.r),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(0xFF362A1A).withOpacity(0.24),
-                                              spreadRadius: 0,
-                                              blurRadius: 4.r,
-                                              offset: Offset(0, 2.h),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            /**
-                                             * Daily Entry Summary
-                                             */
-                                            ExpansionTile(
-                                              showTrailingIcon: false,
-                                              minTileHeight: 50.h,
-                                              initiallyExpanded: isExpanded,
-                                              collapsedShape: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(8.r),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              onExpansionChanged: (isExpanded) {
-                                                if (globalIndex < _expandedStates.length) {
-                                                  setState(() {
-                                                    // Reset all expanded states
-                                                    for (int i = 0; i < _expandedStates.length; i++) {
-                                                      _expandedStates[i] = false;
-                                                    }
-                                                    _expandedStates[globalIndex] = isExpanded;
-                                                  });
-                                                }
-                                              },
-                                              shape: InputBorder.none,
-                                              backgroundColor: Colors.transparent,
-                                              title: _buildSummaryItem(dateKey, entriesForDate, viewModel.pastries),
-                                              children: [
-                                                Divider(
-                                                  color: Colors.black12,
-                                                  thickness: 5.h,
-                                                  height: 3.h,
-                                                ),
-                                                _buildFilterChips(viewModel.categories),
-                                                _buildItemsList(entriesForDate, viewModel.pastries),
-                                              ],
-                                            ),
-                                            isExpanded
-                                                ? Container()
-                                                : Container(
-                                              width: size.width,
-                                              height: 5.h,
-                                              padding: EdgeInsets.zero,
-                                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0XFF634923).withOpacity(0.22),
-                                                borderRadius: BorderRadius.circular(10.r),
-                                              ),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_down_rounded,
-                                                  size: 10.w,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }),
-                                SizedBox(height: 17.h),
-                              ],
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                    ),
+              SizedBox(
+                height: 50.h,
               ),
-              SizedBox(height: 50.h,),
             ],
           ),
         ),
@@ -596,7 +589,6 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
 
   Widget _buildSummaryItem(String date, List<DailyEntry> entries, List<Pastry> pastries) {
     int totalItems = entries.fold(0, (sum, entry) => sum + entry.soldStock);
-    String topSeller = _getTopSeller(entries, pastries);
     double totalSales = entries.fold(0, (sum, entry) => sum + (entry.soldStock * _getPastryPrice(entry.pastryId, pastries)));
 
     return Column(
@@ -619,7 +611,7 @@ class _DailyInventoryEntryState extends State<DailyInventoryEntry> {
               children: [
                 DisplayWidget(
                   headerText: "Total Sold",
-                  subText: totalItems.toString(), // Actual count
+                  subText: totalItems.toString(), // This is Actual count
                   headerColor: const Color(0xff6D593D),
                   subTextColor: const Color(0xff553609),
                 ),

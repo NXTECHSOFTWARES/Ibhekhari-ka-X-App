@@ -1,42 +1,182 @@
 [
   {
-    "title": "Snowball",
-    "price": 10.0,
-    "quantity": 220,
-    "category": "Cookie",
-    "imageBytes": null,
-    "created_at": "2023-01-01"
-  },
-  {
-    "title": "Chocolate Chip Muffins",
-    "price": 12.0,
-    "quantity": 800,
-    "category": "Muffin",
-    "imageBytes": null,
-    "created_at": "2023-01-01"
-  },
-  {
-    "title": "Chocolate Cupcake",
+    "pastry_id": 0,
+    "title": "Chocolate Cupcakes",
     "price": 5.0,
-    "quantity": 320,
+    "quantity": 17,
     "category": "Cupcake",
     "imageBytes": null,
-    "created_at": "2023-01-01"
+    "created_at": "2025-02-11"
   },
   {
-    "title": "Long Doughnuts",
-    "price": 10.0,
-    "quantity": 150,
-    "category": "Bread",
+    "pastry_id": 1,
+    "title": "Vanilla Cupcakes",
+    "price": 5.0,
+    "quantity": 21,
+    "category": "Cupcake",
     "imageBytes": null,
-    "created_at": "2023-01-01"
+    "created_at": "2025-02-11"
   },
   {
+    "pastry_id": 2,
     "title": "Cinnamon Rolls",
     "price": 10.0,
-    "quantity": 890,
+    "quantity": 8,
     "category": "Bread",
     "imageBytes": null,
-    "created_at": "2023-01-01"
+    "created_at": "2025-02-11"
+  },
+  {
+    "pastry_id": 3,
+    "title": "Snowball",
+    "price": 10.0,
+    "quantity": 9,
+    "category": "Cookie",
+    "imageBytes": null,
+    "created_at": "2025-02-13"
+  },
+  {
+    "pastry_id": 4,
+    "title": "Bran Muffins",
+    "price": 5.0,
+    "quantity": 9,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-02-18"
+  },
+  {
+    "pastry_id": 5,
+    "title": "Cappuccino Cupcake",
+    "price": 5.0,
+    "quantity": 12,
+    "category": "Cupcake",
+    "imageBytes": null,
+    "created_at": "2025-03-20"
+  },
+  {
+    "pastry_id": 6,
+    "title": "Crunch",
+    "price": 2.0,
+    "quantity": 31,
+    "category": "Cookie",
+    "imageBytes": null,
+    "created_at": "2025-06-08"
+  },
+  {
+    "pastry_id": 7,
+    "title": "Lamingtons",
+    "price": 10.0,
+    "quantity": 5,
+    "category": "Cake",
+    "imageBytes": null,
+    "created_at": "2025-07-10"
+  },
+  {
+    "pastry_id": 8,
+    "title": "Banana Bread Slice",
+    "price": 6.0,
+    "quantity": 3,
+    "category": "Bread",
+    "imageBytes": null,
+    "created_at": "2025-07-10"
+  },
+  {
+    "pastry_id": 9,
+    "title": "Chocolate Muffins",
+    "price": 10.0,
+    "quantity": 3,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-07-10"
+  },
+  {
+    "pastry_id": 10,
+    "title": "Chocolate Chip Muffins",
+    "price": 12.0,
+    "quantity": 6,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-07-12"
+  },
+  {
+    "pastry_id": 11,
+    "title": "Oaks Muffins",
+    "price": 12.0,
+    "quantity": 3,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-07-12"
+  },
+  {
+    "pastry_id": 12,
+    "title": "Chelsea Buns",
+    "price": 10.0,
+    "quantity": 6,
+    "category": "Bread",
+    "imageBytes": null,
+    "created_at": "2025-07-29"
+  },
+  {
+    "pastry_id": 13,
+    "title": "Cream Buns",
+    "price": 7.0,
+    "quantity": 10,
+    "category": "Bread",
+    "imageBytes": null,
+    "created_at": "2025-08-05"
+  },
+  {
+    "pastry_id": 14,
+    "title": "Long Donuts",
+    "price": 10.0,
+    "quantity": 7,
+    "category": "Donut",
+    "imageBytes": null,
+    "created_at": "2025-08-03"
+  },
+  {
+    "pastry_id": 15,
+    "title": "Snowball(Small)",
+    "price": 5.0,
+    "quantity": 19,
+    "category": "Cookie",
+    "imageBytes": null,
+    "created_at": "2025-09-11"
+  },
+  {
+    "pastry_id": 16,
+    "title": "Banana Bread Loaf",
+    "price": 35.0,
+    "quantity": 2,
+    "category": "Bread",
+    "imageBytes": null,
+    "created_at": "2025-09-28"
+  },
+  {
+    "pastry_id": 17,
+    "title": "Scones",
+    "price": 0.0,
+    "quantity": 20,
+    "category": "Bread",
+    "imageBytes": null,
+    "created_at": "2025-10-08"
+  },
+  {
+    "pastry_id": 18,
+    "title": "Cappuccino Muffins",
+    "price": 12.0,
+    "quantity": 8,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-08-09"
+  },
+  {
+    "pastry_id": 18,
+    "title": "Bran muffins (Raises)",
+    "price": 12.0,
+    "quantity": 8,
+    "category": "Muffin",
+    "imageBytes": null,
+    "created_at": "2025-08-09"
   }
 ]

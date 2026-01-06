@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 800),
+      designSize: const Size(420, 890),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           title: 'NX Bakers',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
             useMaterial3: true,
           ),
           home: const Dashboard(),

@@ -50,7 +50,7 @@ class DailyEntryViewModel extends ChangeNotifier {
 
   Future<void> loadTestData() async {
     try {
-      final response = await rootBundle.loadString("assets/daily_entry_test_data.json");
+      final response = await rootBundle.loadString("assets/daily_sales.json");
       final Map<String, dynamic> data = json.decode(response);
 
       // Iterate through each date in the JSON data
@@ -103,7 +103,8 @@ class DailyEntryViewModel extends ChangeNotifier {
       DailyEntry dailyEntry = DailyEntry(
         soldStock: soldStock,
         remainingStock: remainingStock,
-        createdAt: createdAt != null
+        createdAt: createdAt
+            != null
             ? DateFormat('EEEE, d MMMM y').format(DateFormat('d MMMM y').parse(createdAt))
             : DateFormat('EEEE, d MMMM y').format(DateTime.now()),
         pastryId: pastryId,
@@ -121,7 +122,7 @@ class DailyEntryViewModel extends ChangeNotifier {
         return await updateDailyEntry(updatedEntry);
       } else {
         await _dailyEntryRepository.addDailyEntry(dailyEntry);
-        updatePastryQuantity(dailyEntry);
+        //updatePastryQuantity(dailyEntry);
         await initialize();
         return true;
       }
@@ -276,7 +277,7 @@ class DailyEntryViewModel extends ChangeNotifier {
 
     try {
       // First update the pastry quantity
-      updatePastryQuantity(dailyEntry);
+      //updatePastryQuantity(dailyEntry);
 
       // Then update the daily entry
       final success = await _dailyEntryRepository.updateDailyEntryQuantity(

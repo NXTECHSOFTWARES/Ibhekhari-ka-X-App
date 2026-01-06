@@ -1,6 +1,6 @@
 {
   "units": {
-    "weight" : [
+    "weight": [
       {
         "title": "grams",
         "abbreviation": "g"
@@ -17,35 +17,36 @@
         "title": "Pound ",
         "abbreviation": "lb"
       }
+    ],
+    "volume": [
+      {
+        "title": "Cup",
+        "abbreviation": "c"
+      },
+      {
+        "title": "tablespoon",
+        "abbreviation": "Tbsp"
+      },
+      {
+        "title": "Teaspoon ",
+        "abbreviation": "Tsp"
+      },
+      {
+        "title": "litre",
+        "abbreviation": "L"
+      },
+      {
+        "title": "millilitre",
+        "abbreviation": "ml"
+      }
+    ],
+    "Count": [
+      "whole",
+      "Large",
+      "Medium",
+      "Small",
+      "pack",
+      "pinch"
     ]
-  },
-  "volume": [
-    {
-      "title": "Cup",
-      "abbreviation": "c"
-    },
-    {
-      "title": "tablespoon",
-      "abbreviation": "Tbsp"
-    },
-    {
-      "title": "Teaspoon ",
-      "abbreviation": "Tsp"
-    },
-    {
-      "title": "litre",
-      "abbreviation": "L"
-    },{
-      "title": "millilitre",
-      "abbreviation": "ml"
-    }
-  ],
-  "Count": [
-    "whole",
-    "Large",
-    "Medium",
-    "Small",
-    "pack",
-    "pinch"
-  ]
+  }
 }
