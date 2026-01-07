@@ -294,7 +294,7 @@ class _PastriesPageState extends State<PastriesPage> {
                 horizontal: 5.w,
               ),
               child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 100.h),
+                  padding: EdgeInsets.only(bottom: 45.h),
                   itemCount: viewModel.displayedPastries.length,
                   itemBuilder: (context, index) {
                     final pastry = viewModel.displayedPastries[index];

@@ -20,7 +20,7 @@ import '../../ViewModels/daily_entry_viewmodel.dart';
 import '../../ViewModels/stats_viewmodel.dart';
 import '../Pastries/pastries.dart';
 
-import '../Stats/stats_dashboard.dart';
+import '../Statistics/stats_dashboard.dart';
 import 'Utils/WIdgets/custom_drawer.dart';
 
 class Dashboard extends StatefulWidget {
@@ -40,13 +40,13 @@ class _DashboardState extends State<Dashboard> {
       child: const DailyInventoryEntry(),
     ),
     ChangeNotifierProvider(
+      create: (context) => StatsViewModel(),
+      child: DailySalesStatsPage(),
+    ),
+    ChangeNotifierProvider(
       create: (BuildContext context) => PastryViewModel()..loadPastries(),
       child: const PastriesPage(),
     ),
-    ChangeNotifierProvider(
-      create: (context) => StatsViewModel(),
-      child: DailySalesStatsPage(),
-    )
   ];
 
   @override
@@ -59,6 +59,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      extendBody: true,
       drawerScrimColor: Colors.black54,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -95,71 +96,269 @@ class _DashboardState extends State<Dashboard> {
           notchMargin: 10,
           padding: EdgeInsets.zero,
           clipBehavior: Clip.antiAlias,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Wrap(
-                  spacing: 0.w,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  direction: Axis.horizontal,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: size.width,
+                height: 80.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIndex = 0;
-                        });
-                      },
-                      child: Wrap(
-                        direction: Axis.vertical,
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(5.w),
-                            decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(5.r),
-                                border: Border.all(
-                                  color: _selectedIndex == 0 ? Colors.white : const Color(0xffAA9C88),
-                                  width: 1.0.w,
-                                ),
-                            ),
-                            child: Icon(
-                              color: _selectedIndex == 0 ? Colors.white : const Color(0xffAA9C88),
-                              _selectedIndex == 0 ? CommunityMaterialIcons.home : CommunityMaterialIcons.home_outline,
-                              size: 24.w,
-                            ),
-                          ),
-                        ],
+                    Container(
+                      width: 80.w,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff573E1A).withOpacity(0.25),
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(50.r))
                       ),
                     ),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        color: _selectedIndex == 1 ? Colors.white : const Color(0xffAA9C88),
-                        onPressed: () {
-                          setState(() {
-                            _selectedIndex = 1;
-                          });
-                        },
-                        icon: Icon(_selectedIndex == 1 ? CommunityMaterialIcons.clipboard_list : CommunityMaterialIcons.clipboard_list_outline)),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(_selectedIndex == 2 ? CommunityMaterialIcons.chart_line_stacked : CommunityMaterialIcons.chart_line)),
+                    Container(
+                      width: 80.w,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                          color: const Color(0xff573E1A).withOpacity(0.25),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(50.r))
+                      ),
+                    ),
                   ],
                 ),
-                Wrap(
-                  spacing: 25.w,
-                  direction: Axis.horizontal,
+              ),
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                width: size.width,
+                height: 80.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(_selectedIndex == 4 ? CommunityMaterialIcons.cash_usd : CommunityMaterialIcons.cash_usd_outline),
-                    Icon(_selectedIndex == 5 ? Icons.food_bank : Icons.food_bank_outlined),
-                    Icon(_selectedIndex == 6 ? CommunityMaterialIcons.account_outline : CommunityMaterialIcons.account_outline),
+                    Wrap(
+                      spacing: 20.w,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      direction: Axis.horizontal,
+                      children: [
+                        /**
+                         * Home Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 0;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 0 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 0 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 0 ? CommunityMaterialIcons.home : CommunityMaterialIcons.home_outline,
+                                  size: 20.w,
+                                ),
+                              ),
+                              // _selectedIndex == 0 ? ReusableTextWidget(text: "Home", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                        /**
+                         * Daily Sales Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 1;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 1 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 1 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 1 ? CommunityMaterialIcons.clipboard_list : CommunityMaterialIcons.clipboard_list_outline,
+                                  size: 20.w,
+                                ),
+                              ),
+                            //  _selectedIndex == 1 ? ReusableTextWidget(text: "Sales", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                        /**
+                         * Pastries Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 2;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 2 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 2 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 2 ? CommunityMaterialIcons.chart_line_stacked : CommunityMaterialIcons.chart_line,
+                                  size: 20.w,
+                                ),
+                              ),
+                             // _selectedIndex == 2 ? ReusableTextWidget(text: "Sales", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      spacing: 20.w,
+                      direction: Axis.horizontal,
+                      children: [
+                        /**
+                         * Pastries Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 3;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 4 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 4 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 3 ? CommunityMaterialIcons.cake : Icons.cake_outlined,
+                                  size: 20.w,
+                                ),
+                              ),
+                              // _selectedIndex == 0 ? ReusableTextWidget(text: "Home", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                        /**
+                         * Ingredients Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 5;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 5 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 5 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 5 ? Icons.food_bank : Icons.food_bank_outlined,
+                                  size: 20.w,
+                                ),
+                              ),
+                              // _selectedIndex == 0 ? ReusableTextWidget(text: "Home", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                        /**
+                         * Account Page
+                         */
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = 6;
+                            });
+                          },
+                          child: Wrap(
+                            direction: Axis.vertical,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: _selectedIndex == 6 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                    width: 1.0.w,
+                                  ),
+                                ),
+                                child: Icon(
+                                  color: _selectedIndex == 6 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  _selectedIndex == 6 ? CommunityMaterialIcons.account : CommunityMaterialIcons.account_outline,
+                                  size: 20.w,
+                                ),
+                              ),
+                              // _selectedIndex == 0 ? ReusableTextWidget(text: "Home", color: Colors.white, size: xsFontSize) : const SizedBox()
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           )
 
           // BottomNavigationBar(
