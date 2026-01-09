@@ -329,77 +329,80 @@ class _DailySalesStatsPageState extends State<DailySalesStatsPage> with SingleTi
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Consumer<StatsViewModel>(
-      builder: (BuildContext context, StatsViewModel viewModel, Widget? child) {
-        return Scaffold(
-          body: CommonMain(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 85.h,
-                  color: const Color(0xffF2EADE),
-                  padding: EdgeInsets.only(bottom: 15.h),
-                  child: Column(
-                    children: [
-                      Expanded(child: Container()),
-                      const CommonPageHeader(
-                        pageTitle: "Statistics",
-                        pageSubTitle: "Keep track of business performance",
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => StatsViewModel(),
+      child: Consumer<StatsViewModel>(
+        builder: (BuildContext context, StatsViewModel viewModel, Widget? child) {
+          return Scaffold(
+            body: CommonMain(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 85.h,
+                    color: const Color(0xffF2EADE),
+                    padding: EdgeInsets.only(bottom: 15.h),
+                    child: Column(
+                      children: [
+                        Expanded(child: Container()),
+                        const CommonPageHeader(
+                          pageTitle: "Statistics",
+                          pageSubTitle: "Keep track of business performance",
+                        ),
+                      ],
+                    ),
+                  ),
+                  /**
+                   * TOP-BAR for Different Business Assets Performance
+                   */
+                  Container(
+                    width: size.width,
+                    height: 30.h,
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    color: const Color.fromRGBO(0, 0, 0, 0.15),
+                    child: TabBar(
+                      labelPadding: EdgeInsets.zero,
+                      controller: tabController,
+                      labelColor: const Color(0xff5D3700),
+                      indicatorColor: Colors.transparent,
+                      indicatorPadding: EdgeInsets.zero,
+                      labelStyle: GoogleFonts.poppins(
+                        fontSize: lFontSize.sp,
+                        fontWeight: lFontWeight,
                       ),
-                    ],
-                  ),
-                ),
-                /**
-                 * TOP-BAR for Different Business Assets Performance
-                 */
-                Container(
-                  width: size.width,
-                  height: 30.h,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  color: const Color.fromRGBO(0, 0, 0, 0.15),
-                  child: TabBar(
-                    labelPadding: EdgeInsets.zero,
-                    controller: tabController,
-                    labelColor: const Color(0xff5D3700),
-                    indicatorColor: Colors.transparent,
-                    indicatorPadding: EdgeInsets.zero,
-                    labelStyle: GoogleFonts.poppins(
-                      fontSize: lFontSize.sp,
-                      fontWeight: lFontWeight,
+                      unselectedLabelColor: Colors.white,
+                      unselectedLabelStyle: GoogleFonts.poppins(
+                        fontSize: sFontSize.sp,
+                        fontWeight: sFontWeight,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Daily Sales'),
+                        Tab(text: 'Pastries'),
+                        Tab(text: 'Ingredients'),
+                      ],
                     ),
-                    unselectedLabelColor: Colors.white,
-                    unselectedLabelStyle: GoogleFonts.poppins(
-                      fontSize: sFontSize.sp,
-                      fontWeight: sFontWeight,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20.h),
+                    width: MediaQuery.of(context).size.width,
+                    height: 700.h,
+                    child: TabBarView(
+                      controller: tabController,
+                      children: [
+                        _buildDailySales(),
+                        PastryStats(),
+                      ],
                     ),
-                    tabs: const [
-                      Tab(text: 'Daily Sales'),
-                      Tab(text: 'Pastries'),
-                      Tab(text: 'Ingredients'),
-                    ],
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 20.h),
-                  width: MediaQuery.of(context).size.width,
-                  height: 700.h,
-                  child: TabBarView(
-                    controller: tabController,
-                    children: [
-                      _buildDailySales(),
-                      PastryStats(),
-                    ],
-                  ),
-                ),
-                /**
-                 * Main page content
-                 */
-              ],
+                  /**
+                   * Main page content
+                   */
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

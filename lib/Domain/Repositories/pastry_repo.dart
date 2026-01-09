@@ -107,6 +107,16 @@ class PastryRepository {
     }
   }
 
+  Future<int?> getPastryQuantityById(int id) async {
+    final pastry = await getPastryById(id);
+    if (pastry == null) {
+      print("Warning: Pastry with id $id not found");
+      return null;
+    }
+    return pastry.quantity;
+  }
+
+
   // Enhanced Pastry CRUD operations with image bytes support
   // Future<int> addPastry(Pastry pastry, {File? imageFile}) async {
   //   try {

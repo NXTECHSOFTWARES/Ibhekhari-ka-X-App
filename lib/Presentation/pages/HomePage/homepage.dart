@@ -15,6 +15,7 @@ import 'package:nxbakers/Presentation/pages/DailyEntry/daily_inventory_entry.dar
 import 'package:nxbakers/Presentation/pages/HomePage/Widgets/display_widget.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
+import 'package:nxbakers/Presentation/pages/baking_record_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Common/AppData.dart';
@@ -97,10 +98,6 @@ class _HomepageState extends State<Homepage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size(size.width, 8.h),
-          child: Container(),
-        ),
         flexibleSpace:
             /**
          * App bar
@@ -117,7 +114,7 @@ class _HomepageState extends State<Homepage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 /**
-                 * Bakery Shop Name -
+                 * Bakery Shop Name :-
                  */
                 Container(
                   width: 195.w,
@@ -214,162 +211,147 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
       ),
-      body: Container(
-        width: size.width,
-        height: size.height,
-        color: const Color.fromRGBO(242, 234, 222, 1.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /**
-             * Opening Record
-             * */
-            Container(
-              height: 100.h,
-              padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 8.h),
-              color: const Color(0xffF2EADE),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  /**
-                   * Opening Balance Design
-                   */
-                  Container(
-                    height: 40.h,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff42321C),
-                      borderRadius: BorderRadius.circular(6.r),
+      body: CommonMain(
+        child: Container(
+          width: size.width,
+          height: size.height,
+          color: const Color.fromRGBO(242, 234, 222, 1.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /**
+               * Opening Record
+               * */
+              Container(
+                height: 100.h,
+                padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 8.h),
+                color: const Color(0xffF2EADE),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    /**
+                     * Opening Balance Design
+                     */
+                    Container(
+                      height: 40.h,
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff42321C),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          /**
+                           * Opening Balance
+                           */
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ReusableTextWidget(
+                                text: "OPENING BALANCE:",
+                                size: xsFontSize,
+                                FW: sFontWeight,
+                                color: Colors.white,
+                              ),
+                              ReusableTextWidget(
+                                text: "R 1 200",
+                                size: lFontSize,
+                                FW: xlFontWeight,
+                                color: const Color(0xffFFE4BD),
+                              ),
+                            ],
+                          ),
+                          /*
+                        * Opening Date
+                        * */
+                          ReusableTextWidget(
+                            text: "10 February 2025",
+                            size: sFontSize,
+                            FW: xlFontWeight,
+                            color: const Color(0xffFFE4BD),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    /*
+                     * Sales, Income, Expenses
+                    * */
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        /**
-                         * Opening Balance
-                         */
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ReusableTextWidget(
-                              text: "OPENING BALANCE:",
-                              size: xsFontSize,
-                              FW: sFontWeight,
-                              color: Colors.white,
-                            ),
-                            ReusableTextWidget(
-                              text: "R 1 200",
-                              size: lFontSize,
-                              FW: xlFontWeight,
-                              color: const Color(0xffFFE4BD),
-                            ),
-                          ],
+                        DisplayWidget(
+                          headerText: "SALES",
+                          subText: "R10 000",
+                          headerColor: const Color(0xff351F00),
+                          subTextColor: const Color(0xff6D6457),
                         ),
-                        /*
-                      * Opening Date
-                      * */
-                        ReusableTextWidget(
-                          text: "10 February 2025",
-                          size: sFontSize,
-                          FW: xlFontWeight,
-                          color: const Color(0xffFFE4BD),
-                        ),
+                        DisplayWidget(
+                            headerText: "INCOME", subText: "R1 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
+                        DisplayWidget(
+                            headerText: "EXPENSES", subText: "R2 500", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
                       ],
-                    ),
-                  ),
-                  /*
-                   * Sales, Income, Expenses
-                  * */
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      DisplayWidget(
-                        headerText: "SALES",
-                        subText: "R10 000",
-                        headerColor: const Color(0xff351F00),
-                        subTextColor: const Color(0xff6D6457),
-                      ),
-                      DisplayWidget(
-                          headerText: "INCOME", subText: "R1 000", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
-                      DisplayWidget(
-                          headerText: "EXPENSES", subText: "R2 500", headerColor: const Color(0xff351F00), subTextColor: const Color(0xff6D6457)),
-                    ],
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            /**
-             * Main feature buttons
-             */
-            Container(
-              width: size.width,
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 15.h,
-              ),
-              color: const Color(0xffE6DED3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  /**
-                   * Design BEGIN
-                   */
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6.r),
-                    child: Container(
-                      width: 30.w,
-                      height: 50.h,
-                      color: const Color(0xff402E14).withOpacity(0.6),
-                    ),
-                  ),
-
-                  /**
-                   * Button FOR ADDING RECIPES
-                   */
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
-                    child: Container(
-                      width: 74.w,
-                      height: 60.h,
-                      color: const Color(0xff402E14).withOpacity(0.8),
-                      child: Center(
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 5.h,
-                          direction: Axis.vertical,
-                          children: [
-                            Icon(
-                              CommunityMaterialIcons.plus,
-                              color: Colors.white,
-                              size: 16.w,
+              /**
+               * Main feature buttons
+               */
+              Container(
+                width: size.width,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10.w,
+                  vertical: 15.h,
+                ),
+                color: const Color(0xffE6DED3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    /**
+                     * Design BEGIN
+                     */
+                    GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Container())),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.r),
+                        child: Container(
+                          width: 60.w,
+                          height: 50.h,
+                          color: const Color(0xff402E14).withOpacity(0.6),
+                          child: Center(
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 5.h,
+                              direction: Axis.vertical,
+                              children: [
+                                Icon(
+                                  CommunityMaterialIcons.plus,
+                                  color: Colors.white,
+                                  size: 16.w,
+                                ),
+                                Text(
+                                  "RECIPE",
+                                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
+                                )
+                              ],
                             ),
-                            Text(
-                              "RECIPE",
-                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  /**
-                   * BUTTON FOR ADDING NEW INVENTORY
-                   */
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => ChangeNotifierProvider(
-                              create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const UpdateOrAddInventoryPage()));
-                    },
-                    child: ClipRRect(
+                    /**
+                     * Button FOR ADDING RECIPES
+                     */
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(10.r),
                       child: Container(
-                        width: 92.w,
-                        height: 70.h,
-                        color: const Color(0xff402E14),
+                        width: 74.w,
+                        height: 60.h,
+                        color: const Color(0xff402E14).withOpacity(0.8),
                         child: Center(
                           child: Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
@@ -379,525 +361,624 @@ class _HomepageState extends State<Homepage> {
                               Icon(
                                 CommunityMaterialIcons.plus,
                                 color: Colors.white,
-                                size: 24.w,
+                                size: 16.w,
                               ),
                               Text(
-                                "INVENTORY",
-                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 10.sp),
+                                "INGREDIENTS",
+                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
                               )
                             ],
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                  /**
-                   * BUTTON FOR ADDING INGREDIENTS
-                   */
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
-                    child: Container(
-                      width: 74.w,
-                      height: 60.h,
-                      color: const Color(0xff402E14).withOpacity(0.8),
-                      child: Center(
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 5.h,
-                          direction: Axis.vertical,
-                          children: [
-                            Icon(
-                              CommunityMaterialIcons.plus,
-                              color: Colors.white,
-                              size: 16.w,
+                    /**
+                     * BUTTON FOR ADDING NEW INVENTORY
+                     */
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => ChangeNotifierProvider(
+                                create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const UpdateOrAddInventoryPage()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Container(
+                          width: 92.w,
+                          height: 70.h,
+                          color: const Color(0xff402E14),
+                          child: Center(
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 5.h,
+                              direction: Axis.vertical,
+                              children: [
+                                Icon(
+                                  CommunityMaterialIcons.plus,
+                                  color: Colors.white,
+                                  size: 24.w,
+                                ),
+                                Text(
+                                  "RESTOCK",
+                                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 10.sp),
+                                )
+                              ],
                             ),
-                            Text(
-                              "INGREDIENT",
-                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  /**
-                   * Design END
-                   */
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6.r),
-                    child: Container(
-                      width: 30.w,
-                      height: 50.h,
-                      color: const Color(0xff402E14).withOpacity(0.6),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            /**
-             * Daily Entry Header
-             */
-            Expanded(
-              child: ListView(
-                children: [
-                  /**
-                   * Daily Entry Header
-                   */
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 10.h),
-                    child: ReusableTextWidget(
-                      text: "Daily Entry",
-                      color: const Color(0xff573E1A),
-                      size: xlFontSize,
-                      FW: lFontWeight,
-                    ),
-                  ),
-                  /**
-                   * Daily Entry Recent Entry summary
-                   */
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
-                    color: const Color(0xffE6DED3),
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 3.5.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF2EADE),
-                        borderRadius: BorderRadius.circular(8.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF362A1A).withOpacity(0.24),
-                            spreadRadius: 0,
-                            blurRadius: 3.r,
-                            offset: Offset(0, 2.h),
+                    /**
+                     * BUTTON FOR ADDING INGREDIENTS
+                     */
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Container(
+                        width: 74.w,
+                        height: 60.h,
+                        color: const Color(0xff402E14).withOpacity(0.8),
+                        child: Center(
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            direction: Axis.vertical,
+                            children: [
+                              Icon(
+                                CommunityMaterialIcons.plus,
+                                color: Colors.white,
+                                size: 16.w,
+                              ),
+                              Text(
+                                "FRESH BAKED",
+                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
+                              )
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                      child: ChangeNotifierProvider(
-                        create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-                        child: Consumer<DailyEntryViewModel>(
-                          builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
-                            if (viewModel.isLoading) {
-                              return const Center(child: CircularProgressIndicator());
-                            }
+                    ),
 
-                            if (viewModel.dailyEntriesFGroupByDate.isEmpty) {
-                              return Expanded(
-                                child: Center(
-                                  child: Wrap(
-                                    alignment: WrapAlignment.center,
-                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                    spacing: 30.w,
-                                    children: [
-                                      Column(
+                    /**
+                     * Design END
+                     */
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6.r),
+                      child: Container(
+                        width: 60.w,
+                        height: 50.h,
+                        color: const Color(0xff402E14).withOpacity(0.6),
+                        child: Center(
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.h,
+                            direction: Axis.vertical,
+                            children: [
+                              Icon(
+                                CommunityMaterialIcons.plus,
+                                color: Colors.white,
+                                size: 16.w,
+                              ),
+                              Text(
+                                "PASTRY",
+                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: 30.h,
+                color: Colors.black.withOpacity(0.15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>  Container())),
+                      child: ReusableTextWidget(
+                        text: "Baking records",
+                        color: iconColor,
+                        size: sFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: ReusableTextWidget(
+                        text: "Restock records",
+                        color: const Color(0xff553609),
+                        size: sFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: ReusableTextWidget(
+                        text: "shelf life",
+                        color: const Color(0xff553609),
+                        size: sFontSize,
+                        FW: lFontWeight,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              /**
+               * Daily Entry Header
+               */
+              Expanded(
+                child: ListView(
+                  children: [
+                    /**
+                     * Daily Entry Header
+                     */
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 10.h),
+                      child: ReusableTextWidget(
+                        text: "Daily Entry",
+                        color: const Color(0xff573E1A),
+                        size: xlFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    /**
+                     * Daily Entry Recent Entry summary
+                     */
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
+                      color: const Color(0xffE6DED3),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 3.5.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF2EADE),
+                          borderRadius: BorderRadius.circular(8.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF362A1A).withOpacity(0.24),
+                              spreadRadius: 0,
+                              blurRadius: 3.r,
+                              offset: Offset(0, 2.h),
+                            ),
+                          ],
+                        ),
+                        child: ChangeNotifierProvider(
+                          create: (BuildContext context) => DailyEntryViewModel()..initialize(),
+                          child: Consumer<DailyEntryViewModel>(
+                            builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
+                              if (viewModel.isLoading) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+
+                              if (viewModel.dailyEntriesFGroupByDate.isEmpty) {
+                                return Expanded(
+                                  child: Center(
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      spacing: 30.w,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            ReusableTextWidget(
+                                              text: "No daily sales records available".toUpperCase(),
+                                              color: Colors.black,
+                                              size: sFontSize,
+                                              FW: FontWeight.w400,
+                                            ),
+                                            ReusableTextWidget(
+                                              text: "please add new sales",
+                                              color: primaryColor,
+                                              size: xsFontSize,
+                                              FW: FontWeight.w400,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              return _buildSummaryItem(viewModel);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    /**
+                     * Pastries Header
+                     */
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0.w, 0.0.h, 15.h, 10.h),
+                      child: ReusableTextWidget(
+                        text: "Pastries",
+                        color: const Color(0xff573E1A),
+                        size: xlFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    /**
+                     * Top 10 Pastries
+                     */
+                    ChangeNotifierProvider(
+                      create: (BuildContext context) => PastryViewModel()..initialize(),
+                      child: Consumer<PastryViewModel>(
+                        builder: (BuildContext context, viewModel, Widget? child) {
+                          return Container(
+                            height: 135.h,
+                            color: Colors.transparent,
+                            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
+                            child: viewModel.pastries.isEmpty
+                                ? Expanded(
+                                    child: Center(
+                                      child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           ReusableTextWidget(
-                                            text: "No daily sales records available".toUpperCase(),
+                                            text: "No PASTRIES AVAILABLE".toUpperCase(),
                                             color: Colors.black,
-                                            size: sFontSize,
+                                            size: lFontSize,
                                             FW: FontWeight.w400,
                                           ),
                                           ReusableTextWidget(
-                                            text: "please add new sales",
+                                            text: "please add new pastries",
                                             color: primaryColor,
-                                            size: xsFontSize,
+                                            size: sFontSize,
                                             FW: FontWeight.w400,
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                            return _buildSummaryItem(viewModel);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15.h,
-                  ),
-                  /**
-                   * Pastries Header
-                   */
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 0.0.h, 15.h, 10.h),
-                    child: ReusableTextWidget(
-                      text: "Pastries",
-                      color: const Color(0xff573E1A),
-                      size: xlFontSize,
-                      FW: lFontWeight,
-                    ),
-                  ),
-                  /**
-                   * Top 10 Pastries
-                   */
-                  ChangeNotifierProvider(
-                    create: (BuildContext context) => PastryViewModel()..initialize(),
-                    child: Consumer<PastryViewModel>(
-                      builder: (BuildContext context, viewModel, Widget? child) {
-                        return Container(
-                          height: 120.h,
-                          color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0.h),
-                          child: viewModel.pastries.isEmpty
-                              ? Expanded(
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        ReusableTextWidget(
-                                          text: "No PASTRIES AVAILABLE".toUpperCase(),
-                                          color: Colors.black,
-                                          size: lFontSize,
-                                          FW: FontWeight.w400,
-                                        ),
-                                        ReusableTextWidget(
-                                          text: "please add new pastries",
-                                          color: primaryColor,
-                                          size: sFontSize,
-                                          FW: FontWeight.w400,
-                                        ),
-                                      ],
                                     ),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.only(bottom: 10.w),
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: viewModel.pastries.length,
-                                  itemBuilder: (context, index) {
-                                    Pastry pastry = viewModel.pastries[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PastryDetails(pastryId: pastry.id!),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(right: 15.w),
-                                        width: 80.w,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 80.h,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: pastry.imageBytes.isEmpty
-                                                      ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider
-                                                      : MemoryImage(pastry.imageBytes!),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                borderRadius: BorderRadius.circular(
-                                                  10.r,
-                                                ),
-                                                border: Border.all(
-                                                  width: 1.0.w,
-                                                  color: const Color(0xff6D593D),
-                                                ),
-                                              ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.only(bottom: 10.w),
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: viewModel.pastries.length,
+                                    itemBuilder: (context, index) {
+                                      Pastry pastry = viewModel.pastries[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PastryDetails(pastryId: pastry.id!),
                                             ),
-                                            SizedBox(height: 5.h),
-                                            ReusableTextWidget(
-                                              text: pastry.title,
-                                              color: const Color(0xff5D3700),
-                                              size: sFontSize,
-                                              FW: lFontWeight,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    width: size.width,
-                    height: 10.h,
-                    color: const Color(0xffE6DED3),
-                  ),
-                  SizedBox(
-                    height: 0.h,
-                  ),
-                  /**
-                   * Statistics Header
-                   */
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 5.h),
-                    child: ReusableTextWidget(
-                      text: "Statistics",
-                      color: const Color(0xff573E1A),
-                      size: xlFontSize,
-                      FW: lFontWeight,
-                    ),
-                  ),
-                  /**
-                   * Statistics Graph
-                   */
-                  ChangeNotifierProvider(
-                    create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-                    child: Consumer<DailyEntryViewModel>(
-                      builder: (context, viewModel, child) {
-                        List<double> salesData = _extractSalesData(viewModel);
-                        final List<double> sampleData = [50, 75, 95, 110, 125, 115, 95, 75, 60, 70, 90, 115, 130, 125, 105, 85];
-
-                        return DailyEntryStatsGraph(
-                          dataPoints: sampleData,
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Container(
-                    width: size.width,
-                    height: 10.h,
-                    color: const Color(0xffE6DED3),
-                  ),
-                  /**
-                   * Top Sellers Header
-                   */
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 10.h),
-                    child: ReusableTextWidget(
-                      text: "Top Sellers",
-                      color: const Color(0xff573E1A),
-                      size: xlFontSize,
-                      FW: lFontWeight,
-                    ),
-                  ),
-                  /**
-                   * Top 3 pastries making high profit
-                   */
-                  ChangeNotifierProvider(
-                    create: (BuildContext context) => PastryViewModel()..initialize(),
-                    child: Consumer(
-                      builder: (BuildContext context, PastryViewModel viewModel, Widget? child) {
-                        return Container(
-                          width: size.width,
-                          height: 115.h,
-                          //  color: Colors.black,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
-                          color: const Color(0xffE6DED3),
-                          child: viewModel.pastries.isEmpty
-                              ? Expanded(
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  ReusableTextWidget(
-                                    text: "No PASTRIES AVAILABLE".toUpperCase(),
-                                    color: Colors.black,
-                                    size: lFontSize,
-                                    FW: FontWeight.w400,
-                                  ),
-                                  ReusableTextWidget(
-                                    text: "please add new pastries",
-                                    color: primaryColor,
-                                    size: sFontSize,
-                                    FW: FontWeight.w400,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                              : ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: 3,
-                            itemBuilder: (context, index) {
-                              final Pastry pastry = viewModel.pastries[index];
-                              return Container(
-                                width: 170.w,
-                                height: 86.h,
-                                margin: EdgeInsets.only(right: 10.w),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF2EADE),
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          //width: 54.w,
-                                          height: 15.h,
-                                          margin: EdgeInsets.only(top: 5.h, left: 5.w),
-                                          padding: EdgeInsets.symmetric(horizontal: 3.w),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(15.r),
-                                            color: const Color(0xffCEC7BD),
-                                          ),
-                                          child: Row(
+                                          );
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 15.w),
+                                          width: 80.w,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              ReusableTextWidget(
-                                                text: pastry.title,
-                                                color: Colors.white,
-                                                size: 6,
-                                                FW: lFontWeight,
-                                              ),
-                                              SizedBox(
-                                                width: 5.w,
-                                              ),
-                                              CircleAvatar(
-                                                backgroundColor: Colors.white,
-                                                radius: 5.r,
-                                                child: Center(
-                                                  child: ReusableTextWidget(
-                                                    text: index.toString(),
-                                                    color: const Color(0xff351F00),
-                                                    size: 4,
-                                                    FW: lFontWeight,
+                                              Container(
+                                                height: 80.h,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: pastry.imageBytes.isEmpty
+                                                        ? const AssetImage("assets/Images/default_pastry_img.jpg") as ImageProvider
+                                                        : MemoryImage(pastry.imageBytes!),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(
+                                                    10.r,
+                                                  ),
+                                                  border: Border.all(
+                                                    width: 1.0.w,
+                                                    color: const Color(0xff6D593D),
                                                   ),
                                                 ),
+                                              ),
+                                              SizedBox(height: 5.h),
+                                              ReusableTextWidget(
+                                                text: pastry.title,
+                                                color: const Color(0xff5D3700),
+                                                size: sFontSize,
+                                                FW: lFontWeight,
+                                              ),
+                                              ReusableTextWidget(
+                                                text: "R${pastry.price.toStringAsFixed(2)}",
+                                                color: iconColor,
+                                                size: lFontSize,
+                                                FW: xlFontWeight,
                                               )
                                             ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    Expanded(
-                                        child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 8.h),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        ),
+                                      );
+                                    }),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: size.width,
+                      height: 10.h,
+                      color: const Color(0xffE6DED3),
+                    ),
+                    SizedBox(
+                      height: 0.h,
+                    ),
+                    /**
+                     * Statistics Header
+                     */
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 5.h),
+                      child: ReusableTextWidget(
+                        text: "Statistics",
+                        color: const Color(0xff573E1A),
+                        size: xlFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    /**
+                     * Statistics Graph
+                     */
+                    ChangeNotifierProvider(
+                      create: (BuildContext context) => DailyEntryViewModel()..initialize(),
+                      child: Consumer<DailyEntryViewModel>(
+                        builder: (context, viewModel, child) {
+                          List<double> salesData = _extractSalesData(viewModel);
+                          final List<double> sampleData = [50, 75, 95, 110, 125, 115, 95, 75, 60, 70, 90, 115, 130, 125, 105, 85];
+
+                          return DailyEntryStatsGraph(
+                            dataPoints: sampleData,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Container(
+                      width: size.width,
+                      height: 10.h,
+                      color: const Color(0xffE6DED3),
+                    ),
+                    /**
+                     * Top Sellers Header
+                     */
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0.w, 15.0.h, 15.h, 10.h),
+                      child: ReusableTextWidget(
+                        text: "Top Sellers",
+                        color: const Color(0xff573E1A),
+                        size: xlFontSize,
+                        FW: lFontWeight,
+                      ),
+                    ),
+                    /**
+                     * Top 3 pastries making high profit
+                     */
+                    ChangeNotifierProvider(
+                      create: (BuildContext context) => PastryViewModel()..initialize(),
+                      child: Consumer(
+                        builder: (BuildContext context, PastryViewModel viewModel, Widget? child) {
+                          return Container(
+                            width: size.width,
+                            height: 115.h,
+                            //  color: Colors.black,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+                            color: const Color(0xffE6DED3),
+                            child: viewModel.pastries.isEmpty
+                                ? Expanded(
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Wrap(
-                                                spacing: 5.h,
-                                                direction: Axis.vertical,
-                                                children: [
-                                                  ReusableTextWidget(
-                                                    text: "Price",
-                                                    color: const Color(0xff351F00),
-                                                    size: xsFontSize - 2,
-                                                    FW: sFontWeight,
-                                                  ),
-                                                  ReusableTextWidget(
-                                                    text: "Sales",
-                                                    color: const Color(0xff351F00),
-                                                    size: xsFontSize - 2,
-                                                    FW: sFontWeight,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                width: 25.w,
-                                              ),
-                                              Wrap(
-                                                spacing: 5.h,
-                                                direction: Axis.vertical,
-                                                children: [
-                                                  ReusableTextWidget(
-                                                    text: "R${pastry.price}0",
-                                                    color: const Color(0xffAA9C88),
-                                                    size: xsFontSize,
-                                                    FW: lFontWeight,
-                                                  ),
-                                                  ReusableTextWidget(
-                                                    text: "R11 200",
-                                                    color: const Color(0xffAA9C88),
-                                                    size: xsFontSize,
-                                                    FW: lFontWeight,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                          ReusableTextWidget(
+                                            text: "No PASTRIES AVAILABLE".toUpperCase(),
+                                            color: Colors.black,
+                                            size: lFontSize,
+                                            FW: FontWeight.w400,
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 25.w),
-                                            child: Column(
-                                              children: [
-                                                ReusableTextWidget(
-                                                  text: "Sold",
-                                                  color: const Color(0xff5D3700),
-                                                  size: sFontSize,
-                                                  FW: sFontWeight,
-                                                ),
-                                                SizedBox(
-                                                  height: 2.h,
-                                                ),
-                                                ReusableTextWidget(
-                                                  text: "1120",
-                                                  color: const Color(0xffAA9C88),
-                                                  size: xsFontSize,
-                                                  FW: lFontWeight,
-                                                ),
-                                              ],
-                                            ),
-                                          )
+                                          ReusableTextWidget(
+                                            text: "please add new pastries",
+                                            color: primaryColor,
+                                            size: sFontSize,
+                                            FW: FontWeight.w400,
+                                          ),
                                         ],
                                       ),
-                                    )),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: 84.w,
-                                          height: 20.h,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black.withOpacity(0.35),
-                                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.r), topRight: Radius.circular(50.r))),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                                            child: Row(
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: 3,
+                                    itemBuilder: (context, index) {
+                                      final Pastry pastry = viewModel.pastries[index];
+                                      return Container(
+                                        width: 170.w,
+                                        height: 86.h,
+                                        margin: EdgeInsets.only(right: 10.w),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffF2EADE),
+                                          borderRadius: BorderRadius.circular(10.r),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                ReusableTextWidget(
-                                                  text: "Profit",
-                                                  color: const Color(0xffF2EADE),
-                                                  size: xsFontSize - 2,
-                                                  FW: sFontWeight,
-                                                ),
-                                                ReusableTextWidget(
-                                                  text: "R5 600",
-                                                  color: Colors.white,
-                                                  size: xsFontSize,
-                                                  FW: lFontWeight,
-                                                ),
+                                                Container(
+                                                  //width: 54.w,
+                                                  height: 15.h,
+                                                  margin: EdgeInsets.only(top: 5.h, left: 5.w),
+                                                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(15.r),
+                                                    color: const Color(0xffCEC7BD),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      ReusableTextWidget(
+                                                        text: pastry.title,
+                                                        color: Colors.white,
+                                                        size: 6,
+                                                        FW: lFontWeight,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5.w,
+                                                      ),
+                                                      CircleAvatar(
+                                                        backgroundColor: Colors.white,
+                                                        radius: 5.r,
+                                                        child: Center(
+                                                          child: ReusableTextWidget(
+                                                            text: index.toString(),
+                                                            color: const Color(0xff351F00),
+                                                            size: 4,
+                                                            FW: lFontWeight,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                                            Expanded(
+                                                child: Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 8.h),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Wrap(
+                                                        spacing: 5.h,
+                                                        direction: Axis.vertical,
+                                                        children: [
+                                                          ReusableTextWidget(
+                                                            text: "Price",
+                                                            color: const Color(0xff351F00),
+                                                            size: xsFontSize - 2,
+                                                            FW: sFontWeight,
+                                                          ),
+                                                          ReusableTextWidget(
+                                                            text: "Sales",
+                                                            color: const Color(0xff351F00),
+                                                            size: xsFontSize - 2,
+                                                            FW: sFontWeight,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 25.w,
+                                                      ),
+                                                      Wrap(
+                                                        spacing: 5.h,
+                                                        direction: Axis.vertical,
+                                                        children: [
+                                                          ReusableTextWidget(
+                                                            text: "R${pastry.price}0",
+                                                            color: const Color(0xffAA9C88),
+                                                            size: xsFontSize,
+                                                            FW: lFontWeight,
+                                                          ),
+                                                          ReusableTextWidget(
+                                                            text: "R11 200",
+                                                            color: const Color(0xffAA9C88),
+                                                            size: xsFontSize,
+                                                            FW: lFontWeight,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(right: 25.w),
+                                                    child: Column(
+                                                      children: [
+                                                        ReusableTextWidget(
+                                                          text: "Sold",
+                                                          color: const Color(0xff5D3700),
+                                                          size: sFontSize,
+                                                          FW: sFontWeight,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 2.h,
+                                                        ),
+                                                        ReusableTextWidget(
+                                                          text: "1120",
+                                                          color: const Color(0xffAA9C88),
+                                                          size: xsFontSize,
+                                                          FW: lFontWeight,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Container(
+                                                  width: 84.w,
+                                                  height: 20.h,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.black.withOpacity(0.35),
+                                                      borderRadius:
+                                                          BorderRadius.only(bottomLeft: Radius.circular(20.r), topRight: Radius.circular(50.r))),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        ReusableTextWidget(
+                                                          text: "Profit",
+                                                          color: const Color(0xffF2EADE),
+                                                          size: xsFontSize - 2,
+                                                          FW: sFontWeight,
+                                                        ),
+                                                        ReusableTextWidget(
+                                                          text: "R5 600",
+                                                          color: Colors.white,
+                                                          size: xsFontSize,
+                                                          FW: lFontWeight,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 100.h,
-                  ),
-                ],
+                    SizedBox(
+                      height: 40.h,
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

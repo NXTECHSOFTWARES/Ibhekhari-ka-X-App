@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:nxbakers/Data/Model/baking_records.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class SqlDatabaseHelper {
   static final SqlDatabaseHelper _instance = SqlDatabaseHelper._internal();
+
   factory SqlDatabaseHelper() => _instance;
+
   SqlDatabaseHelper._internal();
 
   static Database? _database;
@@ -19,12 +22,11 @@ class SqlDatabaseHelper {
   Future<Database> _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, 'nxbakers.db');
-    // deleteDatabase(path);
+    //deleteDatabase(path);
     return await openDatabase(
       path,
       version: 1,
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade, // Add this
     );
   }
 
@@ -38,48 +40,22 @@ class SqlDatabaseHelper {
     }
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      // Add the notification settings table for users upgrading from version 1
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS pastry_notification_settings(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          pastry_id INTEGER NOT NULL,
-          low_stock_threshold INTEGER DEFAULT 5,
-          notification_enabled INTEGER DEFAULT 1,
-          reminder_interval_hours INTEGER DEFAULT 2,
-          default_coverage_days INTEGER DEFAULT 2,
-          analysis_period_days INTEGER DEFAULT 14,
-          last_notification_time TEXT,
-          notification_snoozed_until TEXT,
-          FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE CASCADE
-        )
-      ''');
-    }
-
-    if (oldVersion < 3) {
-      // Add notifications table for version 3
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS notifications(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          type TEXT NOT NULL,
-          title TEXT NOT NULL,
-          summary TEXT NOT NULL,
-          detailed_message TEXT,
-          created_at TEXT NOT NULL,
-          is_read INTEGER DEFAULT 0,
-          related_item_id TEXT,
-          related_item_name TEXT,
-          additional_data TEXT,
-          notification_id TEXT UNIQUE
-        )
-      ''');
-    }
-  }
-
 // Call this in your initState or wherever you initialize the database
 
   Future<void> _onCreate(Database db, int version) async {
+
+    // Baking Records table creation
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS baking_records(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    baking_date TEXT NOT NULL,
+    quantity_baked INTEGER NOT NULL,
+    pastry_id INTEGER NOT NULL,
+    pastry_name TEXT NOT NULL,
+    FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE RESTRICT
+    )
+    ''');
+
     // Pastry table creation
     await db.execute('''
       CREATE TABLE pastries (
@@ -150,7 +126,38 @@ class SqlDatabaseHelper {
         notification_id TEXT UNIQUE
       )
     ''');
+    // Add the notification settings table for users upgrading from version 1
+    await db.execute('''
+        CREATE TABLE IF NOT EXISTS pastry_notification_settings(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          pastry_id INTEGER NOT NULL,
+          low_stock_threshold INTEGER DEFAULT 5,
+          notification_enabled INTEGER DEFAULT 1,
+          reminder_interval_hours INTEGER DEFAULT 2,
+          default_coverage_days INTEGER DEFAULT 2,
+          analysis_period_days INTEGER DEFAULT 14,
+          last_notification_time TEXT,
+          notification_snoozed_until TEXT,
+          FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE CASCADE
+        )
+      ''');
 
+    // Add notifications table
+    await db.execute('''
+        CREATE TABLE IF NOT EXISTS notifications(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          type TEXT NOT NULL,
+          title TEXT NOT NULL,
+          summary TEXT NOT NULL,
+          detailed_message TEXT,
+          created_at TEXT NOT NULL,
+          is_read INTEGER DEFAULT 0,
+          related_item_id TEXT,
+          related_item_name TEXT,
+          additional_data TEXT,
+          notification_id TEXT UNIQUE
+        )
+      ''');
   }
 
   // CRUD Operations for Pastries
@@ -234,12 +241,34 @@ class SqlDatabaseHelper {
   ''');
   }
 
+  //______________________________________ BAKING RECORDS______________________________________________________________________________________________
+
+  Future<int> insertBakingRecord(Map<String, dynamic> baking) async {
+    final db = await database;
+    return await db.insert('baking_records', baking);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllBakingRecords() async{
+    final db = await database;
+    return await db.query('baking_records');
+  }
+
+  Future<int> deleteBakingRecord(int id) async {
+    final db = await database;
+    return await db.delete(
+      'baking_records',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  //____________________________________PASTRIES RECORDS______________________________________________________________________________________________
   Future<int> insertPastry(Map<String, dynamic> pastry) async {
     final db = await database;
     return await db.insert('pastries', pastry);
   }
 
-Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
+  Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
     final db = await database;
     return await db.insert('dailyEntries', dailyEntry);
   }
@@ -275,7 +304,7 @@ Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
     return result.isNotEmpty ? result.first : null;
   }
 
-Future<Map<String, dynamic>?> getDailyEntry(int id) async {
+  Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
       'dailyEntries',
@@ -286,8 +315,7 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     return result.isNotEmpty ? result.first : null;
   }
 
-  Future<List<Map<String, dynamic>>> getPastriesByCategory(
-      String category) async {
+  Future<List<Map<String, dynamic>>> getPastriesByCategory(String category) async {
     final db = await database;
     return await db.query(
       'pastries',
@@ -297,8 +325,7 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(
-      String dateEntry) async {
+  Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(String dateEntry) async {
     final db = await database;
     return await db.query(
       'dailyEntries',
@@ -382,11 +409,9 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
       // Create a mutable copy
       final mutableNotification = Map<String, dynamic>.from(notification);
 
-      if (mutableNotification['additional_data'] != null &&
-          mutableNotification['additional_data'] is String) {
+      if (mutableNotification['additional_data'] != null && mutableNotification['additional_data'] is String) {
         try {
-          mutableNotification['additional_data'] =
-              jsonDecode(mutableNotification['additional_data'] as String);
+          mutableNotification['additional_data'] = jsonDecode(mutableNotification['additional_data'] as String);
         } catch (e) {
           print('Error parsing additional_data: $e');
           mutableNotification['additional_data'] = {};
@@ -399,9 +424,7 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
   // Get unread notifications count
   Future<int> getUnreadNotificationsCount() async {
     final db = await database;
-    final result = await db.rawQuery(
-        'SELECT COUNT(*) as count FROM notifications WHERE is_read = 0'
-    );
+    final result = await db.rawQuery('SELECT COUNT(*) as count FROM notifications WHERE is_read = 0');
     return result.first['count'] as int? ?? 0;
   }
 
@@ -418,11 +441,9 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     return results.map((notification) {
       final mutableNotification = Map<String, dynamic>.from(notification);
 
-      if (mutableNotification['additional_data'] != null &&
-          mutableNotification['additional_data'] is String) {
+      if (mutableNotification['additional_data'] != null && mutableNotification['additional_data'] is String) {
         try {
-          mutableNotification['additional_data'] =
-              jsonDecode(mutableNotification['additional_data'] as String);
+          mutableNotification['additional_data'] = jsonDecode(mutableNotification['additional_data'] as String);
         } catch (e) {
           print('Error parsing additional_data: $e');
           mutableNotification['additional_data'] = {};
@@ -444,11 +465,9 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     return results.map((notification) {
       final mutableNotification = Map<String, dynamic>.from(notification);
 
-      if (mutableNotification['additional_data'] != null &&
-          mutableNotification['additional_data'] is String) {
+      if (mutableNotification['additional_data'] != null && mutableNotification['additional_data'] is String) {
         try {
-          mutableNotification['additional_data'] =
-              jsonDecode(mutableNotification['additional_data'] as String);
+          mutableNotification['additional_data'] = jsonDecode(mutableNotification['additional_data'] as String);
         } catch (e) {
           print('Error parsing additional_data: $e');
           mutableNotification['additional_data'] = {};
@@ -517,8 +536,7 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
       final notification = results.first;
       if (notification['additional_data'] != null) {
         try {
-          notification['additional_data'] =
-              jsonDecode(notification['additional_data'] as String);
+          notification['additional_data'] = jsonDecode(notification['additional_data'] as String);
         } catch (e) {
           print('Error parsing additional_data: $e');
           notification['additional_data'] = {};
@@ -528,5 +546,4 @@ Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     }
     return null;
   }
-
 }

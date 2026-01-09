@@ -1,0 +1,915 @@
+[
+  {
+    "date": "2025-02-11",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 17,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 21,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 1,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-12",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 8,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 19,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": false
+      }
+    ]
+  },
+  {
+    "date": "2025-02-13",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 2,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 19,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 6,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 7,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-14",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 12,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 2,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 2,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-15",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 6,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 9,
+        "last_restocked": "2025-02-15",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-16",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 0,
+        "last_restocked": "2025-02-15",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": false
+      }
+    ]
+  },
+  {
+    "date": "2025-02-17",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-11",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-13",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 3,
+        "last_restocked": "2025-02-17",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-18",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 28,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 30,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 8,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 8,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 2,
+        "last_restocked": "2025-02-17",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 8,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-19",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 22,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 30,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 3,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 6,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 7,
+        "last_restocked": "2025-02-19",
+        "last_restocked_quantity": 12,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 3,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-20",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 9,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 30,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 1,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 3,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 2,
+        "last_restocked": "2025-02-19",
+        "last_restocked_quantity": 12,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": false
+      }
+    ]
+  },
+  {
+    "date": "2025-02-21",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 30,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 8,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 1,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 17,
+        "last_restocked": "2025-02-21",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 9,
+        "shelf_life": 5,
+        "isAvailable": false
+      }
+    ]
+  },
+  {
+    "date": "2025-02-22",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 19,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 19,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 21,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 8,
+        "last_restocked": "2025-02-21",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 21,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-23",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 11,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 19,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 17,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 0,
+        "last_restocked": "2025-02-21",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 2,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-24",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 3,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 19,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 16,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 0,
+        "last_restocked": "2025-02-18",
+        "last_restocked_quantity": 10,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 0,
+        "last_restocked": "2025-02-21",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": false
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 28,
+        "last_restocked": "2025-02-24",
+        "last_restocked_quantity": 34,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-25",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 15,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 17,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 14,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 11,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 12,
+        "shelf_life": 1,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 18,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 18,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 18,
+        "last_restocked": "2025-02-24",
+        "last_restocked_quantity": 34,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-26",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 11,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 17,
+        "shelf_life": 2,
+        "isAvailable": true,
+        "status": "Fresh"
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 0,
+        "isAvailable": false,
+        "status": "N/A"
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 7,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 12,
+        "shelf_life": 2,
+        "isAvailable": true,
+        "status": "Almost Stale"
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 17,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 18,
+        "shelf_life": 5,
+        "isAvailable": true
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 6,
+        "last_restocked": "2025-02-24",
+        "last_restocked_quantity": 34,
+        "shelf_life": 5,
+        "isAvailable": true
+      }
+    ]
+  },
+  {
+    "date": "2025-02-27",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 2,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 17,
+        "shelf_life": 3,
+        "isAvailable": true,
+        "status": "Stale"
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 0,
+        "isAvailable": false,
+        "status": "N/A"
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 6,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 12,
+        "shelf_life": 3,
+        "isAvailable": true,
+        "status": "Almost Stale"
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 9,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 18,
+        "shelf_life": 3,
+        "isAvailable": true,
+        "status": "Fresh"
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 1,
+        "last_restocked": "2025-02-24",
+        "last_restocked_quantity": 34,
+        "shelf_life": 4,
+        "isAvailable": true,
+        "status": "Almost Expiry"
+      }
+    ]
+  },
+  {
+    "date": "2025-02-28",
+    "shelves": [
+      {
+        "shelf_id": 0,
+        "pastry_id": 0,
+        "pastry_name": "Chocolate Cupcakes",
+        "current_stock": 19,
+        "last_restocked": "2025-02-28",
+        "last_restocked_quantity": 19,
+        "shelf_life": 1,
+        "isAvailable": true,
+        "status": "Fresh"
+      },
+      {
+        "shelf_id": 1,
+        "pastry_id": 1,
+        "pastry_name": "Vanilla Cupcakes",
+        "current_stock": 0,
+        "last_restocked": "2025-02-22",
+        "last_restocked_quantity": 21,
+        "shelf_life": 0,
+        "isAvailable": false,
+        "status": "N/A"
+      },
+      {
+        "shelf_id": 2,
+        "pastry_id": 2,
+        "pastry_name": "Cinnamon Rolls",
+        "current_stock": 6,
+        "last_restocked": "2025-02-25",
+        "last_restocked_quantity": 12,
+        "shelf_life": 4,
+        "isAvailable": true,
+        "status": "Stale"
+      },
+      {
+        "shelf_id": 3,
+        "pastry_id": 3,
+        "pastry_name": "Snowball",
+        "current_stock": 17,
+        "last_restocked": "2025-02-28",
+        "last_restocked_quantity": 18,
+        "shelf_life": 1,
+        "isAvailable": true,
+        "status": "fresh"
+      },
+      {
+        "shelf_id": 4,
+        "pastry_id": 4,
+        "pastry_name": "Bran Muffins",
+        "current_stock": 33,
+        "last_restocked": "2025-02-28",
+        "last_restocked_quantity": 34,
+        "shelf_life": 1,
+        "isAvailable": true,
+        "status": "fresh"
+      }
+    ]
+  }
+]

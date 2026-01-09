@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import '../../../Domain/Services/background_task_service.dart';
 import '../../ViewModels/daily_entry_viewmodel.dart';
 import '../../ViewModels/stats_viewmodel.dart';
+import '../DailyEntry/add_daily_entries.dart';
 import '../Pastries/pastries.dart';
 
 import '../Statistics/stats_dashboard.dart';
@@ -60,6 +61,7 @@ class _DashboardState extends State<Dashboard> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       extendBody: true,
+      extendBodyBehindAppBar: true,
       drawerScrimColor: Colors.black54,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -78,8 +80,8 @@ class _DashboardState extends State<Dashboard> {
             showDialog(
               context: context,
               builder: (context) => ChangeNotifierProvider(
-                create: (BuildContext context) => PastryViewModel()..loadPastries(),
-                child: const NewPastry(),
+                create: (BuildContext context) => DailyEntryViewModel()..loadPastries(),
+                child: const AddDailyEntries(),
               ),
             );
           },
@@ -155,7 +157,7 @@ class _DashboardState extends State<Dashboard> {
                               Container(
                                 padding: EdgeInsets.all(5.w),
                                 decoration: BoxDecoration(
-                                  color: Colors.transparent,
+                                  color: const Color(0xff351F00),
                                   borderRadius: BorderRadius.circular(5.r),
                                   border: Border.all(
                                     color: _selectedIndex == 0 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
@@ -208,7 +210,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         /**
-                         * Pastries Page
+                           * Statistics Page
                          */
                         GestureDetector(
                           onTap: () {
@@ -274,7 +276,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ),
                                 child: Icon(
-                                  color: _selectedIndex == 4 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
+                                  color: _selectedIndex == 3 ? const Color(0xffF3D4A9) : const Color(0xffAA9C88),
                                   _selectedIndex == 3 ? CommunityMaterialIcons.cake : Icons.cake_outlined,
                                   size: 20.w,
                                 ),

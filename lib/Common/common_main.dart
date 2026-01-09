@@ -18,7 +18,7 @@ class CommonMain extends StatelessWidget {
           decoration: const BoxDecoration(
         color: Color.fromRGBO(0, 0, 0, 0.1),
       ),
-      child: SafeArea(child: child)),
+      child: SafeArea(bottom:false, child: child)),
     );
   }
 }
