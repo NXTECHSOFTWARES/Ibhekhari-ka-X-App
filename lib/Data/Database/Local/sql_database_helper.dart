@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:nxbakers/Data/Model/baking_records.dart';
+import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -43,7 +44,6 @@ class SqlDatabaseHelper {
 // Call this in your initState or wherever you initialize the database
 
   Future<void> _onCreate(Database db, int version) async {
-
     // Baking Records table creation
     await db.execute('''
     CREATE TABLE IF NOT EXISTS baking_records(
@@ -56,12 +56,41 @@ class SqlDatabaseHelper {
     )
     ''');
 
+    // Restock Records table creation
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS restock_records(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    restock_date TEXT NOT NULL,
+    quantity_added INTEGER NOT NULL,
+    pastry_id INTEGER NOT NULL,
+    pastry_name TEXT NOT NULL,
+    FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE RESTRICT
+    )
+    ''');
+
+    // shelf Records table creation
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS shelf_records(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    last_restocked_date TEXT NOT NULL,
+    current_stock INTEGER NOT NULL,
+    quantity_added INTEGER NOT NULL,
+    shelf_life INTEGER NOT NULL,
+    pastry_id INTEGER NOT NULL,
+    is_available INTEGER NOT NULL,
+    pastry_name TEXT NOT NULL,
+    status TEXT NOT NULL,
+    FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE RESTRICT
+    )
+    ''');
+
     // Pastry table creation
     await db.execute('''
       CREATE TABLE pastries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         price REAL NOT NULL,
+        shelf_life INTEGER NOT NULL,
         quantity INTEGER NOT NULL,
         category TEXT NOT NULL,
         imageBytes BLOB NOT NULL,
@@ -248,7 +277,7 @@ class SqlDatabaseHelper {
     return await db.insert('baking_records', baking);
   }
 
-  Future<List<Map<String, dynamic>>> getAllBakingRecords() async{
+  Future<List<Map<String, dynamic>>> getAllBakingRecords() async {
     final db = await database;
     return await db.query('baking_records');
   }
@@ -262,15 +291,80 @@ class SqlDatabaseHelper {
     );
   }
 
+  //______________________________________ RESTOCK RECORDS______________________________________________________________________________________________
+
+  Future<int> insertRestockRecord(Map<String, dynamic> newStock) async {
+    final db = await database;
+    return await db.insert('restock_records', newStock);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllRestockRecords() async {
+    final db = await database;
+    return await db.query('restock_records');
+  }
+
+  Future<int> deleteRestockRecord(int id) async {
+    final db = await database;
+    return await db.delete(
+      'restock_records',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  //______________________________________ SHELF RECORDS______________________________________________________________________________________________
+
+  Future<int> insertShelfRecord(Map<String, dynamic> newShelfStock) async {
+    final db = await database;
+    return await db.insert('shelf_records', newShelfStock);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllShelfRecords() async {
+    final db = await database;
+    return await db.query('shelf_records');
+  }
+
+  Future<Map<String, dynamic>> getShelfRecordById(int id) async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query(
+      'shelf_records',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    return result.first;
+  }
+
+  Future<Map<String, dynamic>?> getShelfRecordByPastryId(int pastryId) async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query(
+      'shelf_records',
+      where: 'pastry_id = ?',
+      whereArgs: [pastryId],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<int> updateShelfRecord(int shelfID, Map<String, dynamic> shelfRecord) async {
+    final db = await database;
+    return db.update("shelf_records", where: 'id = ?', whereArgs: [shelfID], shelfRecord);
+  }
+
+  Future<int> deleteShelfRecord(int id) async {
+    final db = await database;
+    return await db.delete(
+      'shelf_records',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   //____________________________________PASTRIES RECORDS______________________________________________________________________________________________
+
   Future<int> insertPastry(Map<String, dynamic> pastry) async {
     final db = await database;
     return await db.insert('pastries', pastry);
-  }
-
-  Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
-    final db = await database;
-    return await db.insert('dailyEntries', dailyEntry);
   }
 
   Future<int> updatePastry(int id, Map<String, dynamic> pastry) async {
@@ -285,12 +379,17 @@ class SqlDatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getPastries() async {
     final db = await database;
-    return await db.query('pastries', orderBy: 'created_at DESC');
+    return await db.query('pastries');
   }
 
-  Future<List<Map<String, dynamic>>> getDailyEntries() async {
+  Future<List<Map<String, dynamic>>> getPastriesByCategory(String category) async {
     final db = await database;
-    return await db.query('dailyEntries', orderBy: 'created_at DESC');
+    return await db.query(
+      'pastries',
+      where: 'category = ?',
+      whereArgs: [category],
+      orderBy: 'created_at DESC',
+    );
   }
 
   Future<Map<String, dynamic>?> getPastry(int id) async {
@@ -304,35 +403,25 @@ class SqlDatabaseHelper {
     return result.isNotEmpty ? result.first : null;
   }
 
-  Future<Map<String, dynamic>?> getDailyEntry(int id) async {
+  Future<int> deletePastry(int id) async {
     final db = await database;
-    List<Map<String, dynamic>> result = await db.query(
-      'dailyEntries',
+    return await db.delete(
+      'pastries',
       where: 'id = ?',
       whereArgs: [id],
-      limit: 1,
     );
-    return result.isNotEmpty ? result.first : null;
   }
 
-  Future<List<Map<String, dynamic>>> getPastriesByCategory(String category) async {
+  Future<int> updatePastryQuantity(int id, int newQuantity) async {
     final db = await database;
-    return await db.query(
+    final result = await db.update(
       'pastries',
-      where: 'category = ?',
-      whereArgs: [category],
-      orderBy: 'created_at DESC',
+      {'quantity': newQuantity},
+      where: 'id = ?',
+      whereArgs: [id],
     );
-  }
 
-  Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(String dateEntry) async {
-    final db = await database;
-    return await db.query(
-      'dailyEntries',
-      where: 'created_at = ?',
-      whereArgs: [dateEntry],
-      orderBy: 'created_at DESC',
-    );
+    return result;
   }
 
   // Future<int> updatePastry(int id, Map<String, dynamic> pastry) async {
@@ -345,22 +434,38 @@ class SqlDatabaseHelper {
   //   );
   // }
 
-  Future<int> deletePastry(int id) async {
+
+  //================================ DAILY SALES ===========================================================
+  Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
     final db = await database;
-    return await db.delete(
-      'pastries',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.insert('dailyEntries', dailyEntry);
   }
 
-  Future<int> updatePastryQuantity(int id, int newQuantity) async {
+  Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     final db = await database;
-    return await db.update(
-      'pastries',
-      {'quantity': newQuantity},
+    List<Map<String, dynamic>> result = await db.query(
+      'dailyEntries',
       where: 'id = ?',
       whereArgs: [id],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<List<Map<String, dynamic>>> getDailyEntries() async {
+    final db = await database;
+    return await db.query('dailyEntries', orderBy: 'created_at DESC');
+  }
+
+
+
+  Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(String dateEntry) async {
+    final db = await database;
+    return await db.query(
+      'dailyEntries',
+      where: 'created_at = ?',
+      whereArgs: [dateEntry],
+      orderBy: 'created_at DESC',
     );
   }
 

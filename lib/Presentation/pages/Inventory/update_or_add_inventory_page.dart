@@ -186,201 +186,204 @@ class _UpdateOrAddInventoryPageState extends State<UpdateOrAddInventoryPage> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<PastryViewModel>();
 
-    return Consumer<PastryViewModel>(
-      builder: (BuildContext context, viewModel, Widget? child) {
-        // Initialize controllers only once when pastries are available
-        if (viewModel.pastries.isNotEmpty && !_isInitialized) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _initializeControllers(viewModel.pastries);
-          });
-        }
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => PastryViewModel()..initialize(),
+      child: Consumer<PastryViewModel>(
+        builder: (BuildContext context, viewModel, Widget? child) {
+          // Initialize controllers only once when pastries are available
+          if (viewModel.pastries.isNotEmpty && !_isInitialized) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _initializeControllers(viewModel.pastries);
+            });
+          }
 
-        return Dialog(
-          insetPadding: EdgeInsets.zero,
-          child: Container(
-            width: 330.w,
-            height: 480.h,
-            color: const Color(0xffF2EADE),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /**
-                 * Page header or Title And Add Pastry Button
-                 */
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 15.0.h, left: 20.w, right: 20.w, bottom: 0.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ReusableTextWidget(
-                            text: "INVENTORY",
-                            color: const Color(0xff351F00),
-                            size: lFontSize,
-                          ),
-                          AddButton(addNavPage: const NewPastry(), addViewModel: PastryViewModel())
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Dialog(
+            insetPadding: EdgeInsets.zero,
+            child: Container(
+              width: 330.w,
+              height: 480.h,
+              color: const Color(0xffF2EADE),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /**
+                   * Page header or Title And Add Pastry Button
+                   */
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Wrap(
-                        spacing: 5.w,
-                        direction: Axis.horizontal,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Container(
-                            width: 25.w,
-                            height: 25.h,
-                            decoration: const BoxDecoration(color: Color(0xff5C4B32), shape: BoxShape.circle),
-                            child: Icon(
-                              Icons.search,
-                              size: 12.w,
-                              color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.0.h, left: 20.w, right: 20.w, bottom: 0.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ReusableTextWidget(
+                              text: "INVENTORY",
+                              color: const Color(0xff351F00),
+                              size: lFontSize,
                             ),
-                          ),
-                          ReusableTextWidget(
-                            text: "Search",
-                            color: const Color(0xff6D593D),
-                            size: xsFontSize,
-                            FW: lFontWeight,
-                          )
-                        ],
+                            AddButton(addNavPage: const NewPastry(), addViewModel: PastryViewModel())
+                          ],
+                        ),
                       ),
-                      Wrap(
-                        direction: Axis.vertical,
-                        crossAxisAlignment: WrapCrossAlignment.end,
-                        children: [
-                          ReusableTextWidget(
-                            text: "Number Of Stock In Inventory",
-                            size: xsFontSize,
-                            color: const Color(0xff8B7355),
-                            FW: sFontWeight,
-                          ),
-                          ReusableTextWidget(
-                            text: "${viewModel.displayedPastries.length}",
-                            size: sFontSize,
-                            FW: xxlFontWeight,
-                            color: const Color(0xff6D593D),
-                          ),
-                        ],
-                      ),
+                      const Divider(),
                     ],
                   ),
-                ),
-                SizedBox(height: 15.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: ReusableTextWidget(
-                    text: "Select To Update Or Add New Pastry If Not Available",
-                    size: xsFontSize,
-                    color: const Color(0xff8B7355),
-                    FW: sFontWeight,
-                  ),
-                ),
-                SizedBox(height: 15.h),
-                Expanded(
-                  child: viewModel.isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : viewModel.displayedPastries.isEmpty
-                      ? Center(
-                    child: Text(
-                      "No pastries found",
-                      style: GoogleFonts.poppins(
-                        fontSize: sFontSize.sp,
-                        color: const Color(0xff8B7355),
-                      ),
-                    ),
-                  )
-                      : ListView.builder(
+                  SizedBox(height: 10.h),
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    itemCount: viewModel.displayedPastries.length,
-                    itemBuilder: (context, index) {
-                      final pastry = viewModel.displayedPastries[index];
-                      final isSelected = _selectedItems[pastry.id] ?? false;
-                      final isChanged = _isInitialized && index < _isChangedList.length
-                          ? _isChangedList[index]
-                          : false;
-
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 10.h),
-                        child: Container(
-                          height: 40.h,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          decoration: BoxDecoration(
-                            color: pastry.quantity == 0
-                                ? Colors.black.withOpacity(0.20)
-                                : isChanged
-                                ? const Color(0xffFFE4BD) // Changed color
-                                : const Color(0xffD8C6AD), // Default color
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 27.w,
-                                height: 27.h,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 1.0.w,
-                                    color: Colors.black.withOpacity(0.35),
-                                    style: BorderStyle.solid,
-                                  ),
-                                  image: DecorationImage(
-                                      image: pastry.imageBytes.isNotEmpty
-                                          ? MemoryImage(pastry.imageBytes)
-                                          : const AssetImage(
-                                        "assets/Images/default_pastry_img.jpg",
-                                      ) as ImageProvider,
-                                      fit: BoxFit.cover),
-                                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Wrap(
+                          spacing: 5.w,
+                          direction: Axis.horizontal,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Container(
+                              width: 25.w,
+                              height: 25.h,
+                              decoration: const BoxDecoration(color: Color(0xff5C4B32), shape: BoxShape.circle),
+                              child: Icon(
+                                Icons.search,
+                                size: 12.w,
+                                color: Colors.white,
                               ),
-                              SizedBox(width: 15.w),
-                              Expanded(
-                                child: ReusableTextWidget(
-                                  text: pastry.title,
-                                  size: sFontSize,
-                                  FW: lFontWeight,
-                                  color:  pastry.quantity == 0 ? Colors.white : const Color(0xff351F00),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 45.w,
-                                height: 26.h,
-                                child: Center(
-                                  child: _buildQuantityTextField(pastry, index),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                            ReusableTextWidget(
+                              text: "Search",
+                              color: const Color(0xff6D593D),
+                              size: xsFontSize,
+                              FW: lFontWeight,
+                            )
+                          ],
                         ),
-                      );
-                    },
+                        Wrap(
+                          direction: Axis.vertical,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          children: [
+                            ReusableTextWidget(
+                              text: "Number Of Stock In Inventory",
+                              size: xsFontSize,
+                              color: const Color(0xff8B7355),
+                              FW: sFontWeight,
+                            ),
+                            ReusableTextWidget(
+                              text: "${viewModel.displayedPastries.length}",
+                              size: sFontSize,
+                              FW: xxlFontWeight,
+                              color: const Color(0xff6D593D),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: GestureDetector(
-                      onTap: _updateStock,
-                      child: const CustomAddButton(buttonTitle: "update stock")
+                  SizedBox(height: 15.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: ReusableTextWidget(
+                      text: "Select To Update Or Add New Pastry If Not Available",
+                      size: xsFontSize,
+                      color: const Color(0xff8B7355),
+                      FW: sFontWeight,
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 15.h),
+                  Expanded(
+                    child: viewModel.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : viewModel.displayedPastries.isEmpty
+                        ? Center(
+                      child: Text(
+                        "No pastries found",
+                        style: GoogleFonts.poppins(
+                          fontSize: sFontSize.sp,
+                          color: const Color(0xff8B7355),
+                        ),
+                      ),
+                    )
+                        : ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      itemCount: viewModel.displayedPastries.length,
+                      itemBuilder: (context, index) {
+                        final pastry = viewModel.displayedPastries[index];
+                        final isSelected = _selectedItems[pastry.id] ?? false;
+                        final isChanged = _isInitialized && index < _isChangedList.length
+                            ? _isChangedList[index]
+                            : false;
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: Container(
+                            height: 40.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            decoration: BoxDecoration(
+                              color: pastry.quantity == 0
+                                  ? Colors.black.withOpacity(0.20)
+                                  : isChanged
+                                  ? const Color(0xffFFE4BD) // Changed color
+                                  : const Color(0xffD8C6AD), // Default color
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 27.w,
+                                  height: 27.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      width: 1.0.w,
+                                      color: Colors.black.withOpacity(0.35),
+                                      style: BorderStyle.solid,
+                                    ),
+                                    image: DecorationImage(
+                                        image: pastry.imageBytes.isNotEmpty
+                                            ? MemoryImage(pastry.imageBytes)
+                                            : const AssetImage(
+                                          "assets/Images/default_pastry_img.jpg",
+                                        ) as ImageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                SizedBox(width: 15.w),
+                                Expanded(
+                                  child: ReusableTextWidget(
+                                    text: pastry.title,
+                                    size: sFontSize,
+                                    FW: lFontWeight,
+                                    color:  pastry.quantity == 0 ? Colors.white : const Color(0xff351F00),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 45.w,
+                                  height: 26.h,
+                                  child: Center(
+                                    child: _buildQuantityTextField(pastry, index),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.w),
+                    child: GestureDetector(
+                        onTap: _updateStock,
+                        child: const CustomAddButton(buttonTitle: "update stock")
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

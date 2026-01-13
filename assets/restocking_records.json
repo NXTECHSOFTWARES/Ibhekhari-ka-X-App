@@ -3,22 +3,19 @@
     "date": "2025-02-11",
     "restocked_items": [
       {
-        "pastry_id": 0,
-        "pastry_name": "Chocolate Cupcakes",
-        "quantity_added": 17,
-        "notes": "initial restocking"
-      },
-      {
         "pastry_id": 1,
-        "pastry_name": "Vanilla Cupcakes",
-        "quantity_added": 21,
-        "notes": "initial restocking"
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_added": 17
       },
       {
         "pastry_id": 2,
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_added": 21
+      },
+      {
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
-        "quantity_added": 8,
-        "notes": "initial restocking"
+        "quantity_added": 8
       }
     ]
   },
@@ -26,16 +23,14 @@
     "date": "2025-02-13",
     "restocked_items": [
       {
-        "pastry_id": 2,
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
-        "quantity_added": 8,
-        "notes": "restocking from new addition"
+        "quantity_added": 8
       },
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 9,
-        "notes": "restocking from new addition"
+        "quantity_added": 9
       }
     ]
   },
@@ -43,10 +38,9 @@
     "date": "2025-02-15",
     "restocked_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 9,
-        "notes": "restocking from new addition"
+        "quantity_added": 9
       }
     ]
   },
@@ -54,10 +48,9 @@
     "date": "2025-02-17",
     "restocked_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 9,
-        "notes": "restocking from new addition"
+        "quantity_added": 9
       }
     ]
   },
@@ -65,28 +58,24 @@
     "date": "2025-02-18",
     "restocked_items": [
       {
-        "pastry_id": 0,
-        "pastry_name": "Chocolate Cupcakes",
-        "quantity_added": 30,
-        "notes": "restocking from new addition"
-      },
-      {
         "pastry_id": 1,
-        "pastry_name": "Vanilla Cupcakes",
-        "quantity_added": 8,
-        "notes": "restocking from new addition"
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_added": 30
       },
       {
         "pastry_id": 2,
-        "pastry_name": "Cinnamon Rolls",
-        "quantity_added": 10,
-        "notes": "restocking from new addition"
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_added": 8
       },
       {
-        "pastry_id": 4,
+        "pastry_id": 3,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_added": 10
+      },
+      {
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
-        "quantity_added": 9,
-        "notes": "restocking from new addition"
+        "quantity_added": 9
       }
     ]
   },
@@ -94,10 +83,9 @@
     "date": "2025-02-19",
     "restocked_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 12,
-        "notes": "restocking from new addition"
+        "quantity_added": 12
       }
     ]
   },
@@ -105,10 +93,9 @@
     "date": "2025-02-21",
     "restocked_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 17,
-        "notes": "restocking from new addition"
+        "quantity_added": 17
       }
     ]
   },
@@ -116,22 +103,19 @@
     "date": "2025-02-22",
     "restocked_items": [
       {
-        "pastry_id": 0,
-        "pastry_name": "Chocolate Cupcakes",
-        "quantity_added": 19,
-        "notes": "restocking from new addition"
-      },
-      {
         "pastry_id": 1,
-        "pastry_name": "Vanilla Cupcakes",
-        "quantity_added": 21,
-        "notes": "restocking from new addition"
+        "pastry_name": "Chocolate Cupcakes",
+        "quantity_added": 19
       },
       {
-        "pastry_id": 4,
+        "pastry_id": 2,
+        "pastry_name": "Vanilla Cupcakes",
+        "quantity_added": 21
+      },
+      {
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
-        "quantity_added": 21,
-        "notes": "restocking from new addition"
+        "quantity_added": 21
       }
     ]
   },
@@ -139,10 +123,9 @@
     "date": "2025-02-24",
     "restocked_items": [
       {
-        "pastry_id": 4,
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
-        "quantity_added": 34,
-        "notes": "restocking from new addition"
+        "quantity_added": 34
       }
     ]
   },
@@ -150,22 +133,19 @@
     "date": "2025-02-25",
     "restocked_items": [
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
-        "quantity_added": 17,
-        "notes": "restocking from new addition"
-      },
-      {
-        "pastry_id": 2,
-        "pastry_name": "Cinnamon Rolls",
-        "quantity_added": 12,
-        "notes": "restocking from new addition"
+        "quantity_added": 17
       },
       {
         "pastry_id": 3,
+        "pastry_name": "Cinnamon Rolls",
+        "quantity_added": 12
+      },
+      {
+        "pastry_id": 4,
         "pastry_name": "Snowball",
-        "quantity_added": 18,
-        "notes": "restocking from new addition"
+        "quantity_added": 18
       }
     ]
   },
@@ -173,22 +153,19 @@
     "date": "2025-02-28",
     "restocked_items": [
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
-        "quantity_added": 19,
-        "notes": "restocking from new addition"
-      },
-      {
-        "pastry_id": 3,
-        "pastry_name": "Snowball",
-        "quantity_added": 17,
-        "notes": "restocking from new addition"
+        "quantity_added": 19
       },
       {
         "pastry_id": 4,
+        "pastry_name": "Snowball",
+        "quantity_added": 17
+      },
+      {
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
-        "quantity_added": 33,
-        "notes": "restocking from new addition"
+        "quantity_added": 33
       }
     ]
   }

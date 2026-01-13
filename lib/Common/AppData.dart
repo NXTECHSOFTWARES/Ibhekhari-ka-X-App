@@ -3,7 +3,7 @@ import 'dart:ui';
 int xsFontSize = 8;
 int sFontSize = 10;
 int lFontSize = 12;
-int xlFontSize = 16;
+int xlFontSize = 14;
 int xxlFontSize = 18;
 
 FontWeight xsFontWeight = FontWeight.w200;

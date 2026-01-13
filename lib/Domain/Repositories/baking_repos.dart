@@ -6,6 +6,7 @@ class BakingRepo {
   final PastryRepository _pastryRepository = PastryRepository();
 
   static final BakingRepo _instance = BakingRepo._internal();
+
   factory BakingRepo() => _instance;
 
   final SqlDatabaseHelper _dbHelper = SqlDatabaseHelper();
@@ -14,7 +15,22 @@ class BakingRepo {
 
   Future<int> addBakingRecord(BakingRecord bakingRecord) async {
     try {
-      return await _dbHelper.insertBakingRecord(bakingRecord.toJson());
+      int id = bakingRecord.pastryId;
+
+      final currentQuantity = await _pastryRepository.getPastryQuantityById(id);
+      if (currentQuantity == null) {
+        print("Warning: Pastry ID $id not found, skipping quantity update");
+        return 0;
+      }
+
+      final newQuantity = bakingRecord.quantityBaked + currentQuantity;
+
+      final success = await _pastryRepository.updatePastryQuantity(id, newQuantity);
+      if (success) {
+        print("Successfully updated Pastry Quantity of: ${bakingRecord.pastryName ?? 'Unknown'} "
+            "(added ${bakingRecord.quantityBaked}, new total: ${newQuantity})");
+      }
+      return await _dbHelper.insertBakingRecord(bakingRecord.toMap());
     } catch (e) {
       print("Failed to add Baking Record: $e");
       throw Exception('Failed to add Baking Record: $e');
@@ -31,11 +47,8 @@ class BakingRepo {
 
     for (var record in bakingRecords) {
       // Accumulate quantity updates
-      pastryQuantityUpdates[record.pastryId] =
-          (pastryQuantityUpdates[record.pastryId] ?? 0) + record.quantityBaked;
-
-      // Add baking record to batch - use toMap() not toJson()
-      batch.insert('baking_records', record.toJson());
+      pastryQuantityUpdates[record.pastryId] = (pastryQuantityUpdates[record.pastryId] ?? 0) + record.quantityBaked;
+      batch.insert('baking_records', record.toMap());
     }
 
     try {
@@ -48,21 +61,19 @@ class BakingRepo {
         int pastryId = entry.key;
         int quantityToAdd = entry.value;
 
-        final currentQuantity = await _pastryRepository.getPastryQuantityById(pastryId);
-
-        if (currentQuantity == null) {
-          print("Warning: Pastry ID $pastryId not found, skipping quantity update");
+        final pastryBefore = await _pastryRepository.getPastryById(pastryId);
+        if (pastryBefore == null) {
+          print("ERROR: Pastry ID $pastryId not found!");
           continue;
         }
 
-        int newQuantity = currentQuantity + quantityToAdd;
-        await _pastryRepository.updatePastryQuantity(pastryId, newQuantity);
+        int newQuantity = pastryBefore.quantity + quantityToAdd;
 
-        // Get pastry name for logging
-        final pastry = await _pastryRepository.getPastryById(pastryId);
-        print("Successfully updated Pastry Quantity of: ${pastry?.title ?? 'Unknown'} (added $quantityToAdd, new total: $newQuantity)");
+        // Perform update
+        bool updateResult = await _pastryRepository.updatePastryQuantity(pastryId, newQuantity);
+        print("  Update Result: $updateResult");
+
       }
-
     } catch (e) {
       print("Failed to add batch records: $e");
       throw Exception('Failed to add batch records: $e');
@@ -88,5 +99,4 @@ class BakingRepo {
       throw Exception('Failed to delete Baking Record: $e');
     }
   }
-
 }

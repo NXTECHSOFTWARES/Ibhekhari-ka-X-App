@@ -4,31 +4,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:nxbakers/Data/Model/baking_records.dart';
-import 'package:nxbakers/Data/Model/shelf_record.dart';
+import 'package:nxbakers/Data/Model/restock_record.dart';
 import 'package:nxbakers/Domain/Repositories/baking_repos.dart';
-import 'package:nxbakers/Domain/Repositories/shelf_records_repository.dart';
+import 'package:nxbakers/Domain/Repositories/restock_record_repo.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 
-import '../../Data/Model/pastry.dart';
 import '../../Domain/Repositories/pastry_repo.dart';
+import 'baking_record_viewmodel.dart';
 
 enum ViewState { idle, loading, error, success }
 
-class BakingRecordViewModel extends ChangeNotifier {
-  final BakingRepo _bakingRepo = BakingRepo();
+class RestockViewModel extends ChangeNotifier {
+
+  final RestockRecordRepo _recordRepo = RestockRecordRepo();
   final PastryRepository _pastryRepository = PastryRepository();
-  final ShelfRecordsRepository _shelfRecordsRepository = ShelfRecordsRepository();
 
   // State management
   ViewState _state = ViewState.idle;
   String? _errorMessage;
 
   // Store original data separately from filtered data
-  List<Map<String, List<BakingRecord>>> _allBakingRecords = [];
-  List<Map<String, List<BakingRecord>>> _bakingRecords = [];
+  List<Map<String, List<RestockRecord>>> _allRestockRecords = [];
+  List<Map<String, List<RestockRecord>>> _restockRecords = [];
 
   // Store records grouped by month for display
-  Map<String, List<Map<String, List<BakingRecord>>>> _recordsByMonth = {};
+  final Map<String, List<Map<String, List<RestockRecord>>>> _recordsByMonth = {};
 
   List<String> _listOfYears = [];
   List<String> _listOfMonths = [];
@@ -37,8 +37,8 @@ class BakingRecordViewModel extends ChangeNotifier {
   String? _selectedYear;
 
   // Getters
-  List<Map<String, List<BakingRecord>>> get bakingRecords => _bakingRecords;
-  Map<String, List<Map<String, List<BakingRecord>>>> get recordsByMonth => _recordsByMonth;
+  List<Map<String, List<RestockRecord>>> get restockRecords => _restockRecords;
+  Map<String, List<Map<String, List<RestockRecord>>>> get recordsByMonth => _recordsByMonth;
   List<String> get listOfYears => _listOfYears;
   List<String> get listOfMonths => _listOfMonths;
   ViewState get state => _state;
@@ -59,54 +59,55 @@ class BakingRecordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addBakingRecord(BakingRecord bakingRecord) async {
+  Future<void> initialize() async {
+    await loadRestockRecords();
+  }
+
+
+  Future<bool> addRestockRecord(RestockRecord restockRecord) async {
     try {
-      final success = await _bakingRepo.addBakingRecord(bakingRecord);
-      if(success > 0) print("Successfully added ${bakingRecord.toString()} baking records");
-      await loadBakingRecords();
+      await _recordRepo.addRestockRecord(restockRecord);
+      await loadRestockRecords();
       return true;
     } catch (e) {
-      _setError('Failed to add baking record <View Model>: $e');
+      _setError('Failed to add restock record <View Model>: $e');
       return false;
     }
   }
 
-  // Delete baking record
-  Future<bool> deleteBakingRecord(int id) async {
+  // Delete restock record
+  Future<bool> deleteRestockRecord(int id) async {
     _setState(ViewState.loading);
 
     try {
-      final success = await _bakingRepo.deleteBakingRecord(id);
+      final success = await _recordRepo.deleteRestockRecord(id);
       if (success) {
-        await loadBakingRecords(); // Refresh data
+        await loadRestockRecords(); // Refresh data
         return true;
       } else {
-        _setError('Failed to delete baking Record');
+        _setError('Failed to delete restock Record');
         return false;
       }
     } catch (e) {
-      _setError('Failed to delete baking record: $e');
+      _setError('Failed to delete restock record: $e');
       return false;
     }
   }
 
-  Future<void> initialize() async {
-    await loadBakingRecords();
-  }
 
-  Future<void> loadBakingRecords() async {
+  Future<void> loadRestockRecords() async {
     _setState(ViewState.loading);
     try {
-      List<Map<String, List<BakingRecord>>> filteredBakingData = [];
+      List<Map<String, List<RestockRecord>>> filteredRestockData = [];
 
-      final bakingRecords = await _bakingRepo.getAllBakingRecords();
+      final restockRecords = await _recordRepo.getAllRestockRecords();
 
-      for (BakingRecord bakingRecord in bakingRecords) {
+      for (RestockRecord restockRecord in restockRecords) {
         bool dateExists = false;
 
-        for (var map in filteredBakingData) {
-          if (map.containsKey(bakingRecord.bakingDate)) {
-            map[bakingRecord.bakingDate]!.add(bakingRecord);
+        for (var map in filteredRestockData) {
+          if (map.containsKey(restockRecord.restockDate)) {
+            map[restockRecord.restockDate]!.add(restockRecord);
             dateExists = true;
             break;
           }
@@ -114,14 +115,14 @@ class BakingRecordViewModel extends ChangeNotifier {
 
         // If date doesn't exist, create a new entry
         if (!dateExists) {
-          final bakingRecordList = [bakingRecord];
-          filteredBakingData.add({bakingRecord.bakingDate: bakingRecordList});
+          final restockRecordList = [restockRecord];
+          filteredRestockData.add({restockRecord.restockDate: restockRecordList});
         }
       }
 
       // Store original data
-      _allBakingRecords = filteredBakingData;
-      _bakingRecords = filteredBakingData;
+      _allRestockRecords = filteredRestockData;
+      _restockRecords = filteredRestockData;
 
       _createListOfAvailableYears();
       _createListOfAvailableMonths();
@@ -129,44 +130,32 @@ class BakingRecordViewModel extends ChangeNotifier {
 
       _setState(ViewState.success);
     } catch (e) {
-      _setError('Failed to load baking records: $e');
+      _setError('Failed to load restock records: $e');
     }
   }
 
-  Future<void> printPastries()async{
-    List<ShelfRecord> pastry = await _shelfRecordsRepository.getAllShelfRecords();
-    final pastryByID = await _pastryRepository.getPastryById(1);
-
-    //print( "PASTRY GOT BY ID\n\n $pastryByID");
-    print("");
-    print( "PASTRY FROM THE LIST\n\n $pastry");
-
-
-  }
-
-
-  Future<void> loadBakingRecordData() async {
+  Future<void> loadRestockedRecordData() async {
     try {
-      final response = await rootBundle.loadString("assets/baking_records.json");
+      final response = await rootBundle.loadString("assets/restocking_records.json");
       final data = json.decode(response);
 
-      List<BakingRecord> bakingRecordsData = [];
+      List<RestockRecord> restockRecordsData = [];
 
       for (var entry in data as List<dynamic>) {
-        final bakingDate = entry['baking_date'] as String;
-        final batchItems = entry['batch_items'] as List<dynamic>;
+        final restockDate = entry['date'] as String;
+        final batchItems = entry['restocked_items'] as List<dynamic>;
 
         for (var item in batchItems) {
-          bakingRecordsData.add(BakingRecord.fromJson(item as Map<String, dynamic>, bakingDate));
+          restockRecordsData.add(RestockRecord.fromJson(item, restockDate));
         }
       }
 
       // Add all data to the database in a single batch operation
-      await _bakingRepo.addBatchEntries(bakingRecordsData);
+      await _recordRepo.addBatchEntries(restockRecordsData);
 
-      print("Successfully loaded ${bakingRecordsData.length} baking records");
+      print("Successfully loaded ${restockRecordsData.length} restock records");
     } catch (e) {
-      print("Error loading baking records: $e");
+      print("Error loading restock records: $e");
       rethrow;
     }
   }
@@ -195,7 +184,7 @@ class BakingRecordViewModel extends ChangeNotifier {
   void _createListOfAvailableYears() {
     Set<String> years = {};
 
-    for (var record in _allBakingRecords) {
+    for (var record in _allRestockRecords) {
       String date = record.keys.first;
       String year = date.split('-').first;
       years.add(year);
@@ -208,7 +197,7 @@ class BakingRecordViewModel extends ChangeNotifier {
     Set<String> months = {};
 
     // Use currently filtered records or all records
-    final recordsToUse = _selectedYear != null ? _bakingRecords : _allBakingRecords;
+    final recordsToUse = _selectedYear != null ? _restockRecords : _allRestockRecords;
 
     for (var record in recordsToUse) {
       String date = record.keys.first;
@@ -236,7 +225,7 @@ class BakingRecordViewModel extends ChangeNotifier {
   void _groupRecordsByMonth() {
     _recordsByMonth.clear();
 
-    for (var record in _bakingRecords) {
+    for (var record in _restockRecords) {
       String date = record.keys.first;
       DateTime dateTime = DateTime.parse(date);
       String month = DateFormat('MMMM').format(dateTime);
@@ -248,42 +237,42 @@ class BakingRecordViewModel extends ChangeNotifier {
     }
   }
 
-  List<Map<String, List<BakingRecord>>> getRecordsForMonth(String month) {
+  List<Map<String, List<RestockRecord>>> getRecordsForMonth(String month) {
     return _recordsByMonth[month] ?? [];
   }
 
   void filterRecordsByYear(String year) {
     _selectedYear = year;
 
-    List<Map<String, List<BakingRecord>>> filteredRecordsList = [];
+    List<Map<String, List<RestockRecord>>> filteredRecordsList = [];
 
-    for (var record in _allBakingRecords) {
+    for (var record in _allRestockRecords) {
       String recordYear = record.keys.first.split('-').first;
       if (recordYear == year) {
         filteredRecordsList.add(record);
       }
     }
 
-    _bakingRecords = filteredRecordsList;
+    _restockRecords = filteredRecordsList;
     _createListOfAvailableMonths(); // Update months for the selected year
     _groupRecordsByMonth(); // Re-group by month
     notifyListeners();
   }
 
-  int calculateTotalMonthBakedGood(String month) {
+  int calculateTotalMonthRestockedGood(String month) {
     final monthRecords = getRecordsForMonth(month);
 
     int totalQuantity = 0;
     for (var record in monthRecords) {
-      for (BakingRecord bakingRecord in record.values.first) {
-        totalQuantity += bakingRecord.quantityBaked;
+      for (RestockRecord restockRecord in record.values.first) {
+        totalQuantity += restockRecord.quantityAdded;
       }
     }
 
     return totalQuantity;
   }
 
-  String getMostBakedPastry(String month) {
+  String getMostRestockedPastry(String month) {
     final monthRecords = getRecordsForMonth(month);
 
     if (monthRecords.isEmpty) return "None";
@@ -292,26 +281,26 @@ class BakingRecordViewModel extends ChangeNotifier {
 
     // Build the quantity map
     for (var record in monthRecords) {
-      for (BakingRecord bakingRecord in record.values.first) {
-        pastryQuantity[bakingRecord.pastryName] =
-            (pastryQuantity[bakingRecord.pastryName] ?? 0) + bakingRecord.quantityBaked;
+      for (RestockRecord restockRecord in record.values.first) {
+        pastryQuantity[restockRecord.pastryName] =
+            (pastryQuantity[restockRecord.pastryName] ?? 0) + restockRecord.quantityAdded;
       }
     }
 
     if (pastryQuantity.isEmpty) return "None";
 
     // Find the pastry with highest quantity
-    String mostBakedPastry = "";
+    String mostRestockedPastry = "";
     int maxQuantity = 0;
 
     pastryQuantity.forEach((pastryName, quantity) {
       if (quantity > maxQuantity) {
         maxQuantity = quantity;
-        mostBakedPastry = pastryName;
+        mostRestockedPastry = pastryName;
       }
     });
 
-    return mostBakedPastry;
+    return mostRestockedPastry;
   }
 
   // Helper method to get month name and year for display
@@ -334,7 +323,7 @@ class BakingRecordViewModel extends ChangeNotifier {
   // Reset filters
   void resetFilters() {
     _selectedYear = null;
-    _bakingRecords = List.from(_allBakingRecords);
+    _restockRecords = List.from(_allRestockRecords);
     _createListOfAvailableYears();
     _createListOfAvailableMonths();
     _groupRecordsByMonth();
@@ -342,9 +331,9 @@ class BakingRecordViewModel extends ChangeNotifier {
   }
 
   /// Get how long ago a record was created
-  String getRecordAge(String bakingDate) {
+  String getRecordAge(String restockDate) {
     try {
-      DateTime recordDate = DateTime.parse(bakingDate);
+      DateTime recordDate = DateTime.parse(restockDate);
       DateTime today = DateTime.now();
 
       Duration difference = today.difference(recordDate);
@@ -370,9 +359,9 @@ class BakingRecordViewModel extends ChangeNotifier {
   }
 
   /// Get exact days since record
-  int getDaysSinceRecord(String bakingDate) {
+  int getDaysSinceRecord(String restockDate) {
     try {
-      DateTime recordDate = DateTime.parse(bakingDate);
+      DateTime recordDate = DateTime.parse(restockDate);
       DateTime today = DateTime.now();
       return today.difference(recordDate).inDays;
     } catch (e) {
@@ -387,10 +376,13 @@ void main() async {
 
   // Now you can safely use rootBundle
   final BakingRecordViewModel bakingRecordViewModel = BakingRecordViewModel();
+  RestockViewModel restockViewModel = RestockViewModel();
 
   // AWAIT the async function to complete before proceeding
   await bakingRecordViewModel.loadBakingRecords();
+  await restockViewModel.loadRestockedRecordData();
 
   print("Most baked in February: ${bakingRecordViewModel.getMostBakedPastry("February")}");
+  print("Most baked in February: ${restockViewModel.getMostRestockedPastry("February")}");
   print("Total baked in February: ${bakingRecordViewModel.calculateTotalMonthBakedGood("February")}");
 }

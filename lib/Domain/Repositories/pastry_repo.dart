@@ -31,7 +31,6 @@ class PastryRepository {
     try {
       // Validate pastry before adding
       if (!isValidPastry(pastry)) {
-        print("Hallo there!");
         throw Exception('Invalid pastry data');
       }
 
@@ -77,8 +76,8 @@ class PastryRepository {
   bool isValidPastry(Pastry pastry) {
     return pastry.title.trim().isNotEmpty &&
         pastry.price > 0 &&
-        pastry.category.trim().isNotEmpty &&
-        pastry.quantity != 0;
+        pastry.category.trim().isNotEmpty ;
+        //&& pastry.quantity != 0;
   }
 
   Future<bool> isPastryTitleUnique(String title, {int? excludeId}) async {
@@ -206,7 +205,7 @@ class PastryRepository {
       if (newQuantity < 0) {
         throw Exception('Quantity cannot be negative');
       }
-
+      print("Hey hey, PASTRY REPO: $newQuantity ");
       final result = await _dbHelper.updatePastryQuantity(id, newQuantity);
       return result > 0;
     } catch (e) {

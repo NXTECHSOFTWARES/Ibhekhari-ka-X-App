@@ -10,23 +10,27 @@
     },
     {
       "id": 3,
-      "name": "Bread"
-    },
-    {
-      "id": 4,
       "name": "Donut"
     },
     {
-      "id": 5,
+      "id": 4,
       "name": "Muffin"
     },
     {
-      "id": 6,
+      "id": 5,
       "name": "Croissant"
     },
     {
-      "id": 7,
+      "id": 6,
       "name": "Cupcake"
+    },
+    {
+      "id": 7,
+      "name": "Sweet Rolls & Buns"
+    },
+    {
+      "id": 8,
+      "name": "Scone"
     }
-      ]
+  ]
 }

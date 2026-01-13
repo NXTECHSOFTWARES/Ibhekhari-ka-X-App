@@ -8,20 +8,23 @@ import 'package:nxbakers/Data/Model/daily_entry.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Domain/Services/notification_history_service.dart';
 import 'package:nxbakers/Domain/Services/notification_service.dart';
+import 'package:nxbakers/Presentation/ViewModels/baking_record_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
-import 'package:nxbakers/Presentation/pages/DailyEntry/add_daily_entries.dart';
-import 'package:nxbakers/Presentation/pages/DailyEntry/daily_inventory_entry.dart';
+import 'package:nxbakers/Presentation/ViewModels/restock_viewmodel.dart';
+
 import 'package:nxbakers/Presentation/pages/HomePage/Widgets/display_widget.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
+import 'package:nxbakers/Presentation/pages/Pastries/add_new_pastry.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
-import 'package:nxbakers/Presentation/pages/baking_record_page.dart';
+import 'package:nxbakers/Presentation/pages/Restock/restock_records.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Common/AppData.dart';
 import '../../../Common/color.dart';
+import '../Baking/baking_record_page.dart';
 import '../Inventory/update_or_add_inventory_page.dart';
-import '../Pastries/add_new_pastry.dart';
+
 import 'Widgets/stats_graph.dart';
 
 class Homepage extends StatefulWidget {
@@ -311,10 +314,9 @@ class _HomepageState extends State<Homepage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     /**
-                     * Design BEGIN
+                     *  Button FOR ADDING INGREDIENTS
                      */
                     GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  Container())),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6.r),
                         child: Container(
@@ -333,7 +335,7 @@ class _HomepageState extends State<Homepage> {
                                   size: 16.w,
                                 ),
                                 Text(
-                                  "RECIPE",
+                                  "INGREDIENT",
                                   style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
                                 )
                               ],
@@ -344,45 +346,52 @@ class _HomepageState extends State<Homepage> {
                     ),
 
                     /**
-                     * Button FOR ADDING RECIPES
-                     */
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10.r),
-                      child: Container(
-                        width: 74.w,
-                        height: 60.h,
-                        color: const Color(0xff402E14).withOpacity(0.8),
-                        child: Center(
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 5.h,
-                            direction: Axis.vertical,
-                            children: [
-                              Icon(
-                                CommunityMaterialIcons.plus,
-                                color: Colors.white,
-                                size: 16.w,
-                              ),
-                              Text(
-                                "INGREDIENTS",
-                                style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    /**
-                     * BUTTON FOR ADDING NEW INVENTORY
+                     *  Button FOR ADDING PASTRIES
                      */
                     GestureDetector(
                       onTap: () {
                         showDialog(
                             context: context,
                             builder: (context) => ChangeNotifierProvider(
-                                create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const UpdateOrAddInventoryPage()));
+                                create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const NewPastry()));
                       },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Container(
+                          width: 74.w,
+                          height: 60.h,
+                          color: const Color(0xff402E14).withOpacity(0.8),
+                          child: Center(
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 5.h,
+                              direction: Axis.vertical,
+                              children: [
+                                Icon(
+                                  CommunityMaterialIcons.plus,
+                                  color: Colors.white,
+                                  size: 16.w,
+                                ),
+                                Text(
+                                  "PASTRY",
+                                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /**
+                     * BUTTON FOR ADDING NEW INVENTORY/RESTOCK
+                     */
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                  create: (BuildContext context) => PastryViewModel()..loadPastries(), child: const UpdateOrAddInventoryPage()))),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.r),
                         child: Container(
@@ -412,7 +421,7 @@ class _HomepageState extends State<Homepage> {
                     ),
 
                     /**
-                     * BUTTON FOR ADDING INGREDIENTS
+                     * BUTTON FOR ADDING FRESHLY BAKED
                      */
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10.r),
@@ -442,7 +451,7 @@ class _HomepageState extends State<Homepage> {
                     ),
 
                     /**
-                     * Design END
+                     * BUTTON FOR ADDING FRESHLY RECIPES
                      */
                     ClipRRect(
                       borderRadius: BorderRadius.circular(6.r),
@@ -462,7 +471,7 @@ class _HomepageState extends State<Homepage> {
                                 size: 16.w,
                               ),
                               Text(
-                                "PASTRY",
+                                "RECIPES",
                                 style: GoogleFonts.poppins(color: Colors.white, fontSize: 8.sp),
                               )
                             ],
@@ -480,7 +489,15 @@ class _HomepageState extends State<Homepage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>  Container())),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (BuildContext context) => BakingRecordViewModel()..loadBakingRecords(),
+                            child: const BakingRecordPage(),
+                          ),
+                        ),
+                      ),
                       child: ReusableTextWidget(
                         text: "Baking records",
                         color: iconColor,
@@ -489,7 +506,13 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (BuildContext context) => RestockViewModel()..initialize(),child: const RestockRecordPage(),
+                            ),
+                          ), ),
                       child: ReusableTextWidget(
                         text: "Restock records",
                         color: const Color(0xff553609),
@@ -498,7 +521,7 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => const RestockRecordPage(),
                       child: ReusableTextWidget(
                         text: "shelf life",
                         color: const Color(0xff553609),

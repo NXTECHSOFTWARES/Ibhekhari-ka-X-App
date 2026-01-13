@@ -128,11 +128,12 @@ class PastryViewModel extends ChangeNotifier {
           quantity: pastry.quantity,
           category: pastry.category,
           createdAt: pastry.createdAt,
-          imageFile: null);
+          imageFile: null, shelfLife: pastry.shelfLife);
       if (success) {
-        print("successfully added Pastry");
+        print("successfully added Pastry: ${pastry.title}");
       } else {
-        _setError("Failed to Added Pastry");
+        print("Failed to Added Pastry: ${pastry.title}");
+        _setError("Failed to Added Pastry: ${pastry.title}");
       }
     }
   }
@@ -141,6 +142,7 @@ class PastryViewModel extends ChangeNotifier {
     required String title,
     required double price,
     required int quantity,
+    required int shelfLife,
     required String category,
     required File? imageFile,
     createdAt
@@ -159,7 +161,7 @@ class PastryViewModel extends ChangeNotifier {
         quantity: quantity,
         category: category,
         imageBytes: imgByte!,
-        createdAt: createdAt ??  DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        createdAt: createdAt ??  DateFormat('yyyy-MM-dd').format(DateTime.now()), shelfLife: shelfLife,
       );
 
       await _repository.addPastry(pastry);
@@ -174,56 +176,10 @@ class PastryViewModel extends ChangeNotifier {
       //     imageBytes: imgByte,
       //     createdAt: DateTime.now().toIso8601String()));
 
-      print(List.of([title, price, quantity, category, imgByte]));
+      // print(List.of([title, price, quantity, category, imgByte]));
       return true;
     } catch (e) {
       _setError('Failed to add pastry: $e');
-      return false;
-    }
-  }
-
-  Future<bool> multipleEntries({
-    required String title,
-    required double price,
-    required int quantity,
-    required String category,
-    required File imageFile,
-  }) async {
-    _setState(ViewState.loading);
-
-    try {
-      Uint8List imgByte = await convertImageFileToByte(imageFile);
-
-      for (Pastry pastry in _listOfPastries) {
-        if (pastry.title.toLowerCase() == title.toLowerCase() &&
-            pastry.price == price &&
-            pastry.category.toLowerCase() == category.toLowerCase()) {
-          pastry.quantity += quantity;
-        } else {
-          continue;
-        }
-      }
-
-      _listOfPastries.add(Pastry(
-          title: title,
-          price: price,
-          quantity: quantity,
-          category: category,
-          imageBytes: imgByte,
-          createdAt: DateTime.now().toIso8601String()));
-      notifyListeners();
-      // await loadPastries();
-
-      print({
-        "Pastry Name": _listOfPastries[0].title,
-        "Pastry Price": _listOfPastries[0].price,
-        "Pastry Quantity": _listOfPastries[0].quantity,
-        "Pastry Image": _listOfPastries[0].imageBytes,
-        "Pastry Created Date": _listOfPastries[0].createdAt,
-      });
-      return true;
-    } catch (e) {
-      _setError('Failed to add pastry to multi pastry list: $e');
       return false;
     }
   }
@@ -376,7 +332,8 @@ class PastryViewModel extends ChangeNotifier {
   //     return false;
   //   }
   // }
-  //
+
+
   // // Update existing pastry
   Future<bool> updatePastry(Pastry updatedPastry) async {
     _setState(ViewState.loading);

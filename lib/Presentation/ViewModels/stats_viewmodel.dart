@@ -111,7 +111,7 @@ class StatsViewModel extends ChangeNotifier {
           quantity: 0,
           category: 'Unknown',
           imageBytes: Uint8List(0),
-          createdAt: DateTime.now().toIso8601String(),
+          createdAt: DateTime.now().toIso8601String(), shelfLife: 0,
         ),
       );
       return sum + (entry.soldStock * pastry.price);
@@ -133,7 +133,7 @@ class StatsViewModel extends ChangeNotifier {
             quantity: 0,
             category: 'Unknown',
             imageBytes: Uint8List(0),
-            createdAt: DateTime.now().toIso8601String(),
+            createdAt: DateTime.now().toIso8601String(), shelfLife: 0,
           ),
         );
         final revenue = entry.soldStock * pastry.price;

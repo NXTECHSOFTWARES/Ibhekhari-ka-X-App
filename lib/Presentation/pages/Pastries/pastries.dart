@@ -1,5 +1,4 @@
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -78,101 +77,106 @@ class _PastriesPageState extends State<PastriesPage> {
               ),
             )
           : null,
-      body: Consumer<PastryViewModel>(
-        builder: (BuildContext context, viewModel, Widget? child) {
-          switch (viewModel.state) {
-            case ViewState.loading:
-              return const Center(child: CircularProgressIndicator());
-            case ViewState.error:
-              return CommonMain(
-                child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  /**
-                   * Header
-                   */
-                  CommonPageHeader(
-                    pageTitle: 'Pastries',
-                    pageSubTitle: 'A List of all pastries in your inventory',
-                    addViewModel: PastryViewModel(),
-                    addNavPage: const NewPastry(),
-                  ),
+      body: ChangeNotifierProvider(
+        create: (BuildContext context) => PastryViewModel()..loadPastries(),
+        child: Consumer<PastryViewModel>(
+          builder: (BuildContext context, viewModel, Widget? child) {
+            switch (viewModel.state) {
+              case ViewState.loading:
+                return const Center(child: CircularProgressIndicator());
+              case ViewState.error:
 
-                  /**
-                   * Filter and sort button
-                   */
-                  Row(
-                    children: [Expanded(child: Container()), _buildCustomFilterDesign(viewModel)],
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ReusableTextWidget(
-                            text: "No PASTRIES AVAILABLE".toUpperCase(),
-                            color: Colors.black,
-                            size: xlFontSize,
-                            FW: FontWeight.w400,
-                          ),
-                          ReusableTextWidget(
-                            text: "please add new pastries",
-                            color: primaryColor,
-                            size: lFontSize,
-                            FW: FontWeight.w400,
-                          ),
-                        ],
+                return CommonMain(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    /**
+                     * Header
+                     */
+                    CommonPageHeader(
+                      pageTitle: 'Pastries',
+                      pageSubTitle: 'A List of all pastries in your inventory',
+                      addViewModel: PastryViewModel(),
+                      addNavPage: const NewPastry(),
+                    ),
+
+                    /**
+                     * Filter and sort button
+                     */
+                    Row(
+                      children: [Expanded(child: Container()), _buildCustomFilterDesign(viewModel)],
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ReusableTextWidget(
+                              text: "No PASTRIES AVAILABLE".toUpperCase(),
+                              color: Colors.black,
+                              size: xlFontSize,
+                              FW: FontWeight.w400,
+                            ),
+                            ReusableTextWidget(
+                              text: "please add new pastries",
+                              color: primaryColor,
+                              size: lFontSize,
+                              FW: FontWeight.w400,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ]),
-              );
-            case ViewState.success:
-            case ViewState.idle:
-              return _buildPastryList(viewModel);
-          }
-          // if (viewModel.listOfPastries.isEmpty) {
-          //   return CommonMain(
-          //       child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: [
-          //         SizedBox(
-          //           height: 20.h,
-          //         ),
-          //         /**
-          //      * Header
-          //      */
-          //         CommonPageHeader(
-          //           pageTitle: 'Pastries',
-          //           pageSubTitle: 'A List of all pastries in your inventory',
-          //           addViewModel: PastryViewModel(),
-          //           addNavPage: const NewPastry(),
-          //         ),
-          //         /**
-          //      * Filter button
-          //      */
-          //         const CustomFilterButton(),
-          //         const Expanded(
-          //           child: Center(
-          //             child: ReusableTextWidget(
-          //               text: 'No pastries available',
-          //               color: Colors.black,
-          //               size: 14,
-          //               FW: FontWeight.w400,
-          //             ),
-          //           ),
-          //         )
-          //       ]));
-          // }
+                  ]),
+                );
+              case ViewState.success:
+              case ViewState.idle:
 
-          /**
-           * Main Code
-           */
-          //print(viewModel.listOfPastries.length);
-        },
+                return _buildPastryList(viewModel);
+            }
+            // if (viewModel.listOfPastries.isEmpty) {
+            //   return CommonMain(
+            //       child: Column(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           crossAxisAlignment: CrossAxisAlignment.center,
+            //           children: [
+            //         SizedBox(
+            //           height: 20.h,
+            //         ),
+            //         /**
+            //      * Header
+            //      */
+            //         CommonPageHeader(
+            //           pageTitle: 'Pastries',
+            //           pageSubTitle: 'A List of all pastries in your inventory',
+            //           addViewModel: PastryViewModel(),
+            //           addNavPage: const NewPastry(),
+            //         ),
+            //         /**
+            //      * Filter button
+            //      */
+            //         const CustomFilterButton(),
+            //         const Expanded(
+            //           child: Center(
+            //             child: ReusableTextWidget(
+            //               text: 'No pastries available',
+            //               color: Colors.black,
+            //               size: 14,
+            //               FW: FontWeight.w400,
+            //             ),
+            //           ),
+            //         )
+            //       ]));
+            // }
+
+            /**
+             * Main Code
+             */
+            //print(viewModel.listOfPastries.length);
+          },
+        ),
       ),
     );
   }

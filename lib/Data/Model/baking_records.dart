@@ -25,7 +25,7 @@ class BakingRecord {
   }
 
   // Convert to database map
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       if (id != null) 'id': id,
       'baking_date': bakingDate,

@@ -69,8 +69,8 @@ class _NotificationDetailsPageState extends State<NotificationDetailsPage> {
         price: 0.0,
         quantity: currentStock,
         category: 'Unknown',
-        imageBytes: defaultImageBytes, // Use the loaded default image
-        createdAt: DateTime.now().toString(),
+        imageBytes: defaultImageBytes,
+        createdAt: DateTime.now().toString(), shelfLife: 0,
       );
 
       // Calculate restock recommendation

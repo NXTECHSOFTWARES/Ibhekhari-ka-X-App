@@ -3,17 +3,17 @@
     "baking_date": "2025-02-11",
     "batch_items": [
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
         "quantity_baked": 17
       },
       {
-        "pastry_id": 1,
+        "pastry_id": 2,
         "pastry_name": "Vanilla Cupcakes",
         "quantity_baked": 21
       },
       {
-        "pastry_id": 2,
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
         "quantity_baked": 8
       }
@@ -24,12 +24,12 @@
     "baking_date": "2025-02-13",
     "batch_items": [
       {
-        "pastry_id": 2,
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
         "quantity_baked": 8
       },
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 9
       }
@@ -39,7 +39,7 @@
     "baking_date": "2025-02-15",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 9
       }
@@ -49,7 +49,7 @@
     "baking_date": "2025-02-17",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 9
       }
@@ -59,22 +59,22 @@
     "baking_date": "2025-02-18",
     "batch_items": [
       {
-        "pastry_id": 2,
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
         "quantity_baked": 10
       },
       {
-        "pastry_id": 1,
+        "pastry_id": 2,
         "pastry_name": "Vanilla Cupcakes",
         "quantity_baked": 8
       },
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
         "quantity_baked": 30
       },
       {
-        "pastry_id": 4,
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
         "quantity_baked": 9
       }
@@ -84,7 +84,7 @@
     "baking_date": "2025-02-19",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 12
       }
@@ -94,7 +94,7 @@
     "baking_date": "2025-02-21",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 17
       }
@@ -104,17 +104,17 @@
     "baking_date": "2025-02-22",
     "batch_items": [
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
         "quantity_baked": 19
       },
       {
-        "pastry_id": 1,
+        "pastry_id": 2,
         "pastry_name": "Vanilla Cupcakes",
         "quantity_baked": 21
       },
       {
-        "pastry_id": 4,
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
         "quantity_baked": 21
       }
@@ -124,7 +124,7 @@
     "baking_date": "2025-02-24",
     "batch_items": [
       {
-        "pastry_id": 4,
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
         "quantity_baked": 34,
         "status": "fresh",
@@ -137,17 +137,17 @@
     "baking_date": "2025-02-25",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 18
       },
       {
-        "pastry_id": 2,
+        "pastry_id": 3,
         "pastry_name": "Cinnamon Rolls",
         "quantity_baked": 12
       },
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
         "quantity_baked": 17
       }
@@ -157,17 +157,17 @@
     "baking_date": "2025-02-28",
     "batch_items": [
       {
-        "pastry_id": 3,
+        "pastry_id": 4,
         "pastry_name": "Snowball",
         "quantity_baked": 17
       },
       {
-        "pastry_id": 0,
+        "pastry_id": 1,
         "pastry_name": "Chocolate Cupcakes",
         "quantity_baked": 19
       },
       {
-        "pastry_id": 4,
+        "pastry_id": 5,
         "pastry_name": "Bran Muffins",
         "quantity_baked": 33
       }

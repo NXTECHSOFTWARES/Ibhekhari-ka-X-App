@@ -34,6 +34,7 @@ class _NewPastryState extends State<NewPastry> {
   late final TextEditingController _titleController;
   late final TextEditingController _priceController;
   late final TextEditingController _quantityController;
+  late final TextEditingController _shelfLifeController;
 
   String? _selectedCategory;
   File? _selectedImage;
@@ -47,6 +48,7 @@ class _NewPastryState extends State<NewPastry> {
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _priceFocusNode = FocusNode();
   final FocusNode _quantityFocusNode = FocusNode();
+  final FocusNode _shelfLifeFocusNode = FocusNode();
 
   final FocusNode _dropDownFocusNode = FocusNode();
 
@@ -56,11 +58,13 @@ class _NewPastryState extends State<NewPastry> {
     _titleController = TextEditingController();
     _priceController = TextEditingController();
     _quantityController = TextEditingController();
+    _shelfLifeController = TextEditingController();
 
     if (widget.pastry != null) {
       _titleController.text = widget.pastry!.title;
       _priceController.text = widget.pastry!.price.toString();
       _quantityController.text = widget.pastry!.quantity?.toString() ?? '';
+      _shelfLifeController.text = widget.pastry!.shelfLife?.toString() ?? '';
       _selectedCategory = widget.pastry!.category;
       if (widget.pastry != null && widget.pastry!.imageBytes.isNotEmpty) {
         _convertBytesToFile(widget.pastry!.imageBytes);
@@ -93,6 +97,7 @@ class _NewPastryState extends State<NewPastry> {
     _titleController.dispose();
     _priceController.dispose();
     _quantityController.dispose();
+    _shelfLifeController.dispose();
 
     _focusNode.dispose();
     _titleFocusNode.dispose();
@@ -458,6 +463,29 @@ class _NewPastryState extends State<NewPastry> {
                             ),
                           ],
                         ),
+                        /**
+                         * Pastry Quantity form field
+                         */
+                        Wrap(
+                          direction: Axis.vertical,
+                          spacing: 5.h,
+                          children: [
+                            ReusableTextWidget(
+                              text: "Shelf Life",
+                              color: const Color(0xff573E1A),
+                              size: sFontSize,
+                              FW: xsFontWeight,
+                            ),
+                            buildTextEditForm(
+                                viewModel.validateQuantity,
+                                "days before expires",
+                                _shelfLifeController,
+                                300,
+                                35,
+                                _shelfLifeFocusNode)
+                          ],
+                        ),
+
                       ],
                     ),
                   ),
@@ -537,26 +565,26 @@ class _NewPastryState extends State<NewPastry> {
                         widget.pastry == null
                             ? GestureDetector(
                                 onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    viewModel.multipleEntries(
-                                      title: _titleController.text,
-                                      price:
-                                          double.parse(_priceController.text),
-                                      quantity:
-                                          int.parse(_quantityController.text),
-                                      category: _selectedCategory!,
-                                      imageFile: _selectedImage!,
-                                    );
-
-                                    _formKey.currentState?.reset();
-                                    _quantityController.text = "";
-                                    _priceController.text = "";
-                                    _titleController.text = "";
-                                    setState(() {
-                                      _selectedCategory = null;
-                                      _selectedImage = null;
-                                    });
-                                  }
+                                  // if (_formKey.currentState!.validate()) {
+                                  //   viewModel.multipleEntries(
+                                  //     title: _titleController.text,
+                                  //     price:
+                                  //         double.parse(_priceController.text),
+                                  //     quantity:
+                                  //         int.parse(_quantityController.text),
+                                  //     category: _selectedCategory!,
+                                  //     imageFile: _selectedImage!,
+                                  //   );
+                                  //
+                                  //   _formKey.currentState?.reset();
+                                  //   _quantityController.text = "";
+                                  //   _priceController.text = "";
+                                  //   _titleController.text = "";
+                                  //   setState(() {
+                                  //     _selectedCategory = null;
+                                  //     _selectedImage = null;
+                                  //   });
+                                  // }
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -704,6 +732,9 @@ class _NewPastryState extends State<NewPastry> {
       final quantity = _quantityController.text.isNotEmpty
           ? int.parse(_quantityController.text)
           : 1;
+      final shelfLife = _quantityController.text.isNotEmpty
+          ? int.parse(_quantityController.text)
+          : 1;
 
       // Add new pastry
       final success = await viewModel.addPastry(
@@ -711,7 +742,7 @@ class _NewPastryState extends State<NewPastry> {
         price: price,
         quantity: quantity,
         category: _selectedCategory!,
-        imageFile: _selectedImage!,
+        imageFile: _selectedImage!, shelfLife: shelfLife,
       );
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(

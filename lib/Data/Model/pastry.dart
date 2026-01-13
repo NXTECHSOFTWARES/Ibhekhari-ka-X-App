@@ -6,6 +6,7 @@ class Pastry {
   final String title;
   final double price;
   int quantity;
+  int shelfLife;
   final String category;
   final Uint8List imageBytes;
   final String createdAt;
@@ -18,6 +19,7 @@ class Pastry {
     required this.title,
     required this.price,
     required this.quantity,
+    required this.shelfLife,
     required this.category,
     required this.imageBytes,
     required this.createdAt,
@@ -30,6 +32,7 @@ class Pastry {
     String? title,
     double? price,
     int? quantity,
+    int? shelfLife,
     String? category,
     Uint8List? imageBytes,
     String? createdAt,
@@ -41,6 +44,7 @@ class Pastry {
       title: title ?? this.title,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
+      shelfLife: quantity ?? this.shelfLife,
       category: category ?? this.category,
       imageBytes: imageBytes ?? this.imageBytes,
       createdAt: createdAt ?? this.createdAt,
@@ -55,6 +59,7 @@ class Pastry {
       'title': title,
       'price': price,
       'quantity': quantity,
+      'shelf_life': shelfLife,
       'category': category,
       'imageBytes': imageBytes,
       'created_at': createdAt,
@@ -68,6 +73,7 @@ class Pastry {
       title: json['title'],
       price: json['price'] is int ? (json['price'] as int).toDouble() : json['price'],
       quantity: json['quantity'],
+      shelfLife: json['shelf_life'] ?? 0,
       category: json['category'],
       imageBytes: json['imageBytes'] is Uint8List
           ? json['imageBytes']
@@ -86,6 +92,7 @@ class Pastry {
       title: $title, 
       price: $price, 
       quantity: $quantity, 
+      shelf_life: $shelfLife, 
       category: $category, 
       imageBytes: ${imageBytes.length} bytes, 
       createdAt: $createdAt,
