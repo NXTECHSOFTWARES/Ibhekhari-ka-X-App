@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:nxbakers/Common/AppData.dart';
 import 'package:nxbakers/Data/Model/restock_record.dart';
 import 'package:nxbakers/Data/Model/shelf_record.dart';
 import 'package:nxbakers/Domain/Repositories/shelf_records_repository.dart';
 import 'package:nxbakers/Presentation/ViewModels/restock_viewmodel.dart';
 
+import '../../Data/Model/pastry.dart';
 import '../../Domain/Repositories/pastry_repo.dart';
 
-class ShelfViewModel extends ChangeNotifier{
-
+class ShelfViewModel extends ChangeNotifier {
   final ShelfRecordsRepository _shelfRecordsRepository = ShelfRecordsRepository();
   final RestockViewModel _restockViewModel = RestockViewModel();
   final PastryRepository _pastryRepository = PastryRepository();
@@ -16,8 +17,11 @@ class ShelfViewModel extends ChangeNotifier{
   ViewState _state = ViewState.idle;
   String? _errorMessage;
 
-  // Store original data separately from filtered data
-  List<Map<String, List<ShelfRecord>>> _allShelfRecords = [];
+  Map<String, String> pastryQuantityLevels = {};
+
+  // Store original data separately
+  List<ShelfRecord> _availableShelfRecords = [];
+  List<ShelfRecord> _outOfStockShelf = [];
   List<ShelfRecord> _shelfRecords = [];
 
   // Store records grouped by month for display
@@ -31,10 +35,18 @@ class ShelfViewModel extends ChangeNotifier{
 
   // Getters
   List<ShelfRecord> get shelfRecords => _shelfRecords;
+
   Map<String, List<Map<String, List<ShelfRecord>>>> get recordsByMonth => _recordsByMonth;
+
+  List<ShelfRecord> get availableShelfRecords => _availableShelfRecords;
+  List<ShelfRecord> get outOfStockShelf => _outOfStockShelf;
+
   List<String> get listOfYears => _listOfYears;
+
   List<String> get listOfMonths => _listOfMonths;
+
   ViewState get state => _state;
+
   String? get errorMessage => _errorMessage;
 
   // Private helper methods
@@ -115,16 +127,26 @@ class ShelfViewModel extends ChangeNotifier{
       _shelfRecords = shelfRecordsData;
       // _allBakingRecords = filteredBakingData;
       // _bakingRecords = filteredBakingData;
-      //
-      // _createListOfAvailableYears();
-      // _createListOfAvailableMonths();
-      // _groupRecordsByMonth(); // Pre-group records by month
 
+      loadAvailableShelf();
+      loadPastryWithHighQuantity();
       _setState(ViewState.success);
     } catch (e) {
       _setError('Failed to load baking records: $e');
     }
   }
+
+
+  Future<Pastry?> getPastryById(int id) async {
+    try {
+      Pastry? pastry = await _pastryRepository.getPastryById(id);
+      return pastry;
+    } catch (e) {
+      _setError('Failed to retrieve pastry by id: $e');
+    }
+    return null;
+  }
+
 
   // Future<void> loadShelfRecordData() async {
   //   try {
@@ -173,39 +195,39 @@ class ShelfViewModel extends ChangeNotifier{
     return null;
   }
 
-  // void _createListOfAvailableYears() {
-  //   Set<String> years = {};
-  //
-  //   for (var record in _allBakingRecords) {
-  //     String date = record.keys.first;
-  //     String year = date.split('-').first;
-  //     years.add(year);
-  //   }
-  //
-  //   _listOfYears = years.toList()..sort((a, b) => b.compareTo(a)); // Sort descending
-  // }
+  void loadAvailableShelf() {
+    List<ShelfRecord> recordAvailable = [];
+    List<ShelfRecord> outOfStock = [];
 
-  // void _createListOfAvailableMonths() {
-  //   Set<String> months = {};
-  //
-  //   // Use currently filtered records or all records
-  //   final recordsToUse = _selectedYear != null ? _bakingRecords : _allBakingRecords;
-  //
-  //   for (var record in recordsToUse) {
-  //     String date = record.keys.first;
-  //     DateTime dateTime = DateTime.parse(date);
-  //     String month = DateFormat('MMMM').format(dateTime);
-  //     months.add(month);
-  //   }
-  //
-  //   _listOfMonths = _sortMonthsList(months.toList());
-  // }
+    for (ShelfRecord record in shelfRecords) {
+      if (record.isAvailable) recordAvailable.add(record);
+      else {outOfStock.add(record);}
+    }
+    _availableShelfRecords = recordAvailable;
+    _outOfStockShelf = outOfStock;
+  }
+
+  void loadPastryWithHighQuantity() {
+    Map<String, String> pastryLevel = {};
+    int topCurrentQuantity = 0;
+    int lowCurrentQuantity = 0;
+
+    for (var record in shelfRecords) {
+      if (record.currentStock > topCurrentQuantity) {
+        pastryLevel["high"] = record.pastryName;
+        topCurrentQuantity = record.currentStock;
+      }
+      if(record.currentStock < topCurrentQuantity){
+        pastryLevel["low"] = record.pastryName;
+        lowCurrentQuantity = record.currentStock;
+      }
+    }
+
+    pastryQuantityLevels = pastryLevel;
+  }
 
   List<String> _sortMonthsList(List<String> months) {
-    final monthOrder = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+    final monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     months.sort((a, b) {
       return monthOrder.indexOf(a).compareTo(monthOrder.indexOf(b));
@@ -214,103 +236,17 @@ class ShelfViewModel extends ChangeNotifier{
     return months;
   }
 
-  // void _groupRecordsByMonth() {
-  //   _recordsByMonth.clear();
-  //
-  //   for (var record in _bakingRecords) {
-  //     String date = record.keys.first;
-  //     DateTime dateTime = DateTime.parse(date);
-  //     String month = DateFormat('MMMM').format(dateTime);
-  //
-  //     if (!_recordsByMonth.containsKey(month)) {
-  //       _recordsByMonth[month] = [];
-  //     }
-  //     _recordsByMonth[month]!.add(record);
-  //   }
-  // }
-
-  // List<Map<String, List<BakingRecord>>> getRecordsForMonth(String month) {
-  //   return _recordsByMonth[month] ?? [];
-  // }
-
-  // void filterRecordsByYear(String year) {
-  //   _selectedYear = year;
-  //
-  //   List<Map<String, List<BakingRecord>>> filteredRecordsList = [];
-  //
-  //   for (var record in _allBakingRecords) {
-  //     String recordYear = record.keys.first.split('-').first;
-  //     if (recordYear == year) {
-  //       filteredRecordsList.add(record);
-  //     }
-  //   }
-  //
-  //   _bakingRecords = filteredRecordsList;
-  //   _createListOfAvailableMonths(); // Update months for the selected year
-  //   _groupRecordsByMonth(); // Re-group by month
-  //   notifyListeners();
-  // }
-
-  // int calculateTotalMonthBakedGood(String month) {
-  //   final monthRecords = getRecordsForMonth(month);
-  //
-  //   int totalQuantity = 0;
-  //   for (var record in monthRecords) {
-  //     for (BakingRecord bakingRecord in record.values.first) {
-  //       totalQuantity += bakingRecord.quantityBaked;
-  //     }
-  //   }
-  //
-  //   return totalQuantity;
-  // }
-
-  // String getMostBakedPastry(String month) {
-  //   final monthRecords = getRecordsForMonth(month);
-  //
-  //   if (monthRecords.isEmpty) return "None";
-  //
-  //   Map<String, int> pastryQuantity = {};
-  //
-  //   // Build the quantity map
-  //   for (var record in monthRecords) {
-  //     for (BakingRecord bakingRecord in record.values.first) {
-  //       pastryQuantity[bakingRecord.pastryName] =
-  //           (pastryQuantity[bakingRecord.pastryName] ?? 0) + bakingRecord.quantityBaked;
-  //     }
-  //   }
-  //
-  //   if (pastryQuantity.isEmpty) return "None";
-  //
-  //   // Find the pastry with highest quantity
-  //   String mostBakedPastry = "";
-  //   int maxQuantity = 0;
-  //
-  //   pastryQuantity.forEach((pastryName, quantity) {
-  //     if (quantity > maxQuantity) {
-  //       maxQuantity = quantity;
-  //       mostBakedPastry = pastryName;
-  //     }
-  //   });
-  //
-  //   return mostBakedPastry;
-  // }
-
-  // Helper method to get month name and year for display
-  // String getMonthYearDisplay(String month) {
-  //   if (_selectedYear != null) {
-  //     return "$month $_selectedYear";
-  //   }
-  //
-  //   // Find the year from the first record of this month
-  //   final monthRecords = getRecordsForMonth(month);
-  //   if (monthRecords.isNotEmpty) {
-  //     String date = monthRecords.first.keys.first;
-  //     String year = date.split('-').first;
-  //     return "$month $year";
-  //   }
-  //
-  //   return month;
-  // }
+  Color getStatusColor(String status){
+    switch(status){
+      case "fresh":
+        return fresh;
+      case "expired":
+        return expired;
+      case "expiringSoon":
+        return expiringSoon;
+    }
+    return outOfStock;
+  }
 
   // Reset filters
   // void resetFilters() {

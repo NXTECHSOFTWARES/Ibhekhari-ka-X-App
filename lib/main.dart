@@ -4,6 +4,7 @@ import 'package:nxbakers/Domain/Services/background_task_service.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastries.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
+import 'package:provider/provider.dart';
 
 import 'Domain/Services/notification_service.dart';
 import 'Domain/Services/stock_monitor_service.dart';
@@ -64,26 +65,31 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(420, 890),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          title: 'NX Bakers',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-            useMaterial3: true,
-          ),
-          home: const Dashboard(),
-          routes: {
-            '/notifications': (context) => const NotificationsPage(),
-            '/list_of_pastries': (context) => const PastriesPage(),
-            // '/pastry_details': (context) => const PastryDetails(),
-          },
-        );
-      },
+    return MultiProvider(
+      providers: [
+
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(420, 890),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp(
+            title: 'NX Bakers',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+              useMaterial3: true,
+            ),
+            home: const Dashboard(),
+            routes: {
+              '/notifications': (context) => const NotificationsPage(),
+              '/list_of_pastries': (context) => const PastriesPage(),
+              // '/pastry_details': (context) => const PastryDetails(),
+            },
+          );
+        },
+      ),
     );
   }
 }

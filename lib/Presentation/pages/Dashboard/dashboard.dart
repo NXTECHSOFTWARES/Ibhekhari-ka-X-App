@@ -2,17 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:nxbakers/Common/AppData.dart';
-import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/pages/DailyEntry/daily_inventory_entry.dart';
 import 'package:nxbakers/Presentation/pages/HomePage/homepage.dart';
-import 'package:nxbakers/Presentation/pages/Ingridient/Ingredients.dart';
-import 'package:nxbakers/Presentation/pages/Pastries/add_new_pastry.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/low_stock_details_page.dart';
-import 'package:nxbakers/Presentation/pages/Profits/profit.dart';
-import 'package:nxbakers/Presentation/pages/Settings/notification_settings_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Domain/Services/background_task_service.dart';
@@ -22,7 +15,6 @@ import '../DailyEntry/add_daily_entries.dart';
 import '../Pastries/pastries.dart';
 
 import '../Statistics/stats_dashboard.dart';
-import 'Utils/WIdgets/custom_drawer.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

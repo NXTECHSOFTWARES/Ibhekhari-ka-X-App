@@ -80,6 +80,8 @@ class SqlDatabaseHelper {
     is_available INTEGER NOT NULL,
     pastry_name TEXT NOT NULL,
     status TEXT NOT NULL,
+     price REAL NOT NULL,
+     imageBytes BLOB NOT NULL,
     FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE RESTRICT
     )
     ''');
@@ -434,7 +436,6 @@ class SqlDatabaseHelper {
   //   );
   // }
 
-
   //================================ DAILY SALES ===========================================================
   Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
     final db = await database;
@@ -456,8 +457,6 @@ class SqlDatabaseHelper {
     final db = await database;
     return await db.query('dailyEntries', orderBy: 'created_at DESC');
   }
-
-
 
   Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(String dateEntry) async {
     final db = await database;

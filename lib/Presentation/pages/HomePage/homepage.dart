@@ -12,12 +12,14 @@ import 'package:nxbakers/Presentation/ViewModels/baking_record_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/restock_viewmodel.dart';
+import 'package:nxbakers/Presentation/ViewModels/shelfViewModel.dart';
 
 import 'package:nxbakers/Presentation/pages/HomePage/Widgets/display_widget.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/add_new_pastry.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
 import 'package:nxbakers/Presentation/pages/Restock/restock_records.dart';
+import 'package:nxbakers/Presentation/pages/shelf_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Common/AppData.dart';
@@ -482,6 +484,9 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
+              /**
+               * TAB BAR
+               */
               Container(
                 height: 30.h,
                 color: Colors.black.withOpacity(0.15),
@@ -521,7 +526,11 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => const RestockRecordPage(),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShelfRecordPage(),
+                        ), ),
                       child: ReusableTextWidget(
                         text: "shelf life",
                         color: const Color(0xff553609),

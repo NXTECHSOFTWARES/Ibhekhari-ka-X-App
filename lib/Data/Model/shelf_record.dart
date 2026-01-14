@@ -1,13 +1,17 @@
+import 'dart:typed_data';
+
 import 'enum/shelf_status.dart';
 
 class ShelfRecord {
   final int? id;
   final String lastRestockedDate;
   final int currentStock;
+  final double price;
   final int quantityAdded;
   final int shelfLife;
   final int pastryId;
   final bool isAvailable;
+  final Uint8List imageBytes;
   final String pastryName;
   final ShelfStatus status;
 
@@ -16,8 +20,10 @@ class ShelfRecord {
     required this.lastRestockedDate,
     required this.currentStock,
     required this.quantityAdded,
+    required this.price,
     required this.shelfLife,
     required this.pastryId,
+    required this.imageBytes,
     required this.isAvailable,
     required this.pastryName,
     required this.status,
@@ -79,6 +85,10 @@ class ShelfRecord {
       quantityAdded: map['quantity_added'] as int,
       shelfLife: map['shelf_life'] as int,
       pastryId: map['pastry_id'] as int,
+      price: map['price'] is int ? (map['price'] as int).toDouble() : map['price'],
+      imageBytes: map['imageBytes'] is Uint8List
+          ? map['imageBytes']
+          : (map['imageBytes'] != null ? Uint8List.fromList(List<int>.from(map['imageBytes'] ?? [])) : Uint8List(0)),
       isAvailable: (map['is_available'] as int) == 1,
       pastryName: map['pastry_name'] as String,
       status: _parseStatus(map['status'] as String),
@@ -94,9 +104,11 @@ class ShelfRecord {
       'quantity_added': quantityAdded,
       'shelf_life': shelfLife,
       'pastry_id': pastryId,
+      'price': price,
       'is_available': isAvailable ? 1 : 0,
       'pastry_name': pastryName,
       'status': status.name,
+      'imageBytes': imageBytes
     };
   }
 
@@ -108,9 +120,11 @@ class ShelfRecord {
       'quantity_added': quantityAdded,
       'shelf_life': shelfLife,
       'pastry_id': pastryId,
+      'price': price,
       'is_available': isAvailable ? 1 : 0,
       'pastry_name': pastryName,
       'status': status.name,
+      'imageBytes': imageBytes
     };
   }
 
@@ -137,12 +151,14 @@ class ShelfRecord {
     int? currentStock,
     int? quantityAdded,
     int? shelfLife,
+    double? price,
     int? pastryId,
     bool? isAvailable,
+    Uint8List? imageBytes,
     String? pastryName,
     ShelfStatus? status,
   }) {
-    DateTime restockedDate = DateTime.parse(lastRestockedDate ??  this.lastRestockedDate);
+    DateTime restockedDate = DateTime.parse(lastRestockedDate ?? this.lastRestockedDate);
     DateTime expiryDate = restockedDate.add(Duration(days: shelfLife ?? this.shelfLife));
     int daysUntilExpiry = expiryDate.difference(DateTime.now()).inDays;
     return ShelfRecord(
@@ -151,7 +167,9 @@ class ShelfRecord {
       currentStock: currentStock ?? this.currentStock,
       quantityAdded: quantityAdded ?? this.quantityAdded,
       shelfLife: shelfLife ?? this.shelfLife,
+      price: price ?? this.price,
       pastryId: pastryId ?? this.pastryId,
+      imageBytes: imageBytes ?? this.imageBytes,
       isAvailable: isAvailable ?? (currentStock! > 0 && daysUntilExpiry >= 0),
       pastryName: pastryName ?? this.pastryName,
       status: status ?? this.status,
@@ -160,9 +178,9 @@ class ShelfRecord {
 
   // Automatically determine status based on current state
   static ShelfStatus determineStatus(
-      int currentStock,
-      int daysUntilExpiry,
-      ) {
+    int currentStock,
+    int daysUntilExpiry,
+  ) {
     if (currentStock <= 0) {
       return ShelfStatus.outOfStock;
     } else if (daysUntilExpiry < 0) {
@@ -180,7 +198,9 @@ class ShelfRecord {
     required int currentStock,
     required int quantityAdded,
     required int shelfLife,
+    required Uint8List imageBytes,
     required int pastryId,
+    required  double price,
     required String pastryName,
     bool? isAvailable,
   }) {
@@ -196,9 +216,11 @@ class ShelfRecord {
       quantityAdded: quantityAdded,
       shelfLife: shelfLife,
       pastryId: pastryId,
+      price: price,
       isAvailable: isAvailable ?? (currentStock > 0 && daysUntilExpiry >= 0),
       pastryName: pastryName,
       status: status,
+      imageBytes: imageBytes,
     );
   }
 
@@ -221,7 +243,9 @@ class ShelfRecord {
         other.pastryId == pastryId &&
         other.isAvailable == isAvailable &&
         other.pastryName == pastryName &&
-        other.status == status;
+        other.status == status &&
+        other.price == price &&
+        other.imageBytes == imageBytes;
   }
 
   @override
@@ -233,8 +257,10 @@ class ShelfRecord {
       quantityAdded,
       shelfLife,
       pastryId,
+      price,
       isAvailable,
       pastryName,
+      imageBytes,
       status,
     );
   }

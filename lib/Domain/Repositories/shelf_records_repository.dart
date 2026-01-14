@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:nxbakers/Data/Model/shelf_record.dart';
 import 'package:nxbakers/Domain/Repositories/pastry_repo.dart';
 
@@ -25,7 +27,9 @@ class ShelfRecordsRepository {
 
       String lastRestockedDate = restockRecord.restockDate;
       String pastryName = restockRecord.pastryName;
+      final pastryPrice = pastry?.price ?? 0;
       int quantityAdded = restockRecord.quantityAdded;
+      final pastryImage = pastry?.imageBytes ?? Uint8List(0);
       int shelfLife = pastry!.shelfLife ?? 0;
       int pastryId = restockRecord.pastryId;
       if (shelfRecordMap == null) {
@@ -38,7 +42,9 @@ class ShelfRecordsRepository {
             quantityAdded: quantityAdded,
             shelfLife: shelfLife,
             pastryId: pastryId,
-            pastryName: pastryName);
+            pastryName: pastryName,
+            imageBytes: pastryImage,
+            price: pastryPrice);
         print("new record:\n $shelfRecord");
         print('Successfully added shelf record of Pastry: $pastryName');
         return await _dbHelper.insertShelfRecord(shelfRecord.toMap());
@@ -48,12 +54,10 @@ class ShelfRecordsRepository {
       int newQuantity = shelfRecordDb.currentStock + restockRecord.quantityAdded;
 
       final updatedShelfRecord = shelfRecordDb.copyWith(
-          lastRestockedDate: lastRestockedDate,
-          currentStock: newQuantity,
-          quantityAdded: quantityAdded,
-          shelfLife: shelfLife,
-          pastryId: pastryId,
-          pastryName: pastryName);
+        lastRestockedDate: lastRestockedDate,
+        currentStock: newQuantity,
+        quantityAdded: quantityAdded,
+      );
 
       print("new record:\n $updatedShelfRecord");
       updateShelfRecord(updatedShelfRecord);
@@ -65,8 +69,8 @@ class ShelfRecordsRepository {
   }
 
   Future<int> addBatchShelfRecord(
-      MapEntry<int, Map<String, dynamic>> restockRecordEntry, // Changed parameter type
-      ) async {
+    MapEntry<int, Map<String, dynamic>> restockRecordEntry,
+  ) async {
     try {
       RestockRecord restockRecord = restockRecordEntry.value["record"];
       final shelfRecordMap = await _dbHelper.getShelfRecordByPastryId(restockRecord.pastryId);
@@ -74,9 +78,11 @@ class ShelfRecordsRepository {
 
       String lastRestockedDate = restockRecordEntry.value["last_restocked"];
       String pastryName = restockRecord.pastryName;
+      final pastryPrice = pastry?.price ?? 0;
+      final pastryImage = pastry?.imageBytes ?? Uint8List(0);
       int _currentStock = restockRecordEntry.value["current_stock"];
       int quantityAdded = restockRecordEntry.value["last_restocked_quantity"];
-      int shelfLife = pastry!.shelfLife ?? 0;
+      int shelfLife = pastry?.shelfLife ?? 0;
       int pastryId = restockRecord.pastryId;
 
       if (shelfRecordMap == null) {
@@ -86,7 +92,9 @@ class ShelfRecordsRepository {
             quantityAdded: quantityAdded,
             shelfLife: shelfLife,
             pastryId: pastryId,
-            pastryName: pastryName);
+            pastryName: pastryName,
+            imageBytes: pastryImage,
+            price: pastryPrice);
         print("new record:\n $shelfRecord");
         print('Successfully added shelf record of Pastry: $pastryName');
         return await _dbHelper.insertShelfRecord(shelfRecord.toMap());
