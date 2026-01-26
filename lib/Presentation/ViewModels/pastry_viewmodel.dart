@@ -11,6 +11,7 @@ import '../../Data/Model/recipe.dart';
 import '../../Domain/Repositories/pastry_repo.dart';
 
 enum ViewState { idle, loading, error, success }
+
 enum FilterType {
   all,
   available,
@@ -83,28 +84,42 @@ class PastryViewModel extends ChangeNotifier {
 
   // Add these getters
   FilterOptions get filterOptions => _filterOptions;
+
   SortType get currentSort => _currentSort;
+
   List<Pastry> get displayedPastries => _displayedPastries;
 
   // Getters
   ViewState get state => _state;
+
   String? get errorMessage => _errorMessage;
+
   List<Pastry> get pastries => _pastries;
+
   List<Category> get categories => _categories;
+
   String get searchQuery => _searchQuery;
+
   String? get selectedCategoryFilter => _selectedCategoryFilter;
+
   bool get showOnlyAvailable => _showOnlyAvailable;
+
   int get totalPastries => _totalPastries;
+
   double get totalValue => _totalValue;
+
   Map<String, int> get categoryStats => _categoryStats;
 
   bool get isLoading => _state == ViewState.loading;
+
   bool get hasError => _state == ViewState.error;
+
   bool get isEmpty => _pastries.isEmpty && _state != ViewState.loading;
 
   Uint8List? _defaultImageBytes;
 
   final List<Pastry> _listOfPastries = [];
+
   List<Pastry> get listOfPastries => _listOfPastries;
 
   Future<Recipe?> getPastryRecipe() async {
@@ -115,38 +130,51 @@ class PastryViewModel extends ChangeNotifier {
   }
 
   Future<void> loadPastyDemoData() async {
-    final response =
-        await rootBundle.loadString("assets/pastry_test_data.json");
-    final data = json.decode(response);
-    List<Pastry> testDataPastries =
-        (data as List<dynamic>).map((pastry) => Pastry.fromJson(pastry)).toList();
+    _setState(ViewState.loading);
 
-    for (Pastry pastry in testDataPastries) {
-      bool success = await addPastry(
-          title: pastry.title,
-          price: pastry.price,
-          quantity: pastry.quantity,
-          category: pastry.category,
-          createdAt: pastry.createdAt,
-          imageFile: null, shelfLife: pastry.shelfLife);
-      if (success) {
-        print("successfully added Pastry: ${pastry.title}");
-      } else {
-        print("Failed to Added Pastry: ${pastry.title}");
-        _setError("Failed to Added Pastry: ${pastry.title}");
+    try {
+      final response = await rootBundle.loadString("assets/pastry_test_data.json");
+      final data = json.decode(response);
+      List<Pastry> testDataPastries = (data as List<dynamic>).map((pastry) => Pastry.fromJson(pastry)).toList();
+
+      int successCount = 0;
+      int totalCount = testDataPastries.length;
+
+      // Add all pastries
+      for (Pastry pastry in testDataPastries) {
+        bool success = await addPastry(
+            title: pastry.title,
+            price: pastry.price,
+            quantity: pastry.quantity,
+            category: pastry.category,
+            createdAt: pastry.createdAt,
+            imageFile: null,
+            shelfLife: pastry.shelfLife);
+
+        if (success) {
+          successCount++;
+          print("Successfully added Pastry: ${pastry.title} ($successCount/$totalCount)");
+        } else {
+          print("Failed to add Pastry: ${pastry.title}");
+        }
       }
+
+      await loadPastries();
+
+      print("Completed: $successCount/$totalCount pastries added");
+    } catch (e) {
+      _setError("Failed to load demo data: $e");
     }
   }
 
-  Future<bool> addPastry({
-    required String title,
-    required double price,
-    required int quantity,
-    required int shelfLife,
-    required String category,
-    required File? imageFile,
-    createdAt
-  }) async {
+  Future<bool> addPastry(
+      {required String title,
+      required double price,
+      required int quantity,
+      required int shelfLife,
+      required String category,
+      required File? imageFile,
+      createdAt}) async {
     Uint8List? imgByte;
     if (imageFile != null) {
       imgByte = await _imageFileToBytes(imageFile);
@@ -161,7 +189,8 @@ class PastryViewModel extends ChangeNotifier {
         quantity: quantity,
         category: category,
         imageBytes: imgByte!,
-        createdAt: createdAt ??  DateFormat('yyyy-MM-dd').format(DateTime.now()), shelfLife: shelfLife,
+        createdAt: createdAt ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        shelfLife: shelfLife,
       );
 
       await _repository.addPastry(pastry);
@@ -208,8 +237,7 @@ class PastryViewModel extends ChangeNotifier {
     if (_defaultImageBytes != null) return _defaultImageBytes!;
 
     try {
-      final byteData =
-          await rootBundle.load('assets/images/default_pastry_img.jpg');
+      final byteData = await rootBundle.load('assets/images/default_pastry_img.jpg');
       _defaultImageBytes = byteData.buffer.asUint8List();
       return _defaultImageBytes!;
     } catch (e) {
@@ -333,7 +361,6 @@ class PastryViewModel extends ChangeNotifier {
   //   }
   // }
 
-
   // // Update existing pastry
   Future<bool> updatePastry(Pastry updatedPastry) async {
     _setState(ViewState.loading);
@@ -412,15 +439,10 @@ class PastryViewModel extends ChangeNotifier {
 
       for (var pastry in _pastries) {
         // Filter entries for this pastry
-        final pastryEntries = dailyEntries
-            .where((entry) => entry.pastryId == pastry.id)
-            .toList();
+        final pastryEntries = dailyEntries.where((entry) => entry.pastryId == pastry.id).toList();
 
         // Calculate total sales (units sold)
-        int totalSold = pastryEntries.fold(
-            0,
-                (sum, entry) => sum + entry.soldStock
-        );
+        int totalSold = pastryEntries.fold(0, (sum, entry) => sum + entry.soldStock);
 
         // Calculate total income (units * current price)
         // Note: Uses current price - consider storing historical prices in DailyEntry
@@ -435,12 +457,10 @@ class PastryViewModel extends ChangeNotifier {
 
       // Replace the pastries list with updated one
       _pastries = updatedPastries;
-
     } catch (e) {
       print('Failed to calculate sales data: $e');
     }
   }
-
 
   // Update loadPastries to include sales calculation
   Future<void> loadPastries() async {
@@ -487,7 +507,7 @@ class PastryViewModel extends ChangeNotifier {
     // Apply filters
     switch (_filterOptions.filterType) {
       case FilterType.all:
-      // No filter
+        // No filter
         break;
       case FilterType.available:
         filtered = filtered.where((p) => p.quantity > 0).toList();
@@ -496,25 +516,20 @@ class PastryViewModel extends ChangeNotifier {
         filtered = filtered.where((p) => p.quantity <= 0).toList();
         break;
       case FilterType.lowStock:
-        filtered = filtered.where((p) =>
-        p.quantity > 0 && p.quantity <= (_filterOptions.lowStockThreshold ?? 5)
-        ).toList();
+        filtered = filtered.where((p) => p.quantity > 0 && p.quantity <= (_filterOptions.lowStockThreshold ?? 5)).toList();
         break;
       case FilterType.category:
         if (_filterOptions.selectedCategory != null) {
-          filtered = filtered.where((p) =>
-          p.category == _filterOptions.selectedCategory
-          ).toList();
+          filtered = filtered.where((p) => p.category == _filterOptions.selectedCategory).toList();
         }
         break;
     }
 
     // Apply search query if exists
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((p) =>
-      p.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().contains(_searchQuery.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where((p) => p.title.toLowerCase().contains(_searchQuery.toLowerCase()) || p.category.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
     }
 
     // Apply sorting
@@ -553,7 +568,6 @@ class PastryViewModel extends ChangeNotifier {
 
     _displayedPastries = filtered;
   }
-
 
   // Delete pastry
   Future<bool> deletePastry(int id) async {
@@ -610,16 +624,15 @@ class PastryViewModel extends ChangeNotifier {
           pastry.category.toLowerCase().contains(_searchQuery.toLowerCase());
 
       // Category filter
-      bool matchesCategory = _selectedCategoryFilter == null ||
-          pastry.category == _selectedCategoryFilter;
+      bool matchesCategory = _selectedCategoryFilter == null || pastry.category == _selectedCategoryFilter;
 
       // Availability filter
-      bool matchesAvailability = !_showOnlyAvailable ||
-          (pastry.quantity != null && pastry.quantity! > 0);
+      bool matchesAvailability = !_showOnlyAvailable || (pastry.quantity != null && pastry.quantity! > 0);
 
       return matchesSearch && matchesCategory && matchesAvailability;
     }).toList();
   }
+
   //
   // // Statistics and analytics
   // Future<void> _updateStatistics() async {

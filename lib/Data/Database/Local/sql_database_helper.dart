@@ -94,6 +94,7 @@ class SqlDatabaseHelper {
         price REAL NOT NULL,
         shelf_life INTEGER NOT NULL,
         quantity INTEGER NOT NULL,
+        shelf_quantity INTEGER,
         category TEXT NOT NULL,
         imageBytes BLOB NOT NULL,
         created_at TEXT NOT NULL,
@@ -103,10 +104,11 @@ class SqlDatabaseHelper {
 
     // Daily Entry table creation
     await db.execute('''
-      CREATE TABLE dailyEntries (
+      CREATE TABLE dailySales (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         sold_stock INTEGER NOT NULL,
         remaining_stock INTEGER NOT NULL,
+        pastry_loss INTEGER,
         created_at TEXT NOT NULL,
         pastry_id INTEGER NOT NULL,
         FOREIGN KEY (pastry_id) REFERENCES pastries(id) ON DELETE RESTRICT
@@ -350,7 +352,22 @@ class SqlDatabaseHelper {
 
   Future<int> updateShelfRecord(int shelfID, Map<String, dynamic> shelfRecord) async {
     final db = await database;
-    return db.update("shelf_records", where: 'id = ?', whereArgs: [shelfID], shelfRecord);
+    return db.update(
+      "shelf_records",
+      shelfRecord,
+      where: 'id = ?',
+      whereArgs: [shelfID],
+    );
+  }
+
+  Future<int> updateShelfRecordQuantity(int pastryID, Map<String, dynamic> shelfRecord) async {
+    final db = await database;
+    return db.update(
+      "shelf_records",
+      shelfRecord,
+      where: 'pastry_id = ?',
+      whereArgs: [pastryID],
+    );
   }
 
   Future<int> deleteShelfRecord(int id) async {
@@ -439,13 +456,13 @@ class SqlDatabaseHelper {
   //================================ DAILY SALES ===========================================================
   Future<int> insertDailyEntry(Map<String, dynamic> dailyEntry) async {
     final db = await database;
-    return await db.insert('dailyEntries', dailyEntry);
+    return await db.insert('dailySales', dailyEntry);
   }
 
   Future<Map<String, dynamic>?> getDailyEntry(int id) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
-      'dailyEntries',
+      'dailySales',
       where: 'id = ?',
       whereArgs: [id],
       limit: 1,
@@ -455,13 +472,13 @@ class SqlDatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getDailyEntries() async {
     final db = await database;
-    return await db.query('dailyEntries', orderBy: 'created_at DESC');
+    return await db.query('dailySales', orderBy: 'created_at DESC');
   }
 
   Future<List<Map<String, dynamic>>> getDailyEntriesMyDate(String dateEntry) async {
     final db = await database;
     return await db.query(
-      'dailyEntries',
+      'dailySales',
       where: 'created_at = ?',
       whereArgs: [dateEntry],
       orderBy: 'created_at DESC',
@@ -471,7 +488,7 @@ class SqlDatabaseHelper {
   Future<int> updateDailyEntryQuantity(int id, int soldStock, int remainingStock) async {
     final db = await database;
     return await db.update(
-      'dailyEntries',
+      'dailySales',
       {
         'sold_stock': soldStock,
         'remaining_stock': remainingStock,

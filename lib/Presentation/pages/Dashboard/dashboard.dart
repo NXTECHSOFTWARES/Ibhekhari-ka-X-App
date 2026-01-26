@@ -9,7 +9,7 @@ import 'package:nxbakers/Presentation/pages/Pastries/low_stock_details_page.dart
 import 'package:provider/provider.dart';
 
 import '../../../Domain/Services/background_task_service.dart';
-import '../../ViewModels/daily_entry_viewmodel.dart';
+import '../../ViewModels/daily_sales_viewmodel.dart';
 import '../../ViewModels/stats_viewmodel.dart';
 import '../DailyEntry/add_daily_entries.dart';
 import '../Pastries/pastries.dart';
@@ -29,7 +29,7 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> listOfPages = [
     const Homepage(),
     ChangeNotifierProvider(
-      create: (BuildContext context) => DailyEntryViewModel()..initialize(),
+      create: (BuildContext context) => DailySalesViewModel()..initialize(),
       child: const DailyInventoryEntry(),
     ),
     ChangeNotifierProvider(
@@ -72,8 +72,8 @@ class _DashboardState extends State<Dashboard> {
             showDialog(
               context: context,
               builder: (context) => ChangeNotifierProvider(
-                create: (BuildContext context) => DailyEntryViewModel()..loadPastries(),
-                child: const AddDailyEntries(),
+                create: (BuildContext context) => DailySalesViewModel()..loadPastries(),
+                child: const AddDailySales(),
               ),
             );
           },

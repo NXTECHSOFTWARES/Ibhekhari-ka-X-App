@@ -35,13 +35,19 @@ class BakingRecordViewModel extends ChangeNotifier {
 
   // Current filters
   String? _selectedYear;
+  String? _selectedMonth;
 
   // Getters
   List<Map<String, List<BakingRecord>>> get bakingRecords => _bakingRecords;
+
   Map<String, List<Map<String, List<BakingRecord>>>> get recordsByMonth => _recordsByMonth;
+
   List<String> get listOfYears => _listOfYears;
+
   List<String> get listOfMonths => _listOfMonths;
+
   ViewState get state => _state;
+
   String? get errorMessage => _errorMessage;
 
   // Private helper methods
@@ -62,7 +68,7 @@ class BakingRecordViewModel extends ChangeNotifier {
   Future<bool> addBakingRecord(BakingRecord bakingRecord) async {
     try {
       final success = await _bakingRepo.addBakingRecord(bakingRecord);
-      if(success > 0) print("Successfully added ${bakingRecord.toString()} baking records");
+      if (success > 0) print("Successfully added ${bakingRecord.toString()} baking records");
       await loadBakingRecords();
       return true;
     } catch (e) {
@@ -133,19 +139,17 @@ class BakingRecordViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> printPastries()async{
+  Future<void> printPastries() async {
     List<ShelfRecord> pastry = await _shelfRecordsRepository.getAllShelfRecords();
     final pastryByID = await _pastryRepository.getPastryById(1);
 
     //print( "PASTRY GOT BY ID\n\n $pastryByID");
     print("");
-    print( "PASTRY FROM THE LIST\n\n $pastry");
-
-
+    print("PASTRY FROM THE LIST\n\n $pastry");
   }
 
-
   Future<void> loadBakingRecordData() async {
+    _setState(ViewState.loading);
     try {
       final response = await rootBundle.loadString("assets/baking_records.json");
       final data = json.decode(response);
@@ -163,7 +167,7 @@ class BakingRecordViewModel extends ChangeNotifier {
 
       // Add all data to the database in a single batch operation
       await _bakingRepo.addBatchEntries(bakingRecordsData);
-
+      loadBakingRecords();
       print("Successfully loaded ${bakingRecordsData.length} baking records");
     } catch (e) {
       print("Error loading baking records: $e");
@@ -221,10 +225,7 @@ class BakingRecordViewModel extends ChangeNotifier {
   }
 
   List<String> _sortMonthsList(List<String> months) {
-    final monthOrder = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+    final monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     months.sort((a, b) {
       return monthOrder.indexOf(a).compareTo(monthOrder.indexOf(b));
@@ -270,6 +271,26 @@ class BakingRecordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void filterRecordsByMonth(String month) {
+    _selectedMonth = month;
+
+    List<Map<String, List<BakingRecord>>> filteredRecordsList = [];
+
+    for (var record in _allBakingRecords) {
+      String recordMonth = record.keys.first;
+      final formattedMonth = DateFormat("MMMM").format(DateTime.parse(recordMonth));
+      print("Hey: Record Month $formattedMonth");
+      if (formattedMonth == month) {
+        filteredRecordsList.add(record);
+      }
+    }
+
+    _bakingRecords = filteredRecordsList;
+    // _createListOfAvailableMonths(); // Update months for the selected year
+    // _groupRecordsByMonth(); // Re-group by month
+    notifyListeners();
+  }
+
   int calculateTotalMonthBakedGood(String month) {
     final monthRecords = getRecordsForMonth(month);
 
@@ -293,8 +314,7 @@ class BakingRecordViewModel extends ChangeNotifier {
     // Build the quantity map
     for (var record in monthRecords) {
       for (BakingRecord bakingRecord in record.values.first) {
-        pastryQuantity[bakingRecord.pastryName] =
-            (pastryQuantity[bakingRecord.pastryName] ?? 0) + bakingRecord.quantityBaked;
+        pastryQuantity[bakingRecord.pastryName] = (pastryQuantity[bakingRecord.pastryName] ?? 0) + bakingRecord.quantityBaked;
       }
     }
 

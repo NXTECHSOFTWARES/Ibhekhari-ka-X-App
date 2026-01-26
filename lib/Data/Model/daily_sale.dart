@@ -1,27 +1,29 @@
 import 'package:intl/intl.dart';
 
-class DailyEntry {
+class DailySale {
   final int? id;
   final int soldStock;
   final int remainingStock;
-  final String createdAt;
+  final int? pastryLoss;
+  final String createdAt; // Stored as "2026-01-22"
   final int pastryId;
 
-  DailyEntry({
+  DailySale({
     this.id,
     required this.soldStock,
     required this.remainingStock,
+    this.pastryLoss,
     required this.createdAt,
     required this.pastryId,
   });
 
-  factory DailyEntry.fromJson(Map<String, dynamic> json) {
-    return DailyEntry(
+  factory DailySale.fromJson(Map<String, dynamic> json) {
+    return DailySale(
       id: json["id"],
       soldStock: json["sold_stock"],
       remainingStock: json["remaining_stock"],
-      createdAt: json['created_at'] ??
-          DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      pastryLoss: json["pastry_loss"] ?? 0,
+      createdAt: json['created_at'] ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
       pastryId: json["pastry_id"],
     );
   }
@@ -29,13 +31,19 @@ class DailyEntry {
   // Helper method to get the date as DateTime
   DateTime get date {
     try {
-      return DateTime.parse(createdAt);
+      return DateTime.parse(createdAt); // Works with "2026-01-22"
     } catch (e) {
-      try {
-        return DateFormat('yyyy-MM-dd').parse(createdAt);
-      } catch (e) {
-        return DateTime.now();
-      }
+      return DateTime.now();
+    }
+  }
+
+  // Helper to get formatted display date
+  String get displayDate {
+    try {
+      final date = DateTime.parse(createdAt);
+      return DateFormat('EEEE, d MMMM y').format(date); // "Monday, 22 January 2026"
+    } catch (e) {
+      return createdAt;
     }
   }
 
@@ -51,6 +59,7 @@ class DailyEntry {
       "id": id,
       "sold_stock": soldStock,
       "remaining_stock": remainingStock,
+      "pastry_loss": pastryLoss ?? 0,
       "created_at": createdAt,
       "pastry_id": pastryId,
     };
@@ -63,20 +72,21 @@ DailyEntry {
   id: $id,
   soldStock: $soldStock,
   remainingStock: $remainingStock,
+  pastry_loss: $pastryLoss,
   createdAt: $createdAt,
   pastryId: $pastryId
 }
 ''';
   }
 
-  DailyEntry copyWith({
+  DailySale copyWith({
     int? id,
     int? soldStock,
     int? remainingStock,
     String? createdAt,
     int? pastryId,
   }) {
-    return DailyEntry(
+    return DailySale(
       id: id ?? this.id,
       soldStock: soldStock ?? this.soldStock,
       remainingStock: remainingStock ?? this.remainingStock,

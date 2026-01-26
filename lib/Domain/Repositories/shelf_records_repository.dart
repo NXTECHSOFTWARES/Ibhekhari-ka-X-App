@@ -145,6 +145,25 @@ class ShelfRecordsRepository {
     }
   }
 
+  Future<bool> updateShelfRecordQuantity(int newQuantity, int pastryId) async {
+    try {
+      if (pastryId == null) throw Exception('Cannot update Shelf Record without Pastry ID');
+
+      final shelfRecordMap = await _dbHelper.getShelfRecordByPastryId(pastryId);
+      if(shelfRecordMap == null) throw Exception('Cannot update Shelf Record not found');
+
+      final shelfRecordDb = ShelfRecord.fromMap(shelfRecordMap);
+      final updatedShelfRecord = shelfRecordDb.copyWith(
+        currentStock: newQuantity,
+      );
+
+      final result = await _dbHelper.updateShelfRecordQuantity(pastryId, updatedShelfRecord.toMap());
+      return result > 0;
+    } catch (e) {
+      throw Exception('Failed to update pastry: $e');
+    }
+  }
+
   Future<bool> isPastryShelfAvailable(String pastryName, {int? excludeId}) async {
     if (pastryName.trim().isEmpty) return false;
 

@@ -28,387 +28,470 @@ class RestockRecordPage extends StatefulWidget {
 }
 
 class _RestockRecordPageState extends State<RestockRecordPage> {
-  late final RestockViewModel _viewModel;
   String? _selectedYear;
+  String? _selectedMonth;
   final FocusNode _dropDownFocusNode = FocusNode();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _viewModel = RestockViewModel();
     setState(() {
       _selectedYear = "2025";
+      _selectedMonth = "February";
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0.w,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: ReusableTextWidget(
-          text: "Restock Records",
-          color: const Color(0xff351F00),
-          size: lFontSize,
-          FW: lFontWeight,
-        ),
-        backgroundColor: const Color(0xffD7CEC2),
-        iconTheme: IconThemeData(color: const Color(0xff5D3700), size: 18.w),
-        actions: [
-          /**
-           * Search button
-           */
-          GestureDetector(
-            onTap: () => {},
-            child: Container(
-              width: 27.w,
-              height: 27.w,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(
-                  width: 1.0.w,
-                  color: const Color(0xffAA9C88),
-                  style: BorderStyle.solid,
-                ),
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => RestockViewModel()..initialize(),
+      child: Consumer<RestockViewModel>(
+        builder: (BuildContext context, viewModel, Widget? child) {
+          return Scaffold(
+            appBar: AppBar(
+              titleSpacing: 0.w,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              title: ReusableTextWidget(
+                text: "Restock Records",
+                color: const Color(0xff351F00),
+                size: lFontSize,
+                FW: lFontWeight,
               ),
-              child: Icon(
-                color: const Color(0xffAA9C88),
-                Icons.search,
-                size: 18.w,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 20.0.w, left: 10.w),
-            child: AddButton(addNavPage: const UpdateOrAddInventoryPage(), addViewModel: PastryViewModel()),
-          )
-        ],
-      ),
-      floatingActionButton: _viewModel.restockRecords.isEmpty
-          ? Align(
-        alignment: Alignment.center,
-        child: FloatingActionButton(
-          backgroundColor: Colors.black,
-          onPressed: () {
-            _viewModel.loadRestockedRecordData();
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ),
-      )
-          : null,
-      body: CommonMain(
-        child: ChangeNotifierProvider(
-          create: (BuildContext context) => RestockViewModel()..loadRestockRecords(),
-          child: Consumer<RestockViewModel>(
-            builder: (BuildContext context, viewModel, Widget? child) {
-              return viewModel.restockRecords.isEmpty
-                  ? Expanded(
-                child: Center(
-                  child: ReusableTextWidget(
-                    text: "No Data To Display".toUpperCase(),
-                    color: Colors.black,
-                    size: xlFontSize,
-                    FW: FontWeight.w400,
-                  ),
-                ),
-              )
-                  : Column(
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  /**
-                   * Filter by years dropdown
-                   */
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(child: Container()),
-                        Container(
-                          padding: EdgeInsets.zero,
-                          width: 55.w,
-                          height: 30.h,
-                          child: Center(
-                            child: DropdownButtonFormField<String>(
-                              focusNode: _dropDownFocusNode,
-                              elevation: 0,
-                              dropdownColor: const Color(0xffF2EADE),
-                              style: GoogleFonts.poppins(
-                                fontSize: 10.sp,
-                                color: const Color(0xff351F00),
-                              ),
-                              value: _selectedYear,
-                              items: viewModel.listOfYears.map((year) {
-                                return DropdownMenuItem(
-                                  value: year,
-                                  child: ReusableTextWidget(
-                                    text: year,
-                                    color: const Color(0XFF351F00),
-                                    size: sFontSize,
-                                    FW: sFontWeight,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedYear = value;
-                                  viewModel.filterRecordsByYear(value!);
-                                });
-                              },
-                              iconSize: 18.w,
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: Color(0xff7D6543),
-                              ),
-                              iconEnabledColor: const Color(0xff7D6543),
-                              focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
-                              borderRadius: BorderRadius.circular(6.r),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(left: 10.w),
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                fillColor: Colors.transparent,
-                                filled: true,
-                              ),
-                              validator: (value) => value == null ? 'Please select a year' : null,
-                            ),
-                          ),
-                        ),
-                      ],
+              backgroundColor: const Color(0xffD7CEC2),
+              iconTheme: IconThemeData(color: const Color(0xff5D3700), size: 18.w),
+              actions: [
+                /**
+                 * Search button
+                 */
+                GestureDetector(
+                  onTap: () => {},
+                  child: Container(
+                    width: 27.w,
+                    height: 27.w,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(4.r),
+                      border: Border.all(
+                        width: 1.0.w,
+                        color: const Color(0xffAA9C88),
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: Icon(
+                      color: const Color(0xffAA9C88),
+                      Icons.search,
+                      size: 18.w,
                     ),
                   ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  /**
-                   * Builds the Months data - WRAPPED IN EXPANDED
-                   */
-                  // Replace your ListView.builder section with this:
-
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: viewModel.listOfMonths.length,
-                      itemBuilder: (BuildContext context, int i) {
-                        String month = viewModel.listOfMonths[i];
-
-                        // Get pre-grouped records for this month (no state changes)
-                        final monthRecords = viewModel.getRecordsForMonth(month);
-
-                        // Calculate stats for this month
-                        final totalBaked = viewModel.calculateTotalMonthRestockedGood(month);
-                        final mostBaked = viewModel.getMostRestockedPastry(month);
-                        final monthYearDisplay = viewModel.getMonthYearDisplay(month);
-
-                        return Column(
-                          children: [
-                            /**
-                             * Months Header Summary (Total Restocked Goods, Most Restocked, The Month of Record)
-                             */
-                            Padding(
-                              padding: EdgeInsets.only(right: 15.0.w, bottom: 0.h),
-                              child: Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 20.0.w, left: 10.w),
+                  child: AddButton(addNavPage: const UpdateOrAddInventoryPage(), addViewModel: PastryViewModel()),
+                )
+              ],
+            ),
+            floatingActionButton: viewModel.restockRecords.isEmpty
+                ? Align(
+                    alignment: Alignment.center,
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.black,
+                      onPressed: () {
+                        viewModel.loadRestockedRecordData();
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : null,
+            body: CommonMain(
+              child: viewModel.restockRecords.isEmpty
+                  ? Expanded(
+                      child: Center(
+                        child: ReusableTextWidget(
+                          text: "No Data To Display".toUpperCase(),
+                          color: Colors.black,
+                          size: xlFontSize,
+                          FW: FontWeight.w400,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        /**
+                         * Filter by month & month dropdown
+                         */
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                          child:
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(child: Container()),
+                              ReusableTextWidget(
+                                text: "Filter by",
+                                color: const Color(0xff563D19),
+                                size: sFontSize,
+                                FW: sFontWeight,
+                              ),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              /**
+                               * Filter by months
+                               */
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: const Color(0xffF2EADE),
+                                    // border: Border.all(
+                                    //   color: const Color(0xff868686),
+                                    //   width: 0.8.w,
+                                    // ),
+                                    borderRadius: BorderRadius.circular(5.r)),
+                                child: Wrap(
                                   children: [
-                                    Container(),
-                                    Wrap(
-                                      crossAxisAlignment: WrapCrossAlignment.center,
-                                      spacing: 5.w,
-                                      children: [
-                                        /**
-                                         * Total Restock for the Period
-                                         */
-                                        ReusableTextWidget(
-                                          text: totalBaked.toString(),
-                                          color: const Color(0xff56452D),
-                                          size: sFontSize,
-                                          FW: sFontWeight,
+                                    Container(
+                                      padding: EdgeInsets.zero,
+                                      width: 70.w,
+                                      height: 30.h,
+                                      child: Center(
+                                        child: DropdownButtonFormField<String>(
+                                          focusNode: _dropDownFocusNode,
+                                          elevation: 0,
+                                          dropdownColor: const Color(0xffF2EADE),
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10.sp,
+                                            color: const Color(0xff351F00),
+                                          ),
+                                          value: _selectedMonth,
+                                          items: viewModel.listOfMonths.map((month) {
+                                            return DropdownMenuItem(
+                                              value: month,
+                                              child: ReusableTextWidget(
+                                                text: month,
+                                                color: const Color(0XFF351F00),
+                                                size: sFontSize,
+                                                FW: sFontWeight,
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedMonth = value;
+                                              viewModel.filterRecordsByMonth(value!);
+                                            });
+                                          },
+                                          iconSize: 18.w,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Color(0xff7D6543),
+                                          ),
+                                          iconEnabledColor: const Color(0xff7D6543),
+                                          focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(6.r),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.only(left: 10.w),
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            fillColor: Colors.transparent,
+                                            filled: true,
+                                          ),
+                                          validator: (value) => value == null ? 'Please select a month' : null,
                                         ),
-                                        Container(
-                                          width: 25.w,
-                                          height: 1.h,
-                                          color: const Color(0xffAA9C88),
+                                      ),
+                                    ),
+                                    /**
+                                     * Filter by years
+                                     */
+                                    Container(
+                                      padding: EdgeInsets.zero,
+                                      width: 55.w,
+                                      height: 30.h,
+                                      child: Center(
+                                        child: DropdownButtonFormField<String>(
+                                          focusNode: _dropDownFocusNode,
+                                          elevation: 0,
+                                          dropdownColor: const Color(0xffF2EADE),
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 10.sp,
+                                            color: const Color(0xff351F00),
+                                          ),
+                                          value: _selectedYear,
+                                          items: viewModel.listOfYears.map((year) {
+                                            return DropdownMenuItem(
+                                              value: year,
+                                              child: ReusableTextWidget(
+                                                text: year,
+                                                color: const Color(0XFF351F00),
+                                                size: sFontSize,
+                                                FW: sFontWeight,
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedYear = value;
+                                              viewModel.filterRecordsByYear(value!);
+                                            });
+                                          },
+                                          iconSize: 18.w,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Color(0xff7D6543),
+                                          ),
+                                          iconEnabledColor: const Color(0xff7D6543),
+                                          focusColor: _dropDownFocusNode.hasFocus ? Colors.white : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(6.r),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.only(left: 10.w),
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            fillColor: Colors.transparent,
+                                            filled: true,
+                                          ),
+                                          validator: (value) => value == null ? 'Please select a year' : null,
                                         ),
-                                        /**
-                                         * Top Seller/ Pastry that was restocked the most for the Period
-                                         */
-                                        ReusableTextWidget(
-                                          text: mostBaked,
-                                          color: const Color(0xff56452D),
-                                          size: sFontSize,
-                                          FW: sFontWeight,
-                                        ),
-                                        Container(
-                                          width: 25.w,
-                                          height: 1.h,
-                                          color: const Color(0xffAA9C88),
-                                        ),
-                                        /**
-                                         * Period Date
-                                         */
-                                        ReusableTextWidget(
-                                          text: monthYearDisplay,
-                                          color: const Color(0xff56452D),
-                                          size: sFontSize,
-                                          FW: sFontWeight,
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Divider(
-                              color: primaryColor,
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            /**
-                             * Builds data of the month
-                             */
-                            ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                                itemCount: monthRecords.length,
-                                itemBuilder: (context, index) {
-                                  final String restockRecordDate = monthRecords[index].keys.first;
-                                  final restockDate = DateFormat("dd MMMM yyyy").format(DateTime.parse(restockRecordDate));
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        /**
+                   * Builds the Months data - WRAPPED IN EXPANDED
+                   */
+                        // Replace your ListView.builder section with this:
 
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: viewModel.listOfMonths.length,
+                            itemBuilder: (BuildContext context, int i) {
+                              String month = viewModel.listOfMonths[i];
+
+                              // Get pre-grouped records for this month (no state changes)
+                              final monthRecords = viewModel.getRecordsForMonth(month);
+
+                              // Calculate stats for this month
+                              final totalBaked = viewModel.calculateTotalMonthRestockedGood(month);
+                              final mostBaked = viewModel.getMostRestockedPastry(month);
+                              final monthYearDisplay = "$_selectedMonth $_selectedYear";
+
+                              return Column(
+                                children: [
+                                  /**
+                             * Months Header Summary (Total Restocked Goods, Most Restocked, The Month of Record)
+                             */
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 15.0.w, bottom: 0.h),
+                                    child: Expanded(
+                                      child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          ReusableTextWidget(
-                                            text: restockDate,
-                                            color: iconColor,
-                                            size: lFontSize,
-                                            FW: sFontWeight,
-                                          ),
-                                          ReusableTextWidget(
-                                            text: monthRecords[index].values.first.length == 1 ? "1 Pastry" : "${monthRecords[index].values.first.length.toString()} Pastries",
-                                            color: iconColor,
-                                            size: sFontSize,
-                                            FW: sFontWeight,
+                                          Container(),
+                                          Wrap(
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            spacing: 5.w,
+                                            children: [
+                                              /**
+                                         * Total Restock for the Period
+                                         */
+                                              ReusableTextWidget(
+                                                text: totalBaked.toString(),
+                                                color: const Color(0xff56452D),
+                                                size: sFontSize,
+                                                FW: sFontWeight,
+                                              ),
+                                              Container(
+                                                width: 25.w,
+                                                height: 1.h,
+                                                color: const Color(0xffAA9C88),
+                                              ),
+                                              /**
+                                         * Top Seller/ Pastry that was restocked the most for the Period
+                                         */
+                                              ReusableTextWidget(
+                                                text: mostBaked,
+                                                color: const Color(0xff56452D),
+                                                size: sFontSize,
+                                                FW: sFontWeight,
+                                              ),
+                                              Container(
+                                                width: 25.w,
+                                                height: 1.h,
+                                                color: const Color(0xffAA9C88),
+                                              ),
+                                              /**
+                                         * Period Date
+                                         */
+                                              ReusableTextWidget(
+                                                text: monthYearDisplay,
+                                                color: const Color(0xff56452D),
+                                                size: sFontSize,
+                                                FW: sFontWeight,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10.h),
-                                      ListView.builder(
-                                        padding: EdgeInsets.only(bottom: 20.h),
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemCount: monthRecords[index].values.first.length,
-                                        itemBuilder: (BuildContext context, int i) {
-                                          final RestockRecord restockRecord = monthRecords[index].values.first[i];
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: primaryColor,
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  /**
+                             * Builds data of the month
+                             */
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                      itemCount: monthRecords.length,
+                                      itemBuilder: (context, index) {
+                                        final String restockRecordDate = monthRecords[index].keys.first;
+                                        final restockDate = DateFormat("dd MMMM yyyy").format(DateTime.parse(restockRecordDate));
 
-                                          return Slidable(
-                                            key: Key(restockRecord.id.toString()),
-                                            endActionPane: ActionPane(motion: const ScrollMotion(), children: [
-                                              SlidableAction(
-                                                onPressed: (context) => _confirmDeleteRecord(restockRecord),
-                                                backgroundColor: Colors.red.shade700,
-                                                foregroundColor: Colors.white,
-                                                icon: CommunityMaterialIcons.delete_outline,
-                                                spacing: 0,
-                                                padding: EdgeInsets.zero,
-                                                label: 'Delete',
-                                              ),
-                                              SlidableAction(
-                                                onPressed: (context) => _showEditRestockRecord(restockRecord),
-                                                backgroundColor: Colors.blue,
-                                                foregroundColor: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(6.r),
-                                                  bottomRight: Radius.circular(6.r),
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                ReusableTextWidget(
+                                                  text: restockDate,
+                                                  color: iconColor,
+                                                  size: lFontSize,
+                                                  FW: sFontWeight,
                                                 ),
-                                                icon: Icons.edit,
-                                                label: 'Edit',
-                                              ),
-                                            ]),
-                                            child: Container(
-                                              height: 80.h,
-                                              margin: EdgeInsets.only(bottom: 10.h),
-                                              padding: EdgeInsets.all(10.w),
-                                              decoration: BoxDecoration(
-                                                color: primaryColor,
-                                                borderRadius: BorderRadius.circular(10.r),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      ReusableTextWidget(
-                                                        text: restockRecord.pastryName,
-                                                        color: iconColor,
-                                                        size: xlFontSize,
-                                                        FW: sFontWeight,
-                                                      ),
-                                                      ReusableTextWidget(
-                                                        text: viewModel.getRecordAge(restockRecord.restockDate),
-                                                        color: iconColor,
-                                                        size: sFontSize,
-                                                        FW: sFontWeight,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 10.h),
-                                                  Wrap(
-                                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                                    direction: Axis.horizontal,
-                                                    spacing: 10.w,
-                                                    children: [
-                                                      ReusableTextWidget(
-                                                        text: "Quantity Restoked:",
-                                                        color: iconColor,
-                                                        size: sFontSize,
-                                                        FW: sFontWeight,
-                                                      ),
-                                                      ReusableTextWidget(
-                                                        text: restockRecord.quantityAdded.toString(),
-                                                        color: iconColor,
-                                                        size: lFontSize,
-                                                        FW: xlFontWeight,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                                ReusableTextWidget(
+                                                  text: monthRecords[index].values.first.length == 1
+                                                      ? "1 Pastry"
+                                                      : "${monthRecords[index].values.first.length.toString()} Pastries",
+                                                  color: iconColor,
+                                                  size: sFontSize,
+                                                  FW: sFontWeight,
+                                                ),
+                                              ],
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }),
-                          ],
-                        );
-                      },
+                                            SizedBox(height: 10.h),
+                                            ListView.builder(
+                                              padding: EdgeInsets.only(bottom: 20.h),
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              itemCount: monthRecords[index].values.first.length,
+                                              itemBuilder: (BuildContext context, int i) {
+                                                final RestockRecord restockRecord = monthRecords[index].values.first[i];
+
+                                                return Slidable(
+                                                  key: Key(restockRecord.id.toString()),
+                                                  endActionPane: ActionPane(motion: const ScrollMotion(), children: [
+                                                    SlidableAction(
+                                                      onPressed: (context) => _confirmDeleteRecord(restockRecord),
+                                                      backgroundColor: Colors.red.shade700,
+                                                      foregroundColor: Colors.white,
+                                                      icon: CommunityMaterialIcons.delete_outline,
+                                                      spacing: 0,
+                                                      padding: EdgeInsets.zero,
+                                                      label: 'Delete',
+                                                    ),
+                                                    SlidableAction(
+                                                      onPressed: (context) => _showEditRestockRecord(restockRecord),
+                                                      backgroundColor: Colors.blue,
+                                                      foregroundColor: Colors.white,
+                                                      borderRadius: BorderRadius.only(
+                                                        topRight: Radius.circular(6.r),
+                                                        bottomRight: Radius.circular(6.r),
+                                                      ),
+                                                      icon: Icons.edit,
+                                                      label: 'Edit',
+                                                    ),
+                                                  ]),
+                                                  child: Container(
+                                                    height: 80.h,
+                                                    margin: EdgeInsets.only(bottom: 10.h),
+                                                    padding: EdgeInsets.all(10.w),
+                                                    decoration: BoxDecoration(
+                                                      color: primaryColor,
+                                                      borderRadius: BorderRadius.circular(10.r),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            ReusableTextWidget(
+                                                              text: restockRecord.pastryName,
+                                                              color: iconColor,
+                                                              size: xlFontSize,
+                                                              FW: sFontWeight,
+                                                            ),
+                                                            ReusableTextWidget(
+                                                              text: viewModel.getRecordAge(restockRecord.restockDate),
+                                                              color: iconColor,
+                                                              size: sFontSize,
+                                                              FW: sFontWeight,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10.h),
+                                                        Wrap(
+                                                          crossAxisAlignment: WrapCrossAlignment.center,
+                                                          direction: Axis.horizontal,
+                                                          spacing: 10.w,
+                                                          children: [
+                                                            ReusableTextWidget(
+                                                              text: "Quantity Restoked:",
+                                                              color: iconColor,
+                                                              size: sFontSize,
+                                                              FW: sFontWeight,
+                                                            ),
+                                                            ReusableTextWidget(
+                                                              text: restockRecord.quantityAdded.toString(),
+                                                              color: iconColor,
+                                                              size: lFontSize,
+                                                              FW: xlFontWeight,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              );
-            },
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -423,6 +506,7 @@ class _RestockRecordPageState extends State<RestockRecordPage> {
   }
 
   void _confirmDeleteRecord(RestockRecord restockRecord) {
+    final viewModel = Provider.of<RestockViewModel>(context, listen: false);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -479,14 +563,14 @@ class _RestockRecordPageState extends State<RestockRecordPage> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await _viewModel.deleteRestockRecord(restockRecord.id!);
+              final success = await viewModel.deleteRestockRecord(restockRecord.id!);
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       backgroundColor: Colors.white,
                       content: ReusableTextWidget(
                         text:
-                        '${DateFormat("dd MMM yyyy").format(DateTime.parse(restockRecord.restockDate))} ${restockRecord.pastryName} Record deleted',
+                            '${DateFormat("dd MMM yyyy").format(DateTime.parse(restockRecord.restockDate))} ${restockRecord.pastryName} Record deleted',
                         color: Colors.black,
                         size: sFontSize,
                         FW: lFontWeight,

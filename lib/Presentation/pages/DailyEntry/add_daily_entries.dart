@@ -5,19 +5,19 @@ import 'package:intl/intl.dart';
 import 'package:nxbakers/Common/Widgets/custom_add_button.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
-import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
+import 'package:nxbakers/Presentation/ViewModels/daily_sales_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Common/AppData.dart';
 
-class AddDailyEntries extends StatefulWidget {
-  const AddDailyEntries({super.key});
+class AddDailySales extends StatefulWidget {
+  const AddDailySales({super.key});
 
   @override
-  State<AddDailyEntries> createState() => _AddDailyEntriesState();
+  State<AddDailySales> createState() => _AddDailySalesState();
 }
 
-class _AddDailyEntriesState extends State<AddDailyEntries> {
+class _AddDailySalesState extends State<AddDailySales> {
   final FocusNode focusNode = FocusNode();
   List<TextEditingController> _controllers = [];
   List<int> _soldQuantities = [];
@@ -55,7 +55,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     super.dispose();
   }
 
-  void _updateTotalSales(Pastry pastry, int index, String remainingStockText, DailyEntryViewModel viewModel) {
+  void _updateTotalSales(Pastry pastry, int index, String remainingStockText, DailySalesViewModel viewModel) {
     int remainingStock = 0;
     int initialStock = pastry.quantity ?? 0;
     int soldQuantity = 0;
@@ -96,7 +96,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     });
   }
 
-  void _recalculateTotalSales(DailyEntryViewModel viewModel) {
+  void _recalculateTotalSales(DailySalesViewModel viewModel) {
     double newTotal = 0;
 
     for (int i = 0; i < _soldQuantities.length; i++) {
@@ -131,7 +131,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     return null;
   }
 
-  Map<String, dynamic> _getTopSeller(DailyEntryViewModel viewModel) {
+  Map<String, dynamic> _getTopSeller(DailySalesViewModel viewModel) {
     if (_soldQuantities.isEmpty || viewModel.pastries.isEmpty) {
       return {'name': 'No sales', 'quantity': 0, 'total': 0.0};
     }
@@ -162,7 +162,7 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
     };
   }
 
-  void _submitDailyEntry(DailyEntryViewModel viewModel) async {
+  void _submitDailyEntry(DailySalesViewModel viewModel) async {
     bool hasErrors = false;
     for (int i = 0; i < _controllers.length; i++) {
       if (i < viewModel.pastries.length) {
@@ -230,9 +230,9 @@ class _AddDailyEntriesState extends State<AddDailyEntries> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-      child: Consumer<DailyEntryViewModel>(
-        builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
+      create: (BuildContext context) => DailySalesViewModel()..initialize(),
+      child: Consumer<DailySalesViewModel>(
+        builder: (BuildContext context, viewModel, Widget? child) {
           if (viewModel.pastries.isNotEmpty && _controllers.length != viewModel.pastries.length) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _initializeControllers(viewModel.pastries.length);

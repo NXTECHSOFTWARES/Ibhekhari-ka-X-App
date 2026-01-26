@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nxbakers/Domain/Repositories/shelf_records_repository.dart';
 import 'package:nxbakers/Domain/Services/background_task_service.dart';
+import 'package:nxbakers/Presentation/ViewModels/shelfViewModel.dart';
 import 'package:nxbakers/Presentation/pages/Notifications/notifications.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastries.dart';
 import 'package:nxbakers/Presentation/pages/Pastries/pastry_details.dart';
@@ -67,7 +69,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-
+        ChangeNotifierProvider(create: (conte)=> ShelfViewModel())
       ],
       child: ScreenUtilInit(
         designSize: const Size(420, 890),

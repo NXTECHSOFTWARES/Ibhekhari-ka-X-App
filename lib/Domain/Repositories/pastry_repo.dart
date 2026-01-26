@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:nxbakers/Data/Model/daily_entry.dart';
+import 'package:nxbakers/Data/Model/daily_sale.dart';
 import '../../Data/Database/Local/sql_database_helper.dart';
 import '../../Data/Model/category.dart';
 import '../../Data/Model/pastry.dart';

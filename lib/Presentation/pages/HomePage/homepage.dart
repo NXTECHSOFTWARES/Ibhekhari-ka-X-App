@@ -4,12 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nxbakers/Common/common_main.dart';
 import 'package:nxbakers/Common/Widgets/reusable_text_widget.dart';
-import 'package:nxbakers/Data/Model/daily_entry.dart';
+import 'package:nxbakers/Data/Model/daily_sale.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Domain/Services/notification_history_service.dart';
 import 'package:nxbakers/Domain/Services/notification_service.dart';
 import 'package:nxbakers/Presentation/ViewModels/baking_record_viewmodel.dart';
-import 'package:nxbakers/Presentation/ViewModels/daily_entry_viewmodel.dart';
+import 'package:nxbakers/Presentation/ViewModels/daily_sales_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/pastry_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/restock_viewmodel.dart';
 import 'package:nxbakers/Presentation/ViewModels/shelfViewModel.dart';
@@ -50,14 +50,14 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  List<double> _extractSalesData(DailyEntryViewModel viewModel) {
+  List<double> _extractSalesData(DailySalesViewModel viewModel) {
     if (viewModel.dailyEntriesFGroupByDate.isEmpty) {
       return [0, 0, 0, 0, 0, 0, 0, 0];
     }
 
     // Get the last period
     String periodKey = viewModel.dailyEntriesFGroupByDate.keys.last;
-    Map<String, List<DailyEntry>> entries = viewModel.dailyEntriesFGroupByDate[periodKey]!;
+    Map<String, List<DailySale>> entries = viewModel.dailyEntriesFGroupByDate[periodKey]!;
 
     // Convert to list of daily totals
     return entries.values.map((dailyEntries) {
@@ -70,7 +70,7 @@ class _HomepageState extends State<Homepage> {
     return pastry[0].price;
   }
 
-  String _calculatePeriodTotal(Map<String, List<DailyEntry>> dailyEntries, List<Pastry> pastries) {
+  String _calculatePeriodTotal(Map<String, List<DailySale>> dailyEntries, List<Pastry> pastries) {
     double total = 0;
     dailyEntries.forEach((date, entries) {
       for (var entry in entries) {
@@ -80,11 +80,11 @@ class _HomepageState extends State<Homepage> {
     return 'R${total.toStringAsFixed(2)}';
   }
 
-  String _getTopSellerForPeriod(Map<String, List<DailyEntry>> dailyEntriesInPeriod, List<Pastry> pastries) {
+  String _getTopSellerForPeriod(Map<String, List<DailySale>> dailyEntriesInPeriod, List<Pastry> pastries) {
     Map<String, int> pastrySales = {};
 
     dailyEntriesInPeriod.forEach((date, entries) {
-      for (DailyEntry entry in entries) {
+      for (DailySale entry in entries) {
         String pastryName = pastries.where((pastry) => pastry.id! == entry.pastryId).firstOrNull?.title ?? "Unknown Pastry";
 
         pastrySales[pastryName] = (pastrySales[pastryName] ?? 0) + entry.soldStock;
@@ -560,7 +560,7 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                     /**
-                     * Daily Entry Recent Entry summary
+                     * Daily Sales Recent Entry summary
                      */
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
@@ -580,9 +580,9 @@ class _HomepageState extends State<Homepage> {
                           ],
                         ),
                         child: ChangeNotifierProvider(
-                          create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-                          child: Consumer<DailyEntryViewModel>(
-                            builder: (BuildContext context, DailyEntryViewModel viewModel, Widget? child) {
+                          create: (BuildContext context) => DailySalesViewModel()..initialize(),
+                          child: Consumer<DailySalesViewModel>(
+                            builder: (BuildContext context, viewModel, Widget? child) {
                               if (viewModel.isLoading) {
                                 return const Center(child: CircularProgressIndicator());
                               }
@@ -761,8 +761,8 @@ class _HomepageState extends State<Homepage> {
                      * Statistics Graph
                      */
                     ChangeNotifierProvider(
-                      create: (BuildContext context) => DailyEntryViewModel()..initialize(),
-                      child: Consumer<DailyEntryViewModel>(
+                      create: (BuildContext context) => DailySalesViewModel()..initialize(),
+                      child: Consumer<DailySalesViewModel>(
                         builder: (context, viewModel, child) {
                           List<double> salesData = _extractSalesData(viewModel);
                           final List<double> sampleData = [50, 75, 95, 110, 125, 115, 95, 75, 60, 70, 90, 115, 130, 125, 105, 85];
@@ -1016,14 +1016,16 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Widget _buildSummaryItem(DailyEntryViewModel viewModel) {
+  Widget _buildSummaryItem(DailySalesViewModel viewModel) {
     if (viewModel.dailyEntriesFGroupByDate.isEmpty) {
       return const SizedBox.shrink();
     }
 
     String periodKey = viewModel.dailyEntriesFGroupByDate.keys.last;
-    Map<String, List<DailyEntry>> dailyEntriesInPeriod = viewModel.dailyEntriesFGroupByDate[periodKey]!;
-    List<DailyEntry> entriesForDate = dailyEntriesInPeriod[periodKey]!;
+
+    Map<String, List<DailySale>> dailyEntriesInPeriod = viewModel.dailyEntriesFGroupByDate[periodKey]!;
+    List<DailySale> entriesForDate = dailyEntriesInPeriod[periodKey]!;
+
     int totalItems = entriesForDate.fold(0, (sum, entry) => sum + entry.soldStock);
 
     // Calculate top seller for this period

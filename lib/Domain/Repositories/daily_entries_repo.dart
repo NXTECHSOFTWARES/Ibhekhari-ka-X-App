@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:nxbakers/Data/Database/Local/sql_database_helper.dart';
-import 'package:nxbakers/Data/Model/daily_entry.dart';
+import 'package:nxbakers/Data/Model/daily_sale.dart';
 
 import '../../Data/Model/category.dart';
 
@@ -14,7 +14,7 @@ class DailyEntriesRepo{
   final SqlDatabaseHelper _dbHelper = SqlDatabaseHelper();
   DailyEntriesRepo._internal();
 
-  Future<int> addDailyEntry(DailyEntry dailyEntry) async {
+  Future<int> addDailyEntry(DailySale dailyEntry) async {
 
     try {
       if( await isDailyEntryUnique(dailyEntry)){
@@ -22,17 +22,16 @@ class DailyEntriesRepo{
       };
       return await _dbHelper.insertDailyEntry(dailyEntry.toJson());
     } catch (e) {
-      print("Hey Im here");
       throw Exception('Failed to add daily entry: $e');
     }
 
   }
 
-  Future<List<DailyEntry>> getAllDailyEntries() async {
+  Future<List<DailySale>> getAllDailyEntries() async {
     try {
       final dailyEntriesMaps = await _dbHelper.getDailyEntries();
       return dailyEntriesMaps.map((map) {
-        final dailyEntries = DailyEntry.fromJson(map);
+        final dailyEntries = DailySale.fromJson(map);
         return dailyEntries;
       }).toList();
     } catch (e) {
@@ -40,11 +39,11 @@ class DailyEntriesRepo{
     }
   }
 
-  Future<List<DailyEntry>> getDailyEntryByDate(String entryDate) async {
+  Future<List<DailySale>> getDailyEntryByDate(String entryDate) async {
     try {
       final dailyEntriesMaps = await _dbHelper.getDailyEntriesMyDate(entryDate);
       return dailyEntriesMaps.map((map) {
-        final dailyEntriesByDate = DailyEntry.fromJson(map);
+        final dailyEntriesByDate = DailySale.fromJson(map);
         return dailyEntriesByDate;
       }).toList();
     } catch (e) {
@@ -78,7 +77,7 @@ class DailyEntriesRepo{
     }
   }
 
-  Future<bool> isDailyEntryUnique(DailyEntry dailyEntry) async {
+  Future<bool> isDailyEntryUnique(DailySale dailyEntry) async {
     final entries = await getAllDailyEntries();
     return !entries.any((entry) =>
     dailyEntry.pastryId == entry.pastryId &&

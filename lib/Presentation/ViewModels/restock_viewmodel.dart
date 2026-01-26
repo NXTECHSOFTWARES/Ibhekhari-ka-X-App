@@ -259,6 +259,25 @@ class RestockViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void filterRecordsByMonth(String month) {
+    _selectedYear = month;
+
+    List<Map<String, List<RestockRecord>>> filteredRecordsList = [];
+
+    for (var record in _allRestockRecords) {
+      String recordMonth = record.keys.first;
+      final formattedMonth = DateFormat("MMMM").format(DateTime.parse(recordMonth));
+      print("Hey: Record Month $formattedMonth");
+      if (formattedMonth == month) {
+        filteredRecordsList.add(record);
+      }
+    }
+
+    _restockRecords = filteredRecordsList;
+    // _createListOfAvailableMonths(); // Update months for the selected year
+    // _groupRecordsByMonth(); // Re-group by month
+    notifyListeners();
+  }
   int calculateTotalMonthRestockedGood(String month) {
     final monthRecords = getRecordsForMonth(month);
 

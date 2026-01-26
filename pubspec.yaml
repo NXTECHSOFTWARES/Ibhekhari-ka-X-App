@@ -54,6 +54,19 @@ dependencies:
   permission_handler: ^11.0.1
   shared_preferences: ^2.5.3
   fl_chart: ^0.65.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/Images/app_logo.png"
+
+  #Adaptive icon for Android (API 26+)
+  adaptive_icon_background: "#A56712"  # Background color
+  adaptive_icon_foreground: "assets/Images/app_logo.png"
+
+  #Remove alpha channel for iOS
+  remove_alpha_ios: true
 
 dev_dependencies:
   flutter_test:

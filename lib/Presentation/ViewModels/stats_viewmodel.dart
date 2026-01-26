@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:nxbakers/Data/Model/daily_entry.dart';
+import 'package:nxbakers/Data/Model/daily_sale.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Domain/Repositories/daily_entries_repo.dart';
 import 'package:nxbakers/Domain/Repositories/pastry_repo.dart';
@@ -12,13 +12,13 @@ class StatsViewModel extends ChangeNotifier {
   final DailyEntriesRepo _dailyEntriesRepo = DailyEntriesRepo();
   final PastryRepository _pastryRepo = PastryRepository();
 
-  List<DailyEntry> _dailyEntries = [];
+  List<DailySale> _dailyEntries = [];
   List<Pastry> _pastries = [];
   DateTime _selectedDate = DateTime.now();
   TimeFrame _selectedTimeFrame = TimeFrame.week;
 
   // Getters
-  List<DailyEntry> get dailyEntries => _dailyEntries;
+  List<DailySale> get dailyEntries => _dailyEntries;
   List<Pastry> get pastries => _pastries;
   DateTime get selectedDate => _selectedDate;
   TimeFrame get selectedTimeFrame => _selectedTimeFrame;
@@ -166,7 +166,7 @@ class StatsViewModel extends ChangeNotifier {
   }
 
   // Helper methods - Simplified version using the new helper methods
-  List<DailyEntry> _getRelevantEntries() {
+  List<DailySale> _getRelevantEntries() {
     final now = _selectedDate;
 
     switch (_selectedTimeFrame) {

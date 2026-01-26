@@ -28,157 +28,151 @@ class PastriesPage extends StatefulWidget {
 }
 
 class _PastriesPageState extends State<PastriesPage> {
-  late final PastryViewModel _viewModel;
+  // late final PastryViewModel _viewModel;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final viewModel = Provider.of<PastryViewModel>(context, listen: false);
-      viewModel.loadPastries();
-    });
+    // Future.microtask(() {
+    //   final viewModel = Provider.of<PastryViewModel>(context, listen: false);
+    //   viewModel.loadPastries();
+    // });
 
-    _viewModel = PastryViewModel();
-    _initializeData();
-    _searchController.addListener(_onSearchChanged);
-  }
+    //_viewModel = PastryViewModel();
+    //   _initializeData(_viewModel);
+    //   _searchController.addListener(_onSearchChanged);
+    // }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _viewModel.dispose();
-    super.dispose();
-  }
+    @override
+    void dispose() {
+      _searchController.dispose();
+      //_viewModel.dispose();
+      super.dispose();
+    }
 
-  Future<void> _initializeData() async {
-    await _viewModel.initialize();
-  }
-
-  void _onSearchChanged() {
-    _viewModel.setSearchQuery(_searchController.text);
+    // Future<void> _initializeData(viewModel) async {
+    //   await viewModel.initialize();
+    // }
+    //
+    // void _onSearchChanged(viewModel) {
+    //   viewModel.setSearchQuery(_searchController.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: _viewModel.pastries.isEmpty
-          ? Align(
-              alignment: Alignment.center,
-              child: FloatingActionButton(
-                backgroundColor: Colors.black,
-                onPressed: () {
-                  _viewModel.loadPastyDemoData();
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => PastryViewModel()..initialize(),
+      child: Consumer<PastryViewModel>(builder: (BuildContext context, viewModel, Widget? child) {
+        return Scaffold(
+          floatingActionButton: viewModel.pastries.isEmpty
+              ? Align(
+                  alignment: Alignment.center,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.black,
+                    onPressed: () {
+                      viewModel.loadPastyDemoData();
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : null,
+          body: _buildBodyContent(viewModel),
+        );
+      }),
+    );
+  }
+
+  Widget _buildBodyContent(PastryViewModel viewModel) {
+    switch (viewModel.state) {
+      case ViewState.loading:
+        return const Center(child: CircularProgressIndicator());
+
+      case ViewState.error:
+        return CommonMain(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: 20.h),
+            CommonPageHeader(
+              pageTitle: 'Pastries',
+              pageSubTitle: 'A List of all pastries in your inventory',
+              addViewModel: viewModel,
+              addNavPage: const NewPastry(),
+            ),
+            Row(
+              children: [Expanded(child: Container()), _buildCustomFilterDesign(viewModel)],
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ReusableTextWidget(
+                      text: "No PASTRIES AVAILABLE".toUpperCase(),
+                      color: Colors.black,
+                      size: xlFontSize,
+                      FW: FontWeight.w400,
+                    ),
+                    ReusableTextWidget(
+                      text: "please add new pastries",
+                      color: primaryColor,
+                      size: lFontSize,
+                      FW: FontWeight.w400,
+                    ),
+                  ],
                 ),
               ),
-            )
-          : null,
-      body: ChangeNotifierProvider(
-        create: (BuildContext context) => PastryViewModel()..loadPastries(),
-        child: Consumer<PastryViewModel>(
-          builder: (BuildContext context, viewModel, Widget? child) {
-            switch (viewModel.state) {
-              case ViewState.loading:
-                return const Center(child: CircularProgressIndicator());
-              case ViewState.error:
+            ),
+          ]),
+        );
 
-                return CommonMain(
-                  child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    /**
-                     * Header
-                     */
-                    CommonPageHeader(
-                      pageTitle: 'Pastries',
-                      pageSubTitle: 'A List of all pastries in your inventory',
-                      addViewModel: PastryViewModel(),
-                      addNavPage: const NewPastry(),
-                    ),
+      case ViewState.success:
+      case ViewState.idle:
+        return _buildPastryList(viewModel);
+    }
 
-                    /**
-                     * Filter and sort button
-                     */
-                    Row(
-                      children: [Expanded(child: Container()), _buildCustomFilterDesign(viewModel)],
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ReusableTextWidget(
-                              text: "No PASTRIES AVAILABLE".toUpperCase(),
-                              color: Colors.black,
-                              size: xlFontSize,
-                              FW: FontWeight.w400,
-                            ),
-                            ReusableTextWidget(
-                              text: "please add new pastries",
-                              color: primaryColor,
-                              size: lFontSize,
-                              FW: FontWeight.w400,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ]),
-                );
-              case ViewState.success:
-              case ViewState.idle:
+    // if (viewModel.listOfPastries.isEmpty) {
+    //   return CommonMain(
+    //       child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //         SizedBox(
+    //           height: 20.h,
+    //         ),
+    //         /**
+    //      * Header
+    //      */
+    //         CommonPageHeader(
+    //           pageTitle: 'Pastries',
+    //           pageSubTitle: 'A List of all pastries in your inventory',
+    //           addViewModel: PastryViewModel(),
+    //           addNavPage: const NewPastry(),
+    //         ),
+    //         /**
+    //      * Filter button
+    //      */
+    //         const CustomFilterButton(),
+    //         const Expanded(
+    //           child: Center(
+    //             child: ReusableTextWidget(
+    //               text: 'No pastries available',
+    //               color: Colors.black,
+    //               size: 14,
+    //               FW: FontWeight.w400,
+    //             ),
+    //           ),
+    //         )
+    //       ]));
+    // }
 
-                return _buildPastryList(viewModel);
-            }
-            // if (viewModel.listOfPastries.isEmpty) {
-            //   return CommonMain(
-            //       child: Column(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           crossAxisAlignment: CrossAxisAlignment.center,
-            //           children: [
-            //         SizedBox(
-            //           height: 20.h,
-            //         ),
-            //         /**
-            //      * Header
-            //      */
-            //         CommonPageHeader(
-            //           pageTitle: 'Pastries',
-            //           pageSubTitle: 'A List of all pastries in your inventory',
-            //           addViewModel: PastryViewModel(),
-            //           addNavPage: const NewPastry(),
-            //         ),
-            //         /**
-            //      * Filter button
-            //      */
-            //         const CustomFilterButton(),
-            //         const Expanded(
-            //           child: Center(
-            //             child: ReusableTextWidget(
-            //               text: 'No pastries available',
-            //               color: Colors.black,
-            //               size: 14,
-            //               FW: FontWeight.w400,
-            //             ),
-            //           ),
-            //         )
-            //       ]));
-            // }
-
-            /**
-             * Main Code
-             */
-            //print(viewModel.listOfPastries.length);
-          },
-        ),
-      ),
-    );
+    /**
+     * Main Code
+     */
+    //print(viewModel.listOfPastries.length);
   }
 
   // Widget _buildSearchAndFilters() {
@@ -263,7 +257,7 @@ class _PastriesPageState extends State<PastriesPage> {
           CommonPageHeader(
             pageTitle: 'Pastries',
             pageSubTitle: 'A List of all pastries in your inventory',
-            addViewModel: PastryViewModel(),
+            addViewModel: viewModel,
             addNavPage: const NewPastry(),
           ),
 
@@ -298,7 +292,7 @@ class _PastriesPageState extends State<PastriesPage> {
                 horizontal: 5.w,
               ),
               child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 45.h),
+                  padding: EdgeInsets.only(bottom: 120.h),
                   itemCount: viewModel.displayedPastries.length,
                   itemBuilder: (context, index) {
                     final pastry = viewModel.displayedPastries[index];
@@ -310,7 +304,7 @@ class _PastriesPageState extends State<PastriesPage> {
                       key: Key(pastry.id.toString()),
                       endActionPane: ActionPane(motion: const ScrollMotion(), children: [
                         SlidableAction(
-                          onPressed: (context) => _confirmDeletePastry(pastry),
+                          onPressed: (context) => _confirmDeletePastry(pastry, viewModel),
                           backgroundColor: Colors.red.shade700,
                           foregroundColor: Colors.white,
                           icon: CommunityMaterialIcons.delete_outline,
@@ -351,7 +345,6 @@ class _PastriesPageState extends State<PastriesPage> {
                   }),
             ),
           ),
-
         ],
       ),
     );
@@ -479,11 +472,12 @@ class _PastriesPageState extends State<PastriesPage> {
   // }
   //
   void _showEditPastryDialog(Pastry pastry) {
+    final viewModel = Provider.of<PastryViewModel>(context, listen: false);
     showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
-        return ChangeNotifierProvider(
-            create: (BuildContext context) => PastryViewModel(),
+        return ChangeNotifierProvider.value(
+            value: viewModel,
             child: NewPastry(
               pastry: pastry,
             ));
@@ -491,7 +485,7 @@ class _PastriesPageState extends State<PastriesPage> {
     );
   }
 
-  void _confirmDeletePastry(Pastry pastry) {
+  void _confirmDeletePastry(Pastry pastry, viewModel) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -520,7 +514,7 @@ class _PastriesPageState extends State<PastriesPage> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              final success = await _viewModel.deletePastry(pastry.id!);
+              final success = await viewModel.deletePastry(pastry.id!);
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

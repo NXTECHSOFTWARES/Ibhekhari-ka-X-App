@@ -1,4 +1,4 @@
-import 'package:nxbakers/Data/Model/daily_entry.dart';
+import 'package:nxbakers/Data/Model/daily_sale.dart';
 import 'package:nxbakers/Data/Model/pastry.dart';
 import 'package:nxbakers/Domain/Repositories/daily_entries_repo.dart';
 
@@ -81,7 +81,7 @@ class RestockCalculator {
   }
 
   // Calculate average daily sales from entries
-  Map<String, double> _calculateAverageSales(List<DailyEntry> entries) {
+  Map<String, double> _calculateAverageSales(List<DailySale> entries) {
     if (entries.isEmpty) {
       return {'average': 0, 'total': 0, 'daysWithSales': 0};
     }
